@@ -28,41 +28,41 @@
     >
       <div class="p-6">
         <!-- Header -->
-        <div class="mb-6">
+        <div class="mb-4">
           <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">ឯកសារប្រឡង</h2>
           <div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
         </div>
 
         <!-- Search Bar -->
-        <div class="mb-6 relative">
+        <div class="mb-4 relative">
           <input
             v-model="searchQuery"
             @keydown.escape="searchQuery = ''"
             type="text"
             placeholder="ស្វែងរកមុខវិជ្ជា... (ចុច / ដើម្បីស្វែងរក)"
-            class="w-full px-4 py-2.5 pl-10 pr-10 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
+            class="w-full px-4 py-2 pl-10 pr-10 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-sm"
             @focus="isSearchFocused = true"
             @blur="isSearchFocused = false"
           />
-          <svg class="w-5 h-5 absolute left-3 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 absolute left-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <button
             v-if="searchQuery"
             @click="searchQuery = ''"
-            class="absolute right-3 top-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         <!-- Recently Viewed -->
-        <div v-if="recentlyViewed.length > 0 && !searchQuery" class="mb-6">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400 flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div v-if="recentlyViewed.length > 0 && !searchQuery" class="mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs font-semibold text-gray-600 dark:text-gray-400 flex items-center gap-1.5 uppercase tracking-wide">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               មើលថ្មីៗ
@@ -72,35 +72,35 @@
               class="text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors flex items-center gap-1"
               title="Clear recent history"
             >
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
               សម្អាត
             </button>
           </div>
-          <div class="space-y-1">
+          <div class="space-y-0.5">
             <button
               v-for="item in recentlyViewed.slice(0, 3)"
               :key="item.pdf"
               @click="selectPdfFromRecent(item); !isDesktop && toggleSidebar()"
-              class="flex items-center w-full text-left text-sm py-2 px-3 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300 transition-all"
+              class="flex items-center w-full text-left text-sm py-1.5 px-3 rounded-md hover:bg-blue-50 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300 transition-all"
             >
-              <span class="mr-2 text-blue-500">{{ getSubjectIcon(item.label) }}</span>
-              <span class="truncate flex-1">{{ item.label }}</span>
+              <span class="mr-2 text-base">{{ getSubjectIcon(item.label) }}</span>
+              <span class="truncate flex-1 text-sm">{{ item.label }}</span>
             </button>
           </div>
         </div>
 
-        <div v-for="category in filteredData" :key="category.label" class="mb-6">
+        <div v-for="category in filteredData" :key="category.label" class="mb-4">
           <!-- Category -->
           <div>
             <button
               @click="toggleCategory(category.label)"
-              class="flex items-center justify-between w-full text-left font-bold text-lg text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-all py-3 px-4 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-700/50 group focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="flex items-center justify-between w-full text-left font-bold text-base text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-all py-2 px-3 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700/50 group focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <span class="flex items-center gap-3">
+              <span class="flex items-center gap-2">
                 <span class="text-blue-600 dark:text-blue-400 transform transition-transform duration-200" :class="expandedCategories[category.label] ? 'rotate-90' : ''">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                   </svg>
                 </span>
@@ -109,45 +109,45 @@
             </button>
 
             <!-- Years -->
-            <div v-if="expandedCategories[category.label]" class="mt-3 ml-6 space-y-2">
+            <div v-if="expandedCategories[category.label]" class="mt-1.5 ml-4 space-y-1">
               <div v-for="year in category.children" :key="year.label">
                 <button
                   @click="toggleYear(year.label)"
-                  class="flex items-center justify-between w-full text-left font-semibold text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all py-2 px-4 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700/30 dark:hover:to-gray-700/30 group focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="flex items-center justify-between w-full text-left font-semibold text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all py-1.5 px-3 rounded-md hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700/30 dark:hover:to-gray-700/30 group focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <span class="flex items-center gap-2">
                     <span class="text-blue-500 dark:text-blue-400 text-xs transform transition-transform duration-200" :class="expandedYears[year.label] ? 'rotate-90' : ''">
-                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                       </svg>
                     </span>
-                    <span class="px-2 py-0.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-full">
+                    <span class="px-1.5 py-0.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-full font-medium">
                       {{ extractYear(year.label) }}
                     </span>
-                    {{ year.label }}
+                    <span class="text-sm">{{ year.label }}</span>
                   </span>
                 </button>
 
                 <!-- Subjects -->
-                <div v-if="expandedYears[year.label]" class="mt-2 ml-6 space-y-1">
+                <div v-if="expandedYears[year.label]" class="mt-1 ml-4 space-y-0.5">
                   <button
                     v-for="subject in year.children"
                     :key="subject.label"
                     @click="selectPdf(subject, category.label, year.label); !isDesktop && toggleSidebar()"
                     :class="[
-                      'flex items-center w-full text-left text-sm py-2.5 px-4 rounded-lg transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-blue-500',
+                      'flex items-center w-full text-left text-sm py-1.5 px-3 rounded-md transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-blue-500',
                       selectedPdf === subject.pdf
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/30 scale-105 font-semibold'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:pl-6 hover:text-blue-600 dark:hover:text-blue-400'
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md shadow-blue-500/30 font-medium'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-blue-600 dark:hover:text-blue-400'
                     ]"
                   >
                     <span :class="[
-                      'mr-3 text-lg transition-all',
+                      'mr-2 text-base transition-all',
                       selectedPdf === subject.pdf ? '' : ''
                     ]">
                       {{ getSubjectIcon(subject.label) }}
                     </span>
-                    {{ subject.label }}
+                    <span class="text-sm">{{ subject.label }}</span>
                   </button>
                 </div>
               </div>
