@@ -55,6 +55,20 @@
     transform: scale(0.9);
   }
 
+  /* PDF Fade Animation */
+  .pdf-fade-enter-active,
+  .pdf-fade-leave-active {
+    transition: opacity 0.3s ease;
+  }
+
+  .pdf-fade-enter-from {
+    opacity: 0;
+  }
+
+  .pdf-fade-leave-to {
+    opacity: 0;
+  }
+
   /* Focus visible styles */
   *:focus-visible {
     outline: 2px solid #3B82F6;

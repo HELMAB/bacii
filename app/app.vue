@@ -116,8 +116,30 @@
       <div class="p-6">
         <!-- Header -->
         <div class="mb-4">
-          <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">ឯកសារប្រឡង</h2>
-          <div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">ឯកសារប្រឡង</h2>
+              <div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+            </div>
+            <!-- Compact Mode Toggle -->
+            <button
+              @click="isCompactMode = !isCompactMode"
+              :class="[
+                'p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500',
+                isCompactMode 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+              ]"
+              title="Toggle compact mode"
+            >
+              <svg v-if="isCompactMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+              </svg>
+              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- Search Bar -->
@@ -178,16 +200,20 @@
           </div>
         </div>
 
-        <div v-for="category in filteredData" :key="category.label" class="mb-4">
+        <div v-for="category in filteredData" :key="category.label" :class="['mb-4', isCompactMode ? 'mb-2' : 'mb-4']">
           <!-- Category -->
           <div>
             <button
               @click="toggleCategory(category.label)"
-              class="flex items-center justify-between w-full text-left font-bold text-base text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-all py-2 px-3 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700/50 group focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :class="[
+                'flex items-center justify-between w-full text-left font-bold text-base text-white transition-all rounded-lg hover:shadow-lg group focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gradient-to-r',
+                getCategoryGradient(category.label),
+                isCompactMode ? 'py-1.5 px-2.5 text-sm' : 'py-2 px-3'
+              ]"
             >
               <span class="flex items-center gap-2">
-                <span class="text-blue-600 dark:text-blue-400 transform transition-transform duration-200" :class="expandedCategories[category.label] ? 'rotate-90' : ''">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <span class="transform transition-transform duration-200" :class="expandedCategories[category.label] ? 'rotate-90' : ''">
+                  <svg :class="isCompactMode ? 'w-3.5 h-3.5' : 'w-4 h-4'" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                   </svg>
                 </span>
@@ -196,45 +222,46 @@
             </button>
 
             <!-- Years -->
-            <div v-if="expandedCategories[category.label]" class="mt-1.5 ml-4 space-y-1">
+            <div v-if="expandedCategories[category.label]" :class="[isCompactMode ? 'mt-1 ml-3 space-y-0.5' : 'mt-1.5 ml-4 space-y-1']">
               <div v-for="year in category.children" :key="year.label">
                 <button
                   @click="toggleYear(year.label)"
-                  class="flex items-center justify-between w-full text-left font-semibold text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all py-1.5 px-3 rounded-md hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700/30 dark:hover:to-gray-700/30 group focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  :class="[
+                    'flex items-center justify-between w-full text-left font-semibold text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all rounded-md hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700/30 dark:hover:to-gray-700/30 group focus:outline-none focus:ring-2 focus:ring-blue-500',
+                    isCompactMode ? 'text-xs py-1 px-2' : 'text-sm py-1.5 px-3'
+                  ]"
                 >
                   <span class="flex items-center gap-2">
                     <span class="text-blue-500 dark:text-blue-400 text-xs transform transition-transform duration-200" :class="expandedYears[year.label] ? 'rotate-90' : ''">
-                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                      <svg :class="isCompactMode ? 'w-3 h-3' : 'w-3.5 h-3.5'" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                       </svg>
                     </span>
-                    <span class="px-1.5 py-0.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-full font-medium">
+                    <span :class="['bg-gradient-to-r text-white text-xs rounded-full font-medium', getCategoryGradient(category.label), isCompactMode ? 'px-1 py-0.5 text-[10px]' : 'px-1.5 py-0.5']">
                       {{ extractYear(year.label) }}
                     </span>
-                    <span class="text-sm">{{ year.label }}</span>
+                    <span :class="isCompactMode ? 'text-xs' : 'text-sm'">{{ year.label }}</span>
                   </span>
                 </button>
 
                 <!-- Subjects -->
-                <div v-if="expandedYears[year.label]" class="mt-1 ml-4 space-y-0.5">
+                <div v-if="expandedYears[year.label]" :class="[isCompactMode ? 'mt-0.5 ml-3 space-y-0' : 'mt-1 ml-4 space-y-0.5']">
                   <button
                     v-for="subject in year.children"
                     :key="subject.label"
                     @click="selectPdf(subject, category.label, year.label); !isDesktop && toggleSidebar()"
                     :class="[
-                      'flex items-center w-full text-left text-sm py-1.5 px-3 rounded-md transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-blue-500',
+                      'flex items-center w-full text-left rounded-md transition-all duration-200 group focus:outline-none focus:ring-2 focus:ring-blue-500',
+                      isCompactMode ? 'text-xs py-1 px-2' : 'text-sm py-1.5 px-3',
                       selectedPdf === subject.pdf
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md shadow-blue-500/30 font-medium'
+                        ? `bg-gradient-to-r ${getCategoryGradient(category.label)} text-white shadow-md font-medium`
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:text-blue-600 dark:hover:text-blue-400'
                     ]"
                   >
-                    <span :class="[
-                      'mr-2 text-base transition-all',
-                      selectedPdf === subject.pdf ? '' : ''
-                    ]">
+                    <span :class="['transition-all', isCompactMode ? 'mr-1.5 text-sm' : 'mr-2 text-base']">
                       {{ getSubjectIcon(subject.label) }}
                     </span>
-                    <span class="text-sm">{{ subject.label }}</span>
+                    <span :class="isCompactMode ? 'text-xs' : 'text-sm'">{{ subject.label }}</span>
                   </button>
                 </div>
               </div>
@@ -425,24 +452,43 @@
 
         <!-- PDF Container -->
         <div ref="pdfContainer" class="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-auto mx-2 sm:mx-4 mb-2 sm:mb-4 relative">
-          <!-- Loading State -->
-          <div v-if="isLoading" class="absolute inset-0 flex items-center justify-center bg-white dark:bg-gray-800 z-10">
-            <div class="text-center">
-              <div class="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mb-4"></div>
-              <p class="text-gray-600 dark:text-gray-400">កំពុងផ្ទុក...</p>
+          <!-- Skeleton Loader -->
+          <div v-if="isLoading" class="absolute inset-0 bg-white dark:bg-gray-800 z-10 p-4 space-y-4">
+            <div class="animate-pulse space-y-4">
+              <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+              <div class="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5"></div>
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
             </div>
           </div>
 
-          <ClientOnly>
-            <VuePdfEmbed
-              v-if="selectedPdf"
-              :source="selectedPdf"
-              :style="{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center' }"
-              class="w-full transition-transform duration-200"
-              @rendered="onPdfRendered"
-              @loading-failed="onPdfError"
-            />
-          </ClientOnly>
+          <!-- PDF with fade transition -->
+          <Transition name="pdf-fade" mode="out-in">
+            <div v-if="selectedPdf && !isLoading" :key="selectedPdf" class="w-full">
+              <ClientOnly>
+                <VuePdfEmbed
+                  ref="pdfRef"
+                  :source="selectedPdf"
+                  :style="{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center' }"
+                  class="w-full transition-transform duration-200"
+                  @rendered="onPdfRendered"
+                  @loading-failed="onPdfError"
+                  @internal-link-clicked="onInternalLinkClicked"
+                />
+              </ClientOnly>
+            </div>
+          </Transition>
+
+          <!-- Page Progress Indicator -->
+          <Transition name="fade">
+            <div v-if="selectedPdf && totalPages > 0 && !isLoading" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-black/75 text-white px-4 py-2 rounded-full shadow-lg z-40 backdrop-blur-sm">
+              <span class="text-sm font-medium">ទំព័រ {{ currentPage }} / {{ totalPages }}</span>
+            </div>
+          </Transition>
         </div>
 
         <!-- Scroll to Top Button -->
@@ -491,6 +537,8 @@ const toastMessage = ref('')
 const currentPage = ref(1)
 const totalPages = ref(0)
 const showKeyboardShortcuts = ref(false)
+const isCompactMode = ref(false)
+const pdfRef = ref(null)
 
 const isDesktop = computed(() => windowWidth.value >= 1024)
 
@@ -505,6 +553,18 @@ const subjectIcons = {
   'ភូមិវិទ្យា': '🌍',
   'សីលធម៌': '🕊️',
   'ភាសាអង់គ្លេស': '🇬🇧'
+}
+
+// Category gradient backgrounds
+const categoryGradients = {
+  'វិទ្យាសាស្ត្រសង្គម': 'from-blue-500 to-indigo-600',
+  'វិទ្យាសាស្ត្រធម្មជាតិ': 'from-green-500 to-teal-600',
+  'គណិតវិទ្យា': 'from-purple-500 to-pink-600',
+  'ប្រវត្តិសាស្ត្រ': 'from-amber-500 to-orange-600'
+}
+
+const getCategoryGradient = (categoryLabel) => {
+  return categoryGradients[categoryLabel] || 'from-blue-500 to-purple-600'
 }
 
 const getSubjectIcon = (label) => {
@@ -639,6 +699,14 @@ const handleKeydown = (e) => {
 const handleScroll = () => {
   if (pdfContainer.value) {
     showScrollTop.value = pdfContainer.value.scrollTop > 300
+    
+    // Calculate current page based on scroll position (approximate)
+    if (totalPages.value > 0 && pdfRef.value) {
+      const scrollTop = pdfContainer.value.scrollTop
+      const scrollHeight = pdfContainer.value.scrollHeight - pdfContainer.value.clientHeight
+      const scrollPercent = scrollHeight > 0 ? scrollTop / scrollHeight : 0
+      currentPage.value = Math.min(Math.ceil(scrollPercent * totalPages.value) || 1, totalPages.value)
+    }
   }
 }
 
@@ -658,6 +726,12 @@ onMounted(() => {
     const saved = localStorage.getItem('recentlyViewed')
     if (saved) {
       recentlyViewed.value = JSON.parse(saved)
+    }
+
+    // Load compact mode preference
+    const compactMode = localStorage.getItem('compactMode')
+    if (compactMode === 'true') {
+      isCompactMode.value = true
     }
   }
 
@@ -686,6 +760,13 @@ onMounted(() => {
 
   if (typeof document !== 'undefined') {
     document.title = 'Home — Dobpi'
+  }
+})
+
+// Watch compact mode and save to localStorage
+watch(isCompactMode, (newVal) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('compactMode', newVal.toString())
   }
 })
 
@@ -740,6 +821,13 @@ const selectPdf = (subject, category, year) => {
   if (pdfContainer.value) {
     pdfContainer.value.scrollTop = 0
   }
+
+  // Fallback: Remove loading state after 2 seconds if render event doesn't fire
+  setTimeout(() => {
+    if (isLoading.value) {
+      isLoading.value = false
+    }
+  }, 2000)
 }
 
 const selectPdfFromRecent = (item) => {
@@ -795,13 +883,25 @@ const scrollToTop = () => {
   }
 }
 
-const onPdfRendered = () => {
+const onPdfRendered = (pdfProxy) => {
   isLoading.value = false
+  if (pdfProxy && pdfProxy.numPages) {
+    totalPages.value = pdfProxy.numPages
+    currentPage.value = 1
+  } else {
+    // Fallback if pdfProxy doesn't have expected structure
+    totalPages.value = 0
+    currentPage.value = 1
+  }
 }
 
 const onPdfError = () => {
   isLoading.value = false
   showToastNotification('មានបញ្ហាក្នុងការផ្ទុកឯកសារ')
+}
+
+const onInternalLinkClicked = (pageNumber) => {
+  currentPage.value = pageNumber
 }
 
 const clearRecentlyViewed = () => {
