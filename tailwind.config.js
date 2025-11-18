@@ -10,7 +10,11 @@ export default {
     './app/**/*.{js,vue,ts}'
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['PengHuoth', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
