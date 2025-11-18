@@ -10,6 +10,93 @@
       </div>
     </Transition>
 
+    <!-- Keyboard Shortcuts Modal -->
+    <Transition name="fade">
+      <div v-if="showKeyboardShortcuts" @click="showKeyboardShortcuts = false" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div @click.stop class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+              គ្លីដកុំព្យូទ័រ (Keyboard Shortcuts)
+            </h2>
+            <button @click="showKeyboardShortcuts = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="space-y-6">
+            <!-- Navigation -->
+            <div>
+              <h3 class="text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-3">ការរុករក (Navigation)</h3>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">ឯកសារមុន</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">←</kbd>
+                </div>
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">ឯកសារបន្ទាប់</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">→</kbd>
+                </div>
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">បើក/បិទម៉ឺនុយ</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">ESC</kbd>
+                </div>
+              </div>
+            </div>
+
+            <!-- Search -->
+            <div>
+              <h3 class="text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-3">ការស្វែងរក (Search)</h3>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">ផ្តោតលើការស្វែងរក</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">/</kbd>
+                </div>
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">បោះបង់ការស្វែងរក</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">ESC</kbd>
+                </div>
+              </div>
+            </div>
+
+            <!-- View -->
+            <div>
+              <h3 class="text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-3">ការមើល (View)</h3>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">ពង្រីក</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">+</kbd>
+                </div>
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">បង្រួម</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">-</kbd>
+                </div>
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">ពេញអេក្រង់</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">F</kbd>
+                </div>
+              </div>
+            </div>
+
+            <!-- Help -->
+            <div>
+              <h3 class="text-sm font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-3">ជំនួយ (Help)</h3>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <span class="text-gray-700 dark:text-gray-300">បើក/បិទគ្លីដកុំព្យូទ័រ</span>
+                  <kbd class="px-3 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-sm font-mono shadow-sm">?</kbd>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
     <!-- Overlay for mobile -->
     <div
       v-if="isSidebarOpen && !isDesktop"
@@ -219,6 +306,45 @@
             </div>
             
             <div class="flex items-center gap-2 flex-wrap">
+              <!-- Page Navigation -->
+              <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                <button
+                  @click="goToPreviousPdf"
+                  :disabled="!canGoPrevious"
+                  class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Previous PDF (←)"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <span class="px-2 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[5rem] text-center whitespace-nowrap">
+                  {{ currentPdfIndex + 1 }} / {{ totalPdfsCount }}
+                </span>
+                <button
+                  @click="goToNextPdf"
+                  :disabled="!canGoNext"
+                  class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Next PDF (→)"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Keyboard Shortcuts Button -->
+              <button
+                @click="showKeyboardShortcuts = true"
+                class="px-3 py-1.5 bg-gray-600 dark:bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-700 dark:hover:bg-gray-400 transition-colors flex items-center gap-1"
+                title="Keyboard shortcuts (?)"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="hidden sm:inline">គ្លីដ</span>
+              </button>
+
               <!-- Zoom Controls -->
               <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                 <button
@@ -362,6 +488,9 @@ const showScrollTop = ref(false)
 const pdfContainer = ref(null)
 const showToast = ref(false)
 const toastMessage = ref('')
+const currentPage = ref(1)
+const totalPages = ref(0)
+const showKeyboardShortcuts = ref(false)
 
 const isDesktop = computed(() => windowWidth.value >= 1024)
 
@@ -454,10 +583,55 @@ const showToastNotification = (message) => {
 
 // Keyboard shortcuts
 const handleKeydown = (e) => {
-  if (e.key === '/' && !isSearchFocused.value) {
-    e.preventDefault()
-    const searchInput = document.querySelector('input[type="text"]')
-    searchInput?.focus()
+  // Don't trigger shortcuts when typing in input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    if (e.key === 'Escape') {
+      e.target.blur()
+      searchQuery.value = ''
+    }
+    return
+  }
+
+  switch (e.key) {
+    case '/':
+      e.preventDefault()
+      const searchInput = document.querySelector('input[type="text"]')
+      searchInput?.focus()
+      break
+    case '?':
+      e.preventDefault()
+      showKeyboardShortcuts.value = !showKeyboardShortcuts.value
+      break
+    case 'Escape':
+      if (showKeyboardShortcuts.value) {
+        showKeyboardShortcuts.value = false
+      } else if (isSidebarOpen.value && !isDesktop.value) {
+        toggleSidebar()
+      }
+      break
+    case 'ArrowLeft':
+      e.preventDefault()
+      goToPreviousPdf()
+      break
+    case 'ArrowRight':
+      e.preventDefault()
+      goToNextPdf()
+      break
+    case '+':
+    case '=':
+      e.preventDefault()
+      zoomIn()
+      break
+    case '-':
+    case '_':
+      e.preventDefault()
+      zoomOut()
+      break
+    case 'f':
+    case 'F':
+      e.preventDefault()
+      toggleFullscreen()
+      break
   }
 }
 
@@ -637,6 +811,53 @@ const clearRecentlyViewed = () => {
       localStorage.removeItem('recentlyViewed')
     }
     showToastNotification('បានសម្អាតប្រវត្តិមើលថ្មីៗ')
+  }
+}
+
+// Get all PDFs in flat list
+const allPdfs = computed(() => {
+  const pdfs = []
+  data.value.forEach(category => {
+    category.children.forEach(year => {
+      year.children.forEach(subject => {
+        pdfs.push({
+          ...subject,
+          category: category.label,
+          year: year.label
+        })
+      })
+    })
+  })
+  return pdfs
+})
+
+// Current PDF index
+const currentPdfIndex = computed(() => {
+  if (!selectedPdf.value) return -1
+  return allPdfs.value.findIndex(pdf => pdf.pdf === selectedPdf.value)
+})
+
+// Total PDFs count
+const totalPdfsCount = computed(() => allPdfs.value.length)
+
+// Can navigate
+const canGoPrevious = computed(() => currentPdfIndex.value > 0)
+const canGoNext = computed(() => currentPdfIndex.value < totalPdfsCount.value - 1)
+
+// Navigation functions
+const goToPreviousPdf = () => {
+  if (canGoPrevious.value) {
+    const prevPdf = allPdfs.value[currentPdfIndex.value - 1]
+    selectPdf(prevPdf, prevPdf.category, prevPdf.year)
+    showToastNotification('ឯកសារមុន')
+  }
+}
+
+const goToNextPdf = () => {
+  if (canGoNext.value) {
+    const nextPdf = allPdfs.value[currentPdfIndex.value + 1]
+    selectPdf(nextPdf, nextPdf.category, nextPdf.year)
+    showToastNotification('ឯកសារបន្ទាប់')
   }
 }
 </script>
