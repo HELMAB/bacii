@@ -7,10 +7,15 @@
         @click="toggleSidebar"
         :class="[
           'p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all pointer-events-auto',
-          isSidebarOpen && isDesktop ? 'ml-[16rem]' : ''
+          isSidebarOpen && isDesktop ? 'ml-[20rem]' : ''
         ]"
       >
-        <svg class="w-6 h-6 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Close Icon (X) when sidebar is open -->
+        <svg v-if="isSidebarOpen" class="w-6 h-6 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <!-- Menu Icon (Hamburger) when sidebar is closed -->
+        <svg v-else class="w-6 h-6 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
@@ -39,49 +44,74 @@
     <!-- Sidebar -->
     <div
       :class="[
-        'bg-white dark:bg-gray-800 shadow-lg overflow-y-auto transition-all duration-300 ease-in-out z-40',
+        'bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl overflow-y-auto transition-all duration-300 ease-in-out z-40 border-r border-gray-200 dark:border-gray-700',
         isDesktop ? 'relative' : 'fixed inset-y-0 left-0',
-        isSidebarOpen ? 'w-64' : 'w-0',
+        isSidebarOpen ? 'w-80' : 'w-0',
         !isDesktop && isSidebarOpen ? 'translate-x-0' : (!isDesktop ? '-translate-x-full' : '')
       ]"
     >
-      <div class="p-4">
-        <div v-for="category in data" :key="category.label">
+      <div class="p-6">
+        <!-- Header -->
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">ឯកសារប្រឡង</h2>
+          <div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+        </div>
+
+        <div v-for="category in data" :key="category.label" class="mb-6">
           <!-- Category -->
-          <div class="mb-2">
+          <div>
             <button
               @click="toggleCategory(category.label)"
-              class="flex items-center w-full text-left font-semibold text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              class="flex items-center justify-between w-full text-left font-bold text-lg text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-all py-3 px-4 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-700/50 group"
             >
-              <span class="mr-2">{{ expandedCategories[category.label] ? '▼' : '▶' }}</span>
-              {{ category.label }}
+              <span class="flex items-center gap-3">
+                <span class="text-blue-600 dark:text-blue-400 transform transition-transform duration-200" :class="expandedCategories[category.label] ? 'rotate-90' : ''">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                {{ category.label }}
+              </span>
             </button>
 
             <!-- Years -->
-            <div v-if="expandedCategories[category.label]" class="ml-4 mt-2">
-              <div v-for="year in category.children" :key="year.label" class="mb-2">
+            <div v-if="expandedCategories[category.label]" class="mt-3 ml-6 space-y-2">
+              <div v-for="year in category.children" :key="year.label">
                 <button
                   @click="toggleYear(year.label)"
-                  class="flex items-center w-full text-left text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  class="flex items-center justify-between w-full text-left font-semibold text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all py-2 px-4 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700/30 dark:hover:to-gray-700/30 group"
                 >
-                  <span class="mr-2">{{ expandedYears[year.label] ? '▼' : '▶' }}</span>
-                  {{ year.label }}
+                  <span class="flex items-center gap-2">
+                    <span class="text-blue-500 dark:text-blue-400 text-xs transform transition-transform duration-200" :class="expandedYears[year.label] ? 'rotate-90' : ''">
+                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                      </svg>
+                    </span>
+                    {{ year.label }}
+                  </span>
                 </button>
 
                 <!-- Subjects -->
-                <div v-if="expandedYears[year.label]" class="ml-4 mt-1">
+                <div v-if="expandedYears[year.label]" class="mt-2 ml-6 space-y-1">
                   <button
                     v-for="subject in year.children"
                     :key="subject.label"
                     @click="selectPdf(subject); !isDesktop && toggleSidebar()"
                     :class="[
-                      'flex items-center w-full text-left text-sm py-1 px-2 rounded transition-colors',
+                      'flex items-center w-full text-left text-sm py-2.5 px-4 rounded-lg transition-all duration-200 group',
                       selectedPdf === subject.pdf
-                        ? 'bg-red-500 text-white'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/30 scale-105 font-semibold'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:pl-6 hover:text-blue-600 dark:hover:text-blue-400'
                     ]"
                   >
-                    <span class="mr-2">›</span>
+                    <span :class="[
+                      'mr-3 transition-all',
+                      selectedPdf === subject.pdf ? 'text-white' : 'text-blue-500 dark:text-blue-400'
+                    ]">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </span>
                     {{ subject.label }}
                   </button>
                 </div>
@@ -124,16 +154,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               <span class="hidden sm:inline">Download</span>
-            </a>
-
-            <!-- Open in New Tab Button -->
-            <a
-              :href="selectedPdf"
-              target="_blank"
-              class="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors whitespace-nowrap"
-              title="Open in New Tab"
-            >
-              បើក
             </a>
           </div>
         </div>
@@ -204,6 +224,28 @@ onMounted(() => {
   // Then handle resize
   window.addEventListener('resize', handleResize)
   handleResize()
+
+  // Auto select first subject on first load
+  if (data.value.length > 0 && data.value[0].children.length > 0) {
+    const firstCategory = data.value[0]
+    const firstYear = firstCategory.children[0]
+
+    // Expand first category and year
+    expandedCategories[firstCategory.label] = true
+    expandedYears[firstYear.label] = true
+
+    // Select first subject
+    if (firstYear.children.length > 0) {
+      const firstSubject = firstYear.children[0]
+      selectedPdf.value = firstSubject.pdf
+      selectedPdfTitle.value = firstSubject.label
+    }
+  }
+
+  // Set page title
+  if (typeof document !== 'undefined') {
+    document.title = 'Home — Dobpi'
+  }
 })
 
 onUnmounted(() => {
