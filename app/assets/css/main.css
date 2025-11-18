@@ -25,3 +25,76 @@
     font-family: 'PengHuoth', sans-serif;
   }
 }
+
+@layer components {
+  /* Toast Animation */
+  .toast-enter-active,
+  .toast-leave-active {
+    transition: all 0.3s ease;
+  }
+
+  .toast-enter-from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  .toast-leave-to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  /* Fade Animation */
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.3s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  /* Focus visible styles */
+  *:focus-visible {
+    outline: 2px solid #3B82F6;
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgb(243 244 246);
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    background: rgb(31 41 55);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgb(209 213 219);
+    border-radius: 5px;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: rgb(75 85 99);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(156 163 175);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: rgb(107 114 128);
+  }
+}
