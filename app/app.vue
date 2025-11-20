@@ -6,6 +6,17 @@
     <!-- Keyboard Shortcuts Modal -->
     <KeyboardShortcutsModal :show="showKeyboardShortcuts" @close="showKeyboardShortcuts = false" />
 
+    <!-- Confirm Clear Recently Viewed Modal -->
+    <ConfirmModal
+      :show="showClearConfirm"
+      title="បញ្ជាក់ការសម្អាត"
+      message="តើអ្នកប្រាកដថាចង់សម្អាតប្រវត្តិមើលថ្មីៗទេ?"
+      confirmText="សម្អាត"
+      cancelText="បោះបង់"
+      @confirm="handleClearConfirm"
+      @cancel="showClearConfirm = false"
+    />
+
     <!-- Overlay for mobile -->
     <div
       v-if="isSidebarOpen && !isDesktop"
@@ -90,6 +101,7 @@ import docsData from './data/docs.json'
 // Components
 import ToastNotification from './components/ToastNotification.vue'
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal.vue'
+import ConfirmModal from './components/ConfirmModal.vue'
 import SidebarMain from './components/Sidebar/SidebarMain.vue'
 import EmptyState from './components/PdfViewer/EmptyState.vue'
 import PdfViewerHeader from './components/PdfViewer/PdfViewerHeader.vue'
@@ -134,6 +146,7 @@ const { searchQuery, filteredData } = useSearch(data, expandedCategories, expand
 
 // Recently viewed
 const { recentlyViewed, addToRecentlyViewed, clearRecentlyViewed: clearRecent } = useRecentlyViewed()
+const showClearConfirm = ref(false)
 
 // PDF Viewer
 const {
@@ -206,7 +219,12 @@ function selectPdf(subject, category, year) {
 }
 
 function clearRecentlyViewedWrapper() {
+  showClearConfirm.value = true
+}
+
+function handleClearConfirm() {
   clearRecent(showToastNotification)
+  showClearConfirm.value = false
 }
 
 function handleSelectPdf(subject, category, year, isFromRecent = false) {

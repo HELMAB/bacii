@@ -18,13 +18,11 @@ export function useRecentlyViewed() {
   }
 
   function clearRecentlyViewed(showToastNotification) {
-    if (confirm('តើអ្នកប្រាកដថាចង់សម្អាតប្រវត្តិមើលថ្មីៗទេ?')) {
-      recentlyViewed.value = []
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('recentlyViewed')
-      }
-      showToastNotification('បានសម្អាតប្រវត្តិមើលថ្មីៗ')
+    recentlyViewed.value = []
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('recentlyViewed')
     }
+    showToastNotification('បានសម្អាតប្រវត្តិមើលថ្មីៗ')
   }
 
   onMounted(() => {
