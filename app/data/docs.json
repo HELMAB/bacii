@@ -7,35 +7,43 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2014(1)/literature.pdf"
+                        "pdf": "/pdfs/science/2014(1)/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2014(1)/math.pdf"
+                        "pdf": "/pdfs/science/2014(1)/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2014(1)/physics.pdf"
+                        "pdf": "/pdfs/science/2014(1)/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2014(1)/chemistry.pdf"
+                        "pdf": "/pdfs/science/2014(1)/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2014(1)/biology.pdf"
+                        "pdf": "/pdfs/science/2014(1)/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2014(1)/history.pdf"
+                        "pdf": "/pdfs/science/2014(1)/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2014(1)/english.pdf"
+                        "pdf": "/pdfs/science/2014(1)/english.pdf",
+                        "icon": "language"
                     },
                     {
                         "label": "ភាសាបារាំង",
-                        "pdf": "/pdfs/science/2014(1)/french.pdf"
+                        "pdf": "/pdfs/science/2014(1)/french.pdf",
+                        "icon": "flag-fr"
                     }
                 ]
             },
@@ -44,35 +52,43 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2014(2)/literature.pdf"
+                        "pdf": "/pdfs/science/2014(2)/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2014(2)/math.pdf"
+                        "pdf": "/pdfs/science/2014(2)/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2014(2)/physics.pdf"
+                        "pdf": "/pdfs/science/2014(2)/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2014(2)/chemistry.pdf"
+                        "pdf": "/pdfs/science/2014(2)/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2014(2)/biology.pdf"
+                        "pdf": "/pdfs/science/2014(2)/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2014(2)/history.pdf"
+                        "pdf": "/pdfs/science/2014(2)/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2014(2)/english.pdf"
+                        "pdf": "/pdfs/science/2014(2)/english.pdf",
+                        "icon": "language"
                     },
                     {
                         "label": "ភាសាបារាំង",
-                        "pdf": "/pdfs/science/2014(2)/french.pdf"
+                        "pdf": "/pdfs/science/2014(2)/french.pdf",
+                        "icon": "flag-fr"
                     }
                 ]
             },
@@ -81,35 +97,43 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2015/literature.pdf"
+                        "pdf": "/pdfs/science/2015/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2015/math.pdf"
+                        "pdf": "/pdfs/science/2015/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2015/physics.pdf"
+                        "pdf": "/pdfs/science/2015/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2015/chemistry.pdf"
+                        "pdf": "/pdfs/science/2015/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2015/biology.pdf"
+                        "pdf": "/pdfs/science/2015/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2015/history.pdf"
+                        "pdf": "/pdfs/science/2015/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2015/english.pdf"
+                        "pdf": "/pdfs/science/2015/english.pdf",
+                        "icon": "language"
                     },
                     {
                         "label": "ភាសាបារាំង",
-                        "pdf": "/pdfs/science/2015/french.pdf"
+                        "pdf": "/pdfs/science/2015/french.pdf",
+                        "icon": "flag-fr"
                     }
                 ]
             },
@@ -118,35 +142,43 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2016/literature.pdf"
+                        "pdf": "/pdfs/science/2016/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2016/math.pdf"
+                        "pdf": "/pdfs/science/2016/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2016/physics.pdf"
+                        "pdf": "/pdfs/science/2016/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2016/chemistry.pdf"
+                        "pdf": "/pdfs/science/2016/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2016/biology.pdf"
+                        "pdf": "/pdfs/science/2016/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2016/history.pdf"
+                        "pdf": "/pdfs/science/2016/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2016/english.pdf"
+                        "pdf": "/pdfs/science/2016/english.pdf",
+                        "icon": "language"
                     },
                     {
                         "label": "ភាសាបារាំង",
-                        "pdf": "/pdfs/science/2016/french.pdf"
+                        "pdf": "/pdfs/science/2016/french.pdf",
+                        "icon": "flag-fr"
                     }
                 ]
             },
@@ -155,35 +187,43 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2017/literature.pdf"
+                        "pdf": "/pdfs/science/2017/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2017/math.pdf"
+                        "pdf": "/pdfs/science/2017/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2017/physics.pdf"
+                        "pdf": "/pdfs/science/2017/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2017/chemistry.pdf"
+                        "pdf": "/pdfs/science/2017/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2017/biology.pdf"
+                        "pdf": "/pdfs/science/2017/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2017/history.pdf"
+                        "pdf": "/pdfs/science/2017/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2017/english.pdf"
+                        "pdf": "/pdfs/science/2017/english.pdf",
+                        "icon": "language"
                     },
                     {
                         "label": "ភាសាបារាំង",
-                        "pdf": "/pdfs/science/2017/french.pdf"
+                        "pdf": "/pdfs/science/2017/french.pdf",
+                        "icon": "flag-fr"
                     }
                 ]
             },
@@ -192,35 +232,43 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2018/literature.pdf"
+                        "pdf": "/pdfs/science/2018/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2018/math.pdf"
+                        "pdf": "/pdfs/science/2018/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2018/physics.pdf"
+                        "pdf": "/pdfs/science/2018/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2018/chemistry.pdf"
+                        "pdf": "/pdfs/science/2018/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2018/biology.pdf"
+                        "pdf": "/pdfs/science/2018/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2018/history.pdf"
+                        "pdf": "/pdfs/science/2018/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2018/english.pdf"
+                        "pdf": "/pdfs/science/2018/english.pdf",
+                        "icon": "language"
                     },
                     {
                         "label": "ភាសាបារាំង",
-                        "pdf": "/pdfs/science/2017/french.pdf"
+                        "pdf": "/pdfs/science/2017/french.pdf",
+                        "icon": "flag-fr"
                     }
                 ]
             },
@@ -229,31 +277,38 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2019/literature.pdf"
+                        "pdf": "/pdfs/science/2019/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2019/math.pdf"
+                        "pdf": "/pdfs/science/2019/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2019/physics.pdf"
+                        "pdf": "/pdfs/science/2019/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2019/chemistry.pdf"
+                        "pdf": "/pdfs/science/2019/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2019/biology.pdf"
+                        "pdf": "/pdfs/science/2019/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2019/history.pdf"
+                        "pdf": "/pdfs/science/2019/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2019/english.pdf"
+                        "pdf": "/pdfs/science/2019/english.pdf",
+                        "icon": "language"
                     }
                 ]
             },
@@ -262,31 +317,38 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2021/literature.pdf"
+                        "pdf": "/pdfs/science/2021/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2021/math.pdf"
+                        "pdf": "/pdfs/science/2021/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2021/physics.pdf"
+                        "pdf": "/pdfs/science/2021/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2021/chemistry.pdf"
+                        "pdf": "/pdfs/science/2021/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2021/biology.pdf"
+                        "pdf": "/pdfs/science/2021/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2021/history.pdf"
+                        "pdf": "/pdfs/science/2021/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2021/english.pdf"
+                        "pdf": "/pdfs/science/2021/english.pdf",
+                        "icon": "language"
                     }
                 ]
             },
@@ -295,31 +357,38 @@
                 "children": [
                     {
                         "label": "អក្សរសាស្ត្រខ្មែរ",
-                        "pdf": "/pdfs/science/2022/literature.pdf"
+                        "pdf": "/pdfs/science/2022/literature.pdf",
+                        "icon": "book"
                     },
                     {
                         "label": "គណិតវិទ្យា",
-                        "pdf": "/pdfs/science/2022/math.pdf"
+                        "pdf": "/pdfs/science/2022/math.pdf",
+                        "icon": "calculator"
                     },
                     {
                         "label": "រូបវិទ្យា",
-                        "pdf": "/pdfs/science/2022/physics.pdf"
+                        "pdf": "/pdfs/science/2022/physics.pdf",
+                        "icon": "atom"
                     },
                     {
                         "label": "គីមីវិទ្យា",
-                        "pdf": "/pdfs/science/2022/chemistry.pdf"
+                        "pdf": "/pdfs/science/2022/chemistry.pdf",
+                        "icon": "flask"
                     },
                     {
                         "label": "ជីវវិទ្យា",
-                        "pdf": "/pdfs/science/2022/biology.pdf"
+                        "pdf": "/pdfs/science/2022/biology.pdf",
+                        "icon": "leaf"
                     },
                     {
                         "label": "ប្រវត្តិសាស្ត្រ",
-                        "pdf": "/pdfs/science/2022/history.pdf"
+                        "pdf": "/pdfs/science/2022/history.pdf",
+                        "icon": "scroll"
                     },
                     {
                         "label": "ភាសាអង់គ្លេស",
-                        "pdf": "/pdfs/science/2022/english.pdf"
+                        "pdf": "/pdfs/science/2022/english.pdf",
+                        "icon": "language"
                     }
                 ]
             }
