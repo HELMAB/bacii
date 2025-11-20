@@ -2,7 +2,7 @@
 
 ![dobpi](./public/og-image.svg)
 
-A modern, feature-rich PDF viewer application for Cambodian national exam papers (ឯកសារប្រឡងបាក់ឌុប). Built with Nuxt 3 and Vue 3, this application provides an intuitive interface for students to access, view, and study exam papers from 2014 to 2025.
+A modern, feature-rich PDF viewer application for Cambodian national exam papers (ឯកសារប្រឡងបាក់ឌុប). Built with Nuxt 3 and Vue 3, this application provides an intuitive interface for students to access, view, and study exam papers from 2014 to 2022.
 
 ## Features
 
@@ -27,6 +27,7 @@ A modern, feature-rich PDF viewer application for Cambodian national exam papers
 - Collapsible sidebar with compact mode
 - Keyboard shortcuts for power users
 - Toast notifications for user feedback
+- Modal confirmation dialogs for destructive actions
 - Smooth transitions and animations
 
 ### Accessibility
@@ -49,6 +50,13 @@ A modern, feature-rich PDF viewer application for Cambodian national exam papers
 bacii/
 ├── app/
 │   ├── app.vue              # Main application component
+│   ├── components/
+│   │   ├── ConfirmModal.vue # Confirmation modal component
+│   │   ├── KeyboardShortcutsModal.vue
+│   │   ├── ToastNotification.vue
+│   │   ├── PdfViewer/       # PDF viewer components
+│   │   └── Sidebar/         # Sidebar components
+│   ├── composables/         # Vue composables for state management
 │   ├── data/
 │   │   └── docs.json        # Exam papers data structure
 │   └── assets/
@@ -148,7 +156,7 @@ bun run preview
 ## Available Exam Papers
 
 ### វិទ្យាសាស្ត្រសង្គម (Social Sciences)
-Years: 2014 - 2025
+Years: 2014 - 2022
 
 Subjects:
 - អក្សរសាស្ត្រខ្មែរ (Khmer Literature)
