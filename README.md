@@ -1,8 +1,8 @@
-# Bacii - ឯកសារប្រឡងជាតិ
+# Bacii - ឯកសារប្រឡងបាក់ឌុប
 
 ![dobpi](./public/og-image.svg)
 
-A modern, feature-rich PDF viewer application for Cambodian national exam papers (វិញ្ញាសាប្រឡងជាតិ). Built with Nuxt 3 and Vue 3, this application provides an intuitive interface for students to access, view, and study exam papers from 2014 to 2025.
+A modern, feature-rich PDF viewer application for Cambodian national exam papers (ឯកសារប្រឡងបាក់ឌុប). Built with Nuxt 3 and Vue 3, this application provides an intuitive interface for students to access, view, and study exam papers from 2014 to 2025.
 
 ## Features
 
