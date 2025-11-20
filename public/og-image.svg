@@ -33,7 +33,7 @@
   <text x="280" y="330" font-family="Arial, sans-serif" font-size="32" fill="#4B5563">ឯកសារប្រឡងបាក់ឌុប</text>
 
   <!-- Year range -->
-  <text x="280" y="380" font-family="Arial, sans-serif" font-size="28" fill="#6B7280">២០១៤ - ២០២៥</text>
+  <text x="280" y="380" font-family="Arial, sans-serif" font-size="28" fill="#6B7280">២០១៤ - ២០២២</text>
 
   <!-- Features -->
   <g transform="translate(280, 410)">
