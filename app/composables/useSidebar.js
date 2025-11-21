@@ -11,11 +11,32 @@ export function useSidebar(isDesktop) {
   }
 
   function toggleCategory(label) {
-    expandedCategories[label] = !expandedCategories[label]
+    const isCurrentlyExpanded = expandedCategories[label]
+
+    // Close all categories
+    Object.keys(expandedCategories).forEach(key => {
+      expandedCategories[key] = false
+    })
+
+    // Close all years when switching categories
+    Object.keys(expandedYears).forEach(key => {
+      expandedYears[key] = false
+    })
+
+    // Toggle the clicked category
+    expandedCategories[label] = !isCurrentlyExpanded
   }
 
   function toggleYear(label) {
-    expandedYears[label] = !expandedYears[label]
+    const isCurrentlyExpanded = expandedYears[label]
+
+    // Close all years
+    Object.keys(expandedYears).forEach(key => {
+      expandedYears[key] = false
+    })
+
+    // Toggle the clicked year
+    expandedYears[label] = !isCurrentlyExpanded
   }
 
   onMounted(() => {

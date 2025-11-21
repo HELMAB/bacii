@@ -4,6 +4,9 @@
 
 A modern, feature-rich PDF viewer application for Cambodian national exam papers (ឯកសារប្រឡងបាក់ឌុប). Built with Nuxt 3 and Vue 3, this application provides an intuitive interface for students to access, view, and study exam papers from 2014 to 2022.
 
+🔗 **GitHub Repository**: [https://github.com/HELMAB/bacii](https://github.com/HELMAB/bacii)
+🌐 **Live Demo**: [https://dobpi.netlify.app](https://dobpi.netlify.app)
+
 ## Features
 
 ### PDF Viewing
@@ -278,4 +281,18 @@ MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Contributing
 
-This is a private educational project. For issues or suggestions, please contact the project maintainer.
+Contributions are welcome! Please feel free to submit a Pull Request or open an issue on [GitHub](https://github.com/HELMAB/bacii/issues).
+
+---
+
+<div align="center">
+
+**Bacii - ឯកសារប្រឡងបាក់ឌុប**
+
+Copyright © 2025 [Dobpi](https://github.com/HELMAB/bacii)
+
+Made with ❤️ for Cambodian students
+
+[GitHub](https://github.com/HELMAB/bacii) • [Live Demo](https://dobpi.netlify.app) • [Report Bug](https://github.com/HELMAB/bacii/issues) • [Request Feature](https://github.com/HELMAB/bacii/issues)
+
+</div>
