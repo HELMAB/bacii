@@ -64,8 +64,9 @@
               <p class="text-sm">សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប</p>
             </div>
           </div>
-          <VuePdfEmbed
-            v-else
+          <component
+            v-else-if="VuePdfEmbed"
+            :is="VuePdfEmbed"
             :source="comparisonPdf1"
             class="pdf-document"
             @rendered="onPdfRendered"
@@ -105,8 +106,9 @@
               <p class="text-sm">សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប</p>
             </div>
           </div>
-          <VuePdfEmbed
-            v-else
+          <component
+            v-else-if="VuePdfEmbed"
+            :is="VuePdfEmbed"
             :source="comparisonPdf2"
             class="pdf-document"
             @rendered="onPdfRendered"
@@ -118,7 +120,9 @@
 </template>
 
 <script setup>
-import VuePdfEmbed from 'vue-pdf-embed'
+import { ref, onMounted } from 'vue'
+
+const VuePdfEmbed = ref(null)
 
 defineProps({
   comparisonPdf1: String,
@@ -130,6 +134,11 @@ defineProps({
 })
 
 defineEmits(['close', 'swap', 'selectPdf'])
+
+onMounted(async () => {
+  const module = await import('vue-pdf-embed')
+  VuePdfEmbed.value = module.default
+})
 
 function onPdfRendered() {
   // PDF rendered successfully
