@@ -64,18 +64,6 @@
           </button>
         </div>
 
-        <!-- Keyboard Shortcuts Button -->
-        <button
-          @click="$emit('showKeyboardShortcuts')"
-          class="px-3 py-1.5 bg-gray-600 dark:bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-700 dark:hover:bg-gray-400 transition-colors flex items-center gap-1"
-          title="Keyboard shortcuts (?)"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span class="hidden sm:inline">គ្លីដ</span>
-        </button>
-
         <!-- Zoom Controls -->
         <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
           <button
@@ -99,28 +87,24 @@
           </button>
         </div>
 
-        <!-- Fullscreen Button -->
+        <!-- Favorite Button -->
         <button
-          @click="$emit('toggleFullscreen')"
-          class="px-3 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-1"
-          title="Fullscreen"
+          @click="$emit('toggleFavorite')"
+          :class="[
+            'px-3 py-1.5 text-sm rounded-lg transition-all flex items-center gap-1',
+            isFavorite
+              ? 'bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 hover:text-yellow-600'
+          ]"
+          :title="isFavorite ? 'លុបចេញពីចំណូលចិត្ត' : 'បន្ថែមទៅចំណូលចិត្ត'"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          <svg v-if="isFavorite" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
-          <span class="hidden sm:inline">ពេញអេក្រង់</span>
-        </button>
-
-        <!-- Print Button -->
-        <button
-          @click="$emit('print')"
-          class="px-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors flex items-center gap-1"
-          title="Print"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
           </svg>
-          <span class="hidden sm:inline">បោះពុម្ព</span>
+          <span class="hidden sm:inline">{{ isFavorite ? 'ចូលចិត្ត' : 'ចំណូលចិត្ត' }}</span>
         </button>
 
         <!-- Download Button -->
@@ -135,21 +119,16 @@
           <span class="hidden sm:inline">ទាញយក</span>
         </button>
 
-        <!-- Dark Mode Toggle Button -->
-        <button
-          @click="$emit('toggleDarkMode')"
-          class="px-3 py-1.5 bg-gray-700 dark:bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-800 dark:hover:bg-gray-500 transition-colors flex items-center gap-1"
-          aria-label="Toggle dark mode"
-          title="Toggle theme"
-        >
-          <svg v-if="isDark" class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-          </svg>
-          <span class="hidden sm:inline">ពន្លឺ</span>
-        </button>
+        <!-- Actions Dropdown -->
+        <HeaderActionsDropdown
+          :is-dark="isDark"
+          :is-comparison-mode="isComparisonMode"
+          @toggle-comparison="$emit('toggleComparison')"
+          @toggle-fullscreen="$emit('toggleFullscreen')"
+          @print="$emit('print')"
+          @show-keyboard-shortcuts="$emit('showKeyboardShortcuts')"
+          @toggle-dark-mode="$emit('toggleDarkMode')"
+        />
       </div>
     </div>
   </div>
@@ -157,6 +136,7 @@
 
 <script setup>
 import { getSubjectIcon } from '../../constants/icons'
+import HeaderActionsDropdown from './HeaderActionsDropdown.vue'
 
 defineProps({
   selectedCategory: String,
@@ -168,7 +148,9 @@ defineProps({
   canGoPrevious: Boolean,
   canGoNext: Boolean,
   zoomLevel: Number,
-  isDark: Boolean
+  isDark: Boolean,
+  isComparisonMode: Boolean,
+  isFavorite: Boolean
 })
 
 defineEmits([
@@ -176,6 +158,8 @@ defineEmits([
   'previousPdf',
   'nextPdf',
   'showKeyboardShortcuts',
+  'toggleFavorite',
+  'toggleComparison',
   'zoomIn',
   'zoomOut',
   'toggleFullscreen',

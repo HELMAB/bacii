@@ -15,7 +15,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "generate-icons": "node scripts/generate-pwa-icons.js"
   },
   "dependencies": {
     "nuxt": "^4.2.1",

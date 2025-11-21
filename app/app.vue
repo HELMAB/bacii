@@ -1,5 +1,9 @@
 <template>
   <div class="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+    <!-- PWA Components -->
+    <OfflineIndicator />
+    <PWAInstallPrompt />
+
     <!-- Toast Notification -->
     <ToastNotification :show="showToast" :message="toastMessage" />
 
@@ -17,6 +21,26 @@
       @cancel="showClearConfirm = false"
     />
 
+    <!-- Confirm Clear Favorites Modal -->
+    <ConfirmModal
+      :show="showClearFavoritesConfirm"
+      title="បញ្ជាក់ការសម្អាត"
+      message="តើអ្នកប្រាកដថាចង់សម្អាតចំណូលចិត្តទាំងអស់ទេ?"
+      confirmText="សម្អាត"
+      cancelText="បោះបង់"
+      @confirm="handleClearFavoritesConfirm"
+      @cancel="showClearFavoritesConfirm = false"
+    />
+
+    <!-- PDF Selector Modal -->
+    <PdfSelectorModal
+      :show="showPdfSelector"
+      :pdfNumber="pdfSelectorNumber"
+      :data="data"
+      @close="showPdfSelector = false"
+      @select="handlePdfSelection"
+    />
+
     <!-- Overlay for mobile -->
     <div
       v-if="isSidebarOpen && !isDesktop"
@@ -31,6 +55,7 @@
       :isCompactMode="isCompactMode"
       v-model:searchQuery="searchQuery"
       :recentlyViewed="recentlyViewed"
+      :favorites="favorites"
       :filteredData="filteredData"
       :expandedCategories="expandedCategories"
       :expandedYears="expandedYears"
@@ -40,13 +65,29 @@
       @toggleYear="toggleYear"
       @selectPdf="handleSelectPdf"
       @clearRecentlyViewed="clearRecentlyViewedWrapper"
+      @removeFavorite="removeFavorite"
+      @clearFavorites="clearFavoritesWrapper"
       @closeSidebar="toggleSidebar"
     />
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col bg-gray-200 dark:bg-gray-900 overflow-hidden relative">
+      <!-- Comparison View -->
+      <ComparisonView
+        v-if="isComparisonMode"
+        :comparisonPdf1="comparisonPdf1"
+        :comparisonPdf2="comparisonPdf2"
+        :comparisonPdf1Title="comparisonPdf1Title"
+        :comparisonPdf2Title="comparisonPdf2Title"
+        :comparisonPdf1Year="comparisonPdf1Year"
+        :comparisonPdf2Year="comparisonPdf2Year"
+        @close="toggleComparisonMode"
+        @swap="swapPdfs"
+        @selectPdf="openPdfSelector"
+      />
+
       <!-- Empty State -->
-      <EmptyState v-if="!selectedPdf" />
+      <EmptyState v-else-if="!selectedPdf" />
 
       <!-- PDF Viewer -->
       <div v-else class="flex-1 flex flex-col overflow-hidden py-2">
@@ -62,10 +103,14 @@
           :canGoNext="canGoNext"
           :zoomLevel="zoomLevel"
           :isDark="isDark"
+          :isComparisonMode="isComparisonMode"
+          :isFavorite="isFavorite(selectedPdf)"
           @toggleSidebar="toggleSidebar"
           @previousPdf="goToPreviousPdf"
           @nextPdf="goToNextPdf"
           @showKeyboardShortcuts="showKeyboardShortcuts = true"
+          @toggleFavorite="handleToggleFavorite"
+          @toggleComparison="handleToggleComparison"
           @zoomIn="zoomIn"
           @zoomOut="zoomOut"
           @toggleFullscreen="toggleFullscreen"
@@ -120,6 +165,8 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import docsData from './data/docs.json'
 
 // Components
+import OfflineIndicator from './components/OfflineIndicator.vue'
+import PWAInstallPrompt from './components/PWAInstallPrompt.vue'
 import ToastNotification from './components/ToastNotification.vue'
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal.vue'
 import ConfirmModal from './components/ConfirmModal.vue'
@@ -128,6 +175,8 @@ import EmptyState from './components/PdfViewer/EmptyState.vue'
 import PdfViewerHeader from './components/PdfViewer/PdfViewerHeader.vue'
 import PdfContainer from './components/PdfViewer/PdfContainer.vue'
 import ScrollToTopButton from './components/ScrollToTopButton.vue'
+import ComparisonView from './components/ComparisonView.vue'
+import PdfSelectorModal from './components/PdfSelectorModal.vue'
 
 // Composables
 import { useTheme } from './composables/useTheme'
@@ -136,9 +185,11 @@ import { useResponsive } from './composables/useResponsive'
 import { useSidebar } from './composables/useSidebar'
 import { useSearch } from './composables/useSearch'
 import { useRecentlyViewed } from './composables/useRecentlyViewed'
+import { useFavorites } from './composables/useFavorites'
 import { usePdfViewer } from './composables/usePdfViewer'
 import { useNavigation } from './composables/useNavigation'
 import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
+import { useComparison } from './composables/useComparison'
 
 const data = ref(docsData)
 
@@ -168,6 +219,31 @@ const { searchQuery, filteredData } = useSearch(data, expandedCategories, expand
 // Recently viewed
 const { recentlyViewed, addToRecentlyViewed, clearRecentlyViewed: clearRecent } = useRecentlyViewed()
 const showClearConfirm = ref(false)
+
+// Favorites
+const { favorites, isFavorite, toggleFavorite, removeFavorite, clearFavorites } = useFavorites()
+const showClearFavoritesConfirm = ref(false)
+
+// Comparison Mode
+const {
+  isComparisonMode,
+  comparisonPdf1,
+  comparisonPdf2,
+  comparisonPdf1Title,
+  comparisonPdf2Title,
+  comparisonPdf1Category,
+  comparisonPdf2Category,
+  comparisonPdf1Year,
+  comparisonPdf2Year,
+  toggleComparisonMode,
+  setComparisonPdf1,
+  setComparisonPdf2,
+  clearComparison,
+  swapPdfs
+} = useComparison()
+
+const showPdfSelector = ref(false)
+const pdfSelectorNumber = ref(1)
 
 // PDF Viewer
 const {
@@ -254,6 +330,63 @@ function handleSelectPdf(subject, category, year, isFromRecent = false) {
     expandedCategories[category] = true
     expandedYears[year] = true
   }
+}
+
+// Comparison Mode Functions
+function handleToggleComparison() {
+  toggleComparisonMode()
+  if (isComparisonMode.value) {
+    // Set current PDF as first comparison PDF
+    if (selectedPdf.value) {
+      setComparisonPdf1(
+        { pdf: selectedPdf.value, label: selectedPdfTitle.value },
+        selectedCategory.value,
+        selectedYear.value
+      )
+    }
+    showToastNotification('📊 បានបើកមុខងារប្រៀបធៀប។ សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប។')
+  } else {
+    showToastNotification('✓ បានបិទមុខងារប្រៀបធៀប')
+  }
+}
+
+function openPdfSelector(pdfNumber) {
+  pdfSelectorNumber.value = pdfNumber
+  showPdfSelector.value = true
+}
+
+function handlePdfSelection(subject, category, year) {
+  if (pdfSelectorNumber.value === 1) {
+    setComparisonPdf1(subject, category, year)
+    showToastNotification(`✓ បានជ្រើសរើសឯកសារ ១: ${subject.label}`)
+  } else {
+    setComparisonPdf2(subject, category, year)
+    showToastNotification(`✓ បានជ្រើសរើសឯកសារ ២: ${subject.label}`)
+  }
+}
+
+// Favorites Functions
+function handleToggleFavorite() {
+  if (!selectedPdf.value) return
+
+  const subject = { pdf: selectedPdf.value, label: selectedPdfTitle.value }
+  const isAdded = toggleFavorite(subject, selectedCategory.value, selectedYear.value)
+
+  if (isAdded) {
+    showToastNotification(`⭐ បានបន្ថែមទៅចំណូលចិត្ត: ${selectedPdfTitle.value}`)
+  } else {
+    showToastNotification(`✓ បានលុបចេញពីចំណូលចិត្ត: ${selectedPdfTitle.value}`)
+  }
+}
+
+function clearFavoritesWrapper() {
+  showClearFavoritesConfirm.value = true
+}
+
+function handleClearFavoritesConfirm() {
+  clearFavorites()
+  showClearFavoritesConfirm.value = false
+  showToastNotification('✓ បានសម្អាតចំណូលចិត្តទាំងអស់')
 }
 
 // Navigation
