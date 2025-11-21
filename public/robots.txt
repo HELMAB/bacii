@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://dobpi.com/sitemap.xml
+Sitemap: https://dobpi.netlify.app/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 0

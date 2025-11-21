@@ -53,10 +53,15 @@ bacii/
 │   ├── components/
 │   │   ├── ConfirmModal.vue # Confirmation modal component
 │   │   ├── KeyboardShortcutsModal.vue
+│   │   ├── ScrollToTopButton.vue
 │   │   ├── ToastNotification.vue
 │   │   ├── PdfViewer/       # PDF viewer components
 │   │   └── Sidebar/         # Sidebar components
 │   ├── composables/         # Vue composables for state management
+│   ├── constants/
+│   │   └── icons.js         # Subject icons and category gradients
+│   ├── utils/
+│   │   └── helpers.js       # Utility functions
 │   ├── data/
 │   │   └── docs.json        # Exam papers data structure
 │   └── assets/
@@ -64,7 +69,11 @@ bacii/
 │           └── main.css     # Global styles
 ├── public/
 │   ├── pdfs/                # PDF files organized by category/year
-│   └── fonts/               # PengHuoth font files
+│   │   ├── society/         # Social sciences exam papers
+│   │   └── science/         # Natural sciences exam papers
+│   ├── fonts/               # PengHuoth font files
+│   ├── sitemap.xml          # SEO sitemap
+│   └── robots.txt           # Robots file for search engines
 ├── nuxt.config.ts           # Nuxt configuration
 ├── tailwind.config.js       # TailwindCSS configuration
 └── package.json             # Dependencies
@@ -155,19 +164,33 @@ bun run preview
 
 ## Available Exam Papers
 
-### វិទ្យាសាស្ត្រសង្គម (Social Sciences)
+### ថ្នាក់វិទ្យាសាស្ត្រសង្គម (Social Sciences)
 Years: 2014 - 2022
 
 Subjects:
-- អក្សរសាស្ត្រខ្មែរ (Khmer Literature)
-- គណិតវិទ្យា (Mathematics)
-- រូបវិទ្យា (Physics)
-- គីមីវិទ្យា (Chemistry)
-- ជីវវិទ្យា (Biology)
-- ប្រវត្តិសាស្ត្រ (History)
-- ភូមិវិទ្យា (Geography)
-- សីលធម៌ (Morality)
-- ភាសាអង់គ្លេស (English)
+- អក្សរសាស្ត្រខ្មែរ (Khmer Literature) 📚
+- គណិតវិទ្យា (Mathematics) 🧮
+- រូបវិទ្យា (Physics) ⚛️
+- ជីវវិទ្យា (Biology) 🧬
+- ប្រវត្តិសាស្ត្រ (History) 📜
+- ភូមិវិទ្យា (Geography) 🌍
+- ផែនដីវិទ្យា (Geology) ⛰️
+- សីលធម៌-ពលរដ្ឋ (Morality-Citizenship) ❤️
+- ភាសាអង់គ្លេស (English) 🇬🇧
+- ភាសាបារាំង (French) 🇫🇷
+
+### ថ្នាក់វិទ្យាសាស្ត្រពិត (Natural Sciences)
+Years: 2014 - 2022
+
+Subjects:
+- អក្សរសាស្ត្រខ្មែរ (Khmer Literature) 📚
+- គណិតវិទ្យា (Mathematics) 🧮
+- រូបវិទ្យា (Physics) ⚛️
+- គីមីវិទ្យា (Chemistry) 🧪
+- ជីវវិទ្យា (Biology) 🧬
+- ប្រវត្តិសាស្ត្រ (History) 📜
+- ភាសាអង់គ្លេស (English) 🇬🇧
+- ភាសាបារាំង (French) 🇫🇷
 
 ## Configuration
 
@@ -185,7 +208,8 @@ Subjects:
       "children": [
         {
           "label": "Subject Name",
-          "pdf": "/pdfs/category/year/subject.pdf"
+          "pdf": "/pdfs/category/year/subject.pdf",
+          "icon": "icon-name"
         }
       ]
     }
@@ -193,24 +217,46 @@ Subjects:
 }
 ```
 
-### Theme Customization
-
-Theme colors and gradients are defined in `app/app.vue`:
+3. If adding a new subject, update `app/constants/icons.js` to add the emoji icon:
 
 ```javascript
-const categoryGradients = {
+export const subjectIcons = {
+  'Subject Name in Khmer': '📚', // Choose appropriate emoji
+  // ...
+}
+```
+
+### Theme Customization
+
+Theme colors and gradients are defined in `app/constants/icons.js`:
+
+```javascript
+export const categoryGradients = {
   'វិទ្យាសាស្ត្រសង្គម': 'from-blue-500 to-indigo-600',
   'វិទ្យាសាស្ត្រធម្មជាតិ': 'from-green-500 to-teal-600',
-  // Add more categories...
+  'គណិតវិទ្យា': 'from-purple-500 to-pink-600',
+  'ប្រវត្តិសាស្ត្រ': 'from-amber-500 to-orange-600'
+}
+```
+
+Subject icons (emojis) are also defined in the same file:
+
+```javascript
+export const subjectIcons = {
+  'អក្សរសាស្ត្រខ្មែរ': '📚',
+  'គណិតវិទ្យា': '🧮',
+  // ...
 }
 ```
 
 ## SEO & Meta Tags
 
 The application includes comprehensive SEO optimization:
+- XML sitemap (`public/sitemap.xml`)
+- Robots.txt file (`public/robots.txt`)
 - Open Graph meta tags for social media sharing
 - Twitter Card support
-- Proper canonical URLs
+- Canonical URL: https://dobpi.netlify.app
 - Khmer locale (km-KH)
 - Mobile web app capabilities
 
@@ -222,11 +268,13 @@ The application includes comprehensive SEO optimization:
 
 ## Deployment
 
-Check out the [Nuxt deployment documentation](https://nuxt.com/docs/getting-started/deployment) for platform-specific deployment guides.
+The application is deployed at: **https://dobpi.netlify.app**
+
+For deployment to other platforms, check out the [Nuxt deployment documentation](https://nuxt.com/docs/getting-started/deployment) for platform-specific deployment guides.
 
 ## License
 
-Private project
+MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Contributing
 
