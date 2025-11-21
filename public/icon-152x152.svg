@@ -1,0 +1,32 @@
+<svg width="152" height="152" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="152" height="152" fill="url(#grad)" rx="22.8"/>
+
+  <!-- Icon Design - Book/Document -->
+  <g transform="translate(38, 30.400000000000002)">
+    <!-- Book -->
+    <rect x="0" y="0" width="76" height="91.2" fill="white" opacity="0.9" rx="7.6000000000000005"/>
+    <rect x="7.6000000000000005" y="15.200000000000001" width="60.800000000000004" height="7.6000000000000005" fill="#3B82F6" opacity="0.7" rx="3.04"/>
+    <rect x="7.6000000000000005" y="30.400000000000002" width="45.6" height="4.56" fill="#3B82F6" opacity="0.5" rx="2.28"/>
+    <rect x="7.6000000000000005" y="41.040000000000006" width="53.199999999999996" height="4.56" fill="#3B82F6" opacity="0.5" rx="2.28"/>
+
+    <!-- Star accent -->
+    <path d="M 63.839999999999996 7.6000000000000005 L 68.4 18.24 L 79.04 18.24 L 71.44 25.840000000000003 L 74.48 36.48 L 63.839999999999996 28.88 L 53.199999999999996 36.48 L 56.24 25.840000000000003 L 48.64 18.24 L 59.28 18.24 Z"
+          fill="#FCD34D" stroke="#F59E0B" stroke-width="0.76"/>
+  </g>
+
+  <!-- Text "D" for Dobpi -->
+  <text x="76" y="133.76"
+        font-family="Arial, sans-serif"
+        font-weight="bold"
+        font-size="22.8"
+        fill="white"
+        text-anchor="middle">D</text>
+</svg>

@@ -52,6 +52,17 @@
         @clear="$emit('clearRecentlyViewed')"
       />
 
+      <!-- Favorites List -->
+      <FavoritesList
+        v-if="!searchQuery"
+        :favorites="favorites"
+        :selectedPdf="selectedPdf"
+        :isCompactMode="isCompactMode"
+        @selectPdf="handleFavoriteSelect"
+        @removeFavorite="$emit('removeFavorite', $event)"
+        @clearFavorites="$emit('clearFavorites')"
+      />
+
       <!-- Category List -->
       <CategoryList
         :categories="filteredData"
@@ -73,6 +84,7 @@
 import { ref } from 'vue'
 import SearchBar from './SearchBar.vue'
 import RecentlyViewed from './RecentlyViewed.vue'
+import FavoritesList from './FavoritesList.vue'
 import CategoryList from './CategoryList.vue'
 
 const props = defineProps({
@@ -81,6 +93,7 @@ const props = defineProps({
   isCompactMode: Boolean,
   searchQuery: String,
   recentlyViewed: Array,
+  favorites: Array,
   filteredData: Array,
   expandedCategories: Object,
   expandedYears: Object,
@@ -94,6 +107,8 @@ const emit = defineEmits([
   'toggleYear',
   'selectPdf',
   'clearRecentlyViewed',
+  'removeFavorite',
+  'clearFavorites',
   'closeSidebar'
 ])
 
@@ -108,6 +123,13 @@ function handleSelectPdf(subject, category, year) {
 
 function handleRecentSelect(item) {
   emit('selectPdf', item, item.category, item.year, true)
+  if (!props.isDesktop) {
+    emit('closeSidebar')
+  }
+}
+
+function handleFavoriteSelect(favorite) {
+  emit('selectPdf', { pdf: favorite.pdf, label: favorite.label }, favorite.category, favorite.year, true)
   if (!props.isDesktop) {
     emit('closeSidebar')
   }

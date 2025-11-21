@@ -52,7 +52,26 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'canonical', href: 'https://dobpi.netlify.app' },
-        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/manifest.json' }
+      ],
+      script: [
+        {
+          children: `
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                  .then(registration => {
+                    console.log('Service Worker registered:', registration);
+                  })
+                  .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                  });
+              });
+            }
+          `,
+          type: 'text/javascript'
+        }
       ]
     }
   }
