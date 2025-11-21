@@ -38,7 +38,7 @@
 
       <div class="flex items-center gap-2 flex-wrap">
         <!-- Page Navigation -->
-        <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+        <div class="hidden md:flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
           <button
             @click="$emit('previousPdf')"
             :disabled="!canGoPrevious"

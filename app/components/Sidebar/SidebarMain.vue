@@ -3,7 +3,7 @@
     :class="[
       'bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl overflow-y-auto transition-all duration-300 ease-in-out z-40 border-r border-gray-200 dark:border-gray-700',
       isDesktop ? 'relative' : 'fixed inset-y-0 left-0',
-      isOpen ? 'w-96' : 'w-0',
+      isOpen ? 'w-80 md:w-96' : 'w-0',
       !isDesktop && isOpen ? 'translate-x-0' : (!isDesktop ? '-translate-x-full' : '')
     ]"
   >
