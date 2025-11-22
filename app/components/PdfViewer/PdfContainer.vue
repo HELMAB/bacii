@@ -1,5 +1,5 @@
 <template>
-  <div ref="pdfContainer" class="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-auto mx-2 sm:mx-4 mb-2 sm:mb-4 relative">
+  <div ref="pdfContainer" class="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-auto mx-2 sm:mx-4 mb-2 sm:mb-4 py-6 sm:py-8 relative">
     <!-- Skeleton Loader -->
     <div v-if="isLoading" class="absolute inset-0 bg-white dark:bg-gray-800 z-10 p-4 space-y-4">
       <div class="animate-pulse space-y-4">

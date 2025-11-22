@@ -19,7 +19,7 @@
           <button
             @click="$emit('toggleCompactMode')"
             :class="[
-              'p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500',
+              'hidden md:block p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500',
               isCompactMode
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
@@ -46,6 +46,7 @@
 
       <!-- Recently Viewed -->
       <RecentlyViewed
+        v-if="isDesktop"
         :items="recentlyViewed"
         :searchQuery="searchQuery"
         @select="handleRecentSelect"
@@ -54,7 +55,7 @@
 
       <!-- Favorites List -->
       <FavoritesList
-        v-if="!searchQuery"
+        v-if="!searchQuery && isDesktop"
         :favorites="favorites"
         :selectedPdf="selectedPdf"
         :isCompactMode="isCompactMode"

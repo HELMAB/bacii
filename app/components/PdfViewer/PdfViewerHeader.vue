@@ -1,20 +1,20 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 px-4 py-3 shadow mx-2 sm:mx-4 mb-2 rounded-lg">
+  <div class="bg-white dark:bg-gray-800 px-2 py-2 sm:px-4 sm:py-3 shadow mx-2 sm:mx-4 mb-2 rounded-lg">
     <!-- Breadcrumb -->
-    <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3 flex-wrap">
+    <div class="hidden md:flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3 flex-wrap">
       <span>{{ selectedCategory }}</span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
       <span>{{ selectedYear }}</span>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
       </svg>
       <span class="font-semibold text-blue-600 dark:text-blue-400">{{ selectedPdfTitle }}</span>
     </div>
 
     <!-- Controls Row -->
-    <div class="flex items-center justify-between flex-wrap gap-3">
+    <div class="flex items-center justify-between flex-wrap gap-2 sm:gap-3">
       <div class="flex items-center gap-2">
         <!-- Toggle Sidebar Button -->
         <button
@@ -36,7 +36,7 @@
         </h2>
       </div>
 
-      <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
         <!-- Page Navigation -->
         <div class="hidden md:flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
           <button
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Zoom Controls -->
-        <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+        <div class="hidden md:flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
           <button
             @click="$emit('zoomOut')"
             class="px-2 py-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
@@ -91,7 +91,7 @@
         <button
           @click="$emit('toggleFavorite')"
           :class="[
-            'px-3 py-1.5 text-sm rounded-lg transition-all flex items-center gap-1',
+            'hidden md:flex px-3 py-1.5 text-sm rounded-lg transition-all items-center gap-1',
             isFavorite
               ? 'bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 hover:text-yellow-600'

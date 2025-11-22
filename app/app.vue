@@ -137,8 +137,8 @@
       </div>
 
       <!-- Footer -->
-      <footer class="bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 py-3 px-4 text-center text-xs text-gray-600 dark:text-gray-400">
-        <div class="flex items-center justify-center gap-4 flex-wrap">
+      <footer class="bg-white dark:bg-gray-800 border-t border-gray-300 dark:border-gray-700 py-2 px-2 sm:py-3 sm:px-4 text-center text-xs text-gray-600 dark:text-gray-400">
+        <div class="flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
           <span>© 2025 Dobpi</span>
           <span class="hidden sm:inline">•</span>
           <a
