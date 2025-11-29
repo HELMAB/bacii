@@ -157,6 +157,7 @@ async function staleWhileRevalidate(request, cacheName) {
     return response
   }).catch((error) => {
     console.error('[Service Worker] Background fetch failed:', error)
+    throw error // Re-throw to propagate the error
   })
 
   // Return cached version immediately if available
