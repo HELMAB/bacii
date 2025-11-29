@@ -1,6 +1,7 @@
-const CACHE_VERSION = 'dobpi-v1'
+const CACHE_VERSION = 'dobpi-v2'
 const STATIC_CACHE = `${CACHE_VERSION}-static`
 const PDF_CACHE = `${CACHE_VERSION}-pdfs`
+const DATA_CACHE = `${CACHE_VERSION}-data`
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`
 
 // Static assets to cache on install
@@ -11,17 +12,26 @@ const STATIC_ASSETS = [
   '/robots.txt'
 ]
 
+// Data files to cache with stale-while-revalidate
+const DATA_ASSETS = [
+  '/docs.json'
+]
+
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
   console.log('[Service Worker] Installing...')
 
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then((cache) => {
+    Promise.all([
+      caches.open(STATIC_CACHE).then((cache) => {
         console.log('[Service Worker] Caching static assets')
         return cache.addAll(STATIC_ASSETS)
+      }),
+      caches.open(DATA_CACHE).then((cache) => {
+        console.log('[Service Worker] Caching data assets')
+        return cache.addAll(DATA_ASSETS)
       })
-      .then(() => self.skipWaiting())
+    ]).then(() => self.skipWaiting())
   )
 })
 
@@ -34,7 +44,7 @@ self.addEventListener('activate', (event) => {
       .then((cacheNames) => {
         return Promise.all(
           cacheNames
-            .filter((name) => name.startsWith('dobpi-') && name !== STATIC_CACHE && name !== PDF_CACHE && name !== RUNTIME_CACHE)
+            .filter((name) => name.startsWith('dobpi-') && name !== STATIC_CACHE && name !== PDF_CACHE && name !== DATA_CACHE && name !== RUNTIME_CACHE)
             .map((name) => {
               console.log('[Service Worker] Deleting old cache:', name)
               return caches.delete(name)
@@ -63,6 +73,12 @@ self.addEventListener('fetch', (event) => {
   // Handle PDF requests with dedicated cache
   if (url.pathname.endsWith('.pdf')) {
     event.respondWith(handlePdfRequest(request))
+    return
+  }
+
+  // Handle docs.json with stale-while-revalidate
+  if (DATA_ASSETS.includes(url.pathname)) {
+    event.respondWith(staleWhileRevalidate(request, DATA_CACHE))
     return
   }
 
@@ -123,6 +139,38 @@ async function networkFirst(request, cacheName) {
       return caches.match('/')
     }
 
+    return new Response('Offline', { status: 503, statusText: 'Service Unavailable' })
+  }
+}
+
+// Stale-while-revalidate strategy
+async function staleWhileRevalidate(request, cacheName) {
+  const cache = await caches.open(cacheName)
+  const cached = await cache.match(request)
+
+  // Fetch fresh data in background
+  const fetchPromise = fetch(request).then((response) => {
+    if (response.ok) {
+      cache.put(request, response.clone())
+      console.log('[Service Worker] Updated cache:', request.url)
+    }
+    return response
+  }).catch((error) => {
+    console.error('[Service Worker] Background fetch failed:', error)
+    throw error // Re-throw to propagate the error
+  })
+
+  // Return cached version immediately if available
+  if (cached) {
+    console.log('[Service Worker] Serving from cache (will update in background):', request.url)
+    return cached
+  }
+
+  // No cache, wait for network
+  try {
+    return await fetchPromise
+  } catch (error) {
+    console.error('[Service Worker] Stale-while-revalidate failed:', error)
     return new Response('Offline', { status: 503, statusText: 'Service Unavailable' })
   }
 }

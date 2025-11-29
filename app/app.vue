@@ -162,7 +162,6 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import docsData from './data/docs.json'
 
 // Components
 import OfflineIndicator from './components/OfflineIndicator.vue'
@@ -190,8 +189,10 @@ import { usePdfViewer } from './composables/usePdfViewer'
 import { useNavigation } from './composables/useNavigation'
 import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
 import { useComparison } from './composables/useComparison'
+import { useDocsCache } from './composables/useDocsCache'
 
-const data = ref(docsData)
+// Load docs data with caching
+const { data, loadDocs } = useDocsCache()
 
 // Theme
 const { isDark, toggleDarkMode } = useTheme()
@@ -412,7 +413,10 @@ const { showKeyboardShortcuts } = useKeyboardShortcuts({
   toggleFullscreen
 })
 
-onMounted(() => {
+onMounted(async () => {
+  // Load docs data with caching
+  await loadDocs()
+
   if (!isDesktop.value) {
     isSidebarOpen.value = false
   }
