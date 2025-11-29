@@ -65,8 +65,6 @@ bacii/
 │   │   └── icons.js         # Subject icons and category gradients
 │   ├── utils/
 │   │   └── helpers.js       # Utility functions
-│   ├── data/
-│   │   └── docs.json        # Exam papers data structure
 │   └── assets/
 │       └── css/
 │           └── main.css     # Global styles
@@ -74,6 +72,7 @@ bacii/
 │   ├── pdfs/                # PDF files organized by category/year
 │   │   ├── society/         # Social sciences exam papers
 │   │   └── science/         # Natural sciences exam papers
+│   ├── docs.json            # Exam papers data structure
 │   ├── fonts/               # PengHuoth font files
 │   ├── sitemap.xml          # SEO sitemap
 │   └── robots.txt           # Robots file for search engines
@@ -200,7 +199,7 @@ Subjects:
 ### Adding New PDFs
 
 1. Place PDF files in `public/pdfs/{category}/{year}/{subject}.pdf`
-2. Update `app/data/docs.json` with the new entries:
+2. Update `public/docs.json` with the new entries:
 
 ```json
 {
