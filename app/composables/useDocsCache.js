@@ -79,29 +79,25 @@ export function useDocsCache() {
   }
 
   async function fetchAndUpdateCache() {
-    try {
-      const response = await fetch('/docs.json')
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
+    const response = await fetch('/docs.json')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
 
-      const freshData = await response.json()
-      data.value = freshData
+    const freshData = await response.json()
+    data.value = freshData
 
-      // Update cache
-      if (typeof localStorage !== 'undefined') {
-        try {
-          localStorage.setItem(CACHE_KEY, JSON.stringify(freshData))
-          localStorage.setItem(CACHE_VERSION_KEY, JSON.stringify({
-            timestamp: Date.now()
-          }))
-        } catch (err) {
-          // Handle quota exceeded errors gracefully
-          console.warn('Failed to cache data:', err)
-        }
+    // Update cache
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(freshData))
+        localStorage.setItem(CACHE_VERSION_KEY, JSON.stringify({
+          timestamp: Date.now()
+        }))
+      } catch (err) {
+        // Handle quota exceeded errors gracefully
+        console.warn('Failed to cache data:', err)
       }
-    } catch (err) {
-      throw err
     }
   }
 
