@@ -21,7 +21,9 @@ export function useDocsCache() {
         isLoading.value = false
 
         // Fetch fresh data in background and update if different
-        fetchAndUpdateCache()
+        fetchAndUpdateCache().catch((err) => {
+          console.warn('Background data refresh failed:', err)
+        })
         return
       }
 
