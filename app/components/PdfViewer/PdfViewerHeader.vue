@@ -123,11 +123,13 @@
         <HeaderActionsDropdown
           :is-dark="isDark"
           :is-comparison-mode="isComparisonMode"
+          :show-T-T-S="showTTS"
           @toggle-comparison="$emit('toggleComparison')"
           @toggle-fullscreen="$emit('toggleFullscreen')"
           @print="$emit('print')"
           @show-keyboard-shortcuts="$emit('showKeyboardShortcuts')"
           @toggle-dark-mode="$emit('toggleDarkMode')"
+          @toggle-T-T-S="$emit('toggleTTS')"
         />
       </div>
     </div>
@@ -150,7 +152,8 @@ defineProps({
   zoomLevel: Number,
   isDark: Boolean,
   isComparisonMode: Boolean,
-  isFavorite: Boolean
+  isFavorite: Boolean,
+  showTTS: Boolean
 })
 
 defineEmits([
@@ -165,6 +168,7 @@ defineEmits([
   'toggleFullscreen',
   'print',
   'download',
-  'toggleDarkMode'
+  'toggleDarkMode',
+  'toggleTTS'
 ])
 </script>

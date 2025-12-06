@@ -41,6 +41,29 @@
       @select="handlePdfSelection"
     />
 
+    <!-- Text to Speech Panel -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition ease-out duration-200"
+        enter-from-class="opacity-0 translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition ease-in duration-150"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-4"
+      >
+        <div
+          v-if="showTTS"
+          class="fixed bottom-4 right-4 z-50 w-full max-w-md mx-4 sm:mx-0"
+        >
+          <TextToSpeech
+            :pdfUrl="selectedPdf"
+            :currentPage="currentPage"
+            @close="showTTS = false"
+          />
+        </div>
+      </Transition>
+    </Teleport>
+
     <!-- Overlay for mobile -->
     <div
       v-if="isSidebarOpen && !isDesktop"
@@ -105,12 +128,14 @@
           :isDark="isDark"
           :isComparisonMode="isComparisonMode"
           :isFavorite="isFavorite(selectedPdf)"
+          :showTTS="showTTS"
           @toggleSidebar="toggleSidebar"
           @previousPdf="goToPreviousPdf"
           @nextPdf="goToNextPdf"
           @showKeyboardShortcuts="showKeyboardShortcuts = true"
           @toggleFavorite="handleToggleFavorite"
           @toggleComparison="handleToggleComparison"
+          @toggleTTS="showTTS = !showTTS"
           @zoomIn="zoomIn"
           @zoomOut="zoomOut"
           @toggleFullscreen="toggleFullscreen"
@@ -159,6 +184,7 @@ import ScrollToTopButton from './components/ScrollToTopButton.vue'
 import ComparisonView from './components/ComparisonView.vue'
 import PdfSelectorModal from './components/PdfSelectorModal.vue'
 import AppFooter from './components/AppFooter.vue'
+import TextToSpeech from './components/TextToSpeech.vue'
 
 // Composables
 import { useTheme } from './composables/useTheme'
@@ -228,6 +254,7 @@ const {
 
 const showPdfSelector = ref(false)
 const pdfSelectorNumber = ref(1)
+const showTTS = ref(false)
 
 // PDF Viewer
 const {

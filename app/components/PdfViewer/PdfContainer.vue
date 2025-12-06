@@ -45,7 +45,7 @@ import { ref, defineAsyncComponent } from 'vue'
 
 const VuePdfEmbed = defineAsyncComponent(() => import('vue-pdf-embed'))
 
-defineProps({
+const props = defineProps({
   selectedPdf: String,
   isLoading: Boolean,
   zoomLevel: Number,
@@ -53,7 +53,7 @@ defineProps({
   totalPages: Number
 })
 
-defineEmits(['rendered', 'loadingFailed', 'internalLinkClicked'])
+const emit = defineEmits(['rendered', 'loadingFailed', 'internalLinkClicked'])
 
 const pdfContainer = ref(null)
 const pdfRef = ref(null)

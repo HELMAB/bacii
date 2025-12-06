@@ -80,6 +80,24 @@
             <span>បោះពុម្ពឯកសារ</span>
           </button>
 
+          <!-- Text to Speech -->
+          <button
+            @click="handleAction('toggleTTS')"
+            :class="[
+              'w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 transition-colors',
+              showTTS
+                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+            ]"
+            role="menuitem"
+          >
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            </svg>
+            <span class="flex-1">អានឮសៀង (TTS)</span>
+            <span v-if="showTTS" class="text-xs bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded">កំពុងបើក</span>
+          </button>
+
           <!-- Keyboard Shortcuts -->
           <button
             @click="handleAction('showKeyboardShortcuts')"
@@ -119,7 +137,8 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   isDark: Boolean,
-  isComparisonMode: Boolean
+  isComparisonMode: Boolean,
+  showTTS: Boolean
 })
 
 const emit = defineEmits([
@@ -127,7 +146,8 @@ const emit = defineEmits([
   'toggleFullscreen',
   'print',
   'showKeyboardShortcuts',
-  'toggleDarkMode'
+  'toggleDarkMode',
+  'toggleTTS'
 ])
 
 const isOpen = ref(false)
