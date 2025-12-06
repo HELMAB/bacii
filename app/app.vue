@@ -127,14 +127,48 @@
           :zoomLevel="zoomLevel"
           :currentPage="currentPage"
           :totalPages="totalPages"
+          :isAnnotationMode="isAnnotationMode"
+          :currentTool="currentTool"
+          :notes="notes"
           @rendered="onPdfRendered"
           @loadingFailed="onPdfError"
           @internalLinkClicked="onInternalLinkClicked"
+          @addNote="handleAddNote"
+          @noteClicked="handleNoteClicked"
+        />
+
+        <!-- Annotation Toolbar -->
+        <AnnotationToolbar
+          :isAnnotationMode="isAnnotationMode"
+          :currentTool="currentTool"
+          :currentColor="currentColor"
+          :colors="colors"
+          :totalAnnotations="totalAnnotations"
+          :notes="notes"
+          @toggleMode="toggleAnnotationMode"
+          @setTool="setTool"
+          @setColor="setColor"
+          @toggleNotesPanel="showNotesPanel = !showNotesPanel"
+          @export="exportAnnotations(selectedPdf)"
+          @import="(file) => importAnnotations(file, selectedPdf)"
+          @clear="clearAllAnnotations(selectedPdf)"
         />
 
         <!-- Scroll to Top Button -->
         <ScrollToTopButton :show="showScrollTop" @click="scrollToTop" />
       </div>
+
+      <!-- Notes Panel -->
+      <NotesPanel
+        :show="showNotesPanel"
+        :notes="notes"
+        :bookmarks="bookmarks"
+        @close="showNotesPanel = false"
+        @goToPage="handleGoToPage"
+        @removeNote="(id) => removeNote(id, selectedPdf)"
+        @updateNote="(id, text) => updateNote(id, text, selectedPdf)"
+        @removeBookmark="(id) => removeBookmark(id, selectedPdf)"
+      />
 
       <!-- Footer -->
       <AppFooter />
@@ -159,6 +193,8 @@ import ScrollToTopButton from './components/ScrollToTopButton.vue'
 import ComparisonView from './components/ComparisonView.vue'
 import PdfSelectorModal from './components/PdfSelectorModal.vue'
 import AppFooter from './components/AppFooter.vue'
+import AnnotationToolbar from './components/Annotations/AnnotationToolbar.vue'
+import NotesPanel from './components/Annotations/NotesPanel.vue'
 
 // Composables
 import { useTheme } from './composables/useTheme'
@@ -173,6 +209,7 @@ import { useNavigation } from './composables/useNavigation'
 import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
 import { useComparison } from './composables/useComparison'
 import { useDocsCache } from './composables/useDocsCache'
+import { useAnnotations } from './composables/useAnnotations'
 
 // Load docs data with caching
 const { data, loadDocs } = useDocsCache()
@@ -228,6 +265,31 @@ const {
 
 const showPdfSelector = ref(false)
 const pdfSelectorNumber = ref(1)
+
+// Annotations
+const {
+  bookmarks,
+  notes,
+  isAnnotationMode,
+  currentTool,
+  currentColor,
+  colors,
+  totalAnnotations,
+  loadAnnotations,
+  addNote,
+  updateNote,
+  removeNote,
+  addBookmark,
+  removeBookmark,
+  toggleAnnotationMode,
+  setTool,
+  setColor,
+  clearAllAnnotations,
+  exportAnnotations,
+  importAnnotations
+} = useAnnotations()
+
+const showNotesPanel = ref(false)
 
 // PDF Viewer
 const {
@@ -287,6 +349,7 @@ function selectPdf(subject, category, year) {
   zoomLevel.value = isDesktop.value ? 0.75 : 1
 
   addToRecentlyViewed(subject, category, year)
+  loadAnnotations(subject.pdf)
 
   if (pdfContainer.value) {
     pdfContainer.value.scrollTop = 0
@@ -395,6 +458,24 @@ const { showKeyboardShortcuts } = useKeyboardShortcuts({
   zoomOut,
   toggleFullscreen
 })
+
+// Annotation Handlers
+function handleAddNote(text, pageNumber, position) {
+  addNote(text, pageNumber, position, selectedPdf.value)
+  showToastNotification(`✓ បានបន្ថែមកំណត់ចំណាំនៅទំព័រ ${pageNumber}`)
+}
+
+function handleNoteClicked(note) {
+  showNotesPanel.value = true
+}
+
+function handleGoToPage(pageNumber) {
+  if (pdfContainer.value) {
+    const scrollPercent = (pageNumber - 1) / totalPages.value
+    const scrollTop = scrollPercent * (pdfContainer.value.scrollHeight - pdfContainer.value.clientHeight)
+    pdfContainer.value.scrollTo({ top: scrollTop, behavior: 'smooth' })
+  }
+}
 
 onMounted(async () => {
   // Load docs data with caching

@@ -111,4 +111,45 @@
   .dark ::-webkit-scrollbar-thumb:hover {
     background: rgb(107 114 128);
   }
+
+  /* PDF.js Text Layer Styles for text selection */
+  .textLayer {
+    position: absolute;
+    text-align: initial;
+    inset: 0;
+    overflow: clip;
+    opacity: 1;
+    line-height: 1;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    text-size-adjust: none;
+    forced-color-adjust: none;
+    transform-origin: 0 0;
+    caret-color: CanvasText;
+    z-index: 0;
+  }
+
+  .textLayer :is(span, br) {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+  }
+
+  .textLayer ::-moz-selection {
+    background: rgba(0, 0, 255, 0.25);
+  }
+
+  .textLayer ::selection {
+    background: rgba(0, 0, 255, 0.25);
+  }
+
+  .textLayer br::-moz-selection {
+    background: transparent;
+  }
+
+  .textLayer br::selection {
+    background: transparent;
+  }
 }
