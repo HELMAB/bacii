@@ -72,6 +72,9 @@
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col bg-gray-200 dark:bg-gray-900 overflow-hidden relative">
+      <!-- Peace Banner -->
+      <PeaceBanner />
+
       <!-- Comparison View -->
       <ComparisonView
         v-if="isComparisonMode"

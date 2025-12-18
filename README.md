@@ -2,6 +2,24 @@
 
 ![dobpi](./public/og-image.svg)
 
+---
+
+<div align="center">
+
+## 🇰🇭 Stand with Cambodia • កម្ពុជា
+
+### 🕊️ **Cambodia Needs Peace** 🕊️
+
+We stand in solidarity with our brave soldiers defending Cambodia's sovereignty and territorial integrity. Our hearts are with those protecting our homeland during these challenging times. We call upon the international community to support peaceful resolution and respect for Cambodia's borders.
+
+**🙏 កម្ពុជាត្រូវការសន្តិភាព • Together we stand for peace and sovereignty**
+
+> **📢 Peace Banner**: A prominent peace banner is displayed on the [live website](https://dobpi.netlify.app) to raise awareness and show support for Cambodia's call for peace during this difficult time.
+
+</div>
+
+---
+
 A modern, feature-rich PDF viewer application for Cambodian national exam papers (ឯកសារប្រឡងបាក់ឌុប). Built with Nuxt 3 and Vue 3, this application provides an intuitive interface for students to access, view, and study exam papers from 2014 to 2022. Available as both a web application and Android app.
 
 🔗 **GitHub Repository**: [https://github.com/HELMAB/bacii](https://github.com/HELMAB/bacii)
