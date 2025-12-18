@@ -15,15 +15,8 @@
       <div class="w-full h-1.5 bg-red-600"></div>
 
       <div class="py-3 px-4 text-white">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div class="max-w-full mx-auto flex items-center justify-between gap-4">
           <div class="flex items-center gap-3 flex-1">
-            <!-- Peace dove icon -->
-            <div class="hidden sm:flex items-center justify-center w-10 h-10 bg-white/20 rounded-full flex-shrink-0">
-              <svg class="w-6 h-6 text-green-300" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C10.34 2 9 3.34 9 5c0 .35.07.68.18.99C6.41 6.46 4 8.86 4 12c0 .55.45 1 1 1s1-.45 1-1c0-2.21 1.79-4 4-4 .17 0 .33.03.5.05-.17.31-.5.95-.5.95-.55 0-1 .45-1 1s.45 1 1 1h2c.55 0 1-.45 1-1s-.45-1-1-1c0 0-.33-.64-.5-.95.17-.02.33-.05.5-.05 2.21 0 4 1.79 4 4 0 .55.45 1 1 1s1-.45 1-1c0-3.14-2.41-5.54-5.18-6.01.11-.31.18-.64.18-.99 0-1.66-1.34-3-3-3z"/>
-              </svg>
-            </div>
-
             <div class="flex-1 min-w-0">
               <!-- Main message -->
               <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
