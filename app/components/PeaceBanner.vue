@@ -8,7 +8,6 @@
     leave-to-class="-translate-y-full opacity-0"
   >
     <div
-      v-if="true"
       class="w-full shadow-lg flex-shrink-0"
       style="background: linear-gradient(135deg, #032ea1 0%, #1e40af 50%, #032ea1 100%)"
     >
@@ -43,18 +42,6 @@
               </p>
             </div>
           </div>
-
-          <!-- Close button -->
-          <button
-            @click="dismissBanner"
-            class="flex-shrink-0 p-1.5 hover:bg-white/20 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
-            aria-label="Close peace banner"
-            title="បិទ"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
         </div>
       </div>
 
@@ -65,35 +52,4 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-
-const showBanner = ref(true)
-
-// Check if user has dismissed the banner before
-onMounted(() => {
-  if (typeof window !== 'undefined') {
-    const dismissed = localStorage.getItem('peace_banner_dismissed')
-    const dismissedDate = localStorage.getItem('peace_banner_dismissed_date')
-
-    // Show banner again after 7 days
-    if (dismissed && dismissedDate) {
-      const daysSinceDismissed = (Date.now() - parseInt(dismissedDate)) / (1000 * 60 * 60 * 24)
-      if (daysSinceDismissed > 7) {
-        showBanner.value = true
-        localStorage.removeItem('peace_banner_dismissed')
-        localStorage.removeItem('peace_banner_dismissed_date')
-      } else {
-        showBanner.value = false
-      }
-    }
-  }
-})
-
-function dismissBanner() {
-  showBanner.value = false
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('peace_banner_dismissed', 'true')
-    localStorage.setItem('peace_banner_dismissed_date', Date.now().toString())
-  }
-}
 </script>

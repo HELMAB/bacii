@@ -14,8 +14,6 @@ We stand in solidarity with our brave soldiers defending Cambodia's sovereignty 
 
 **🙏 កម្ពុជាត្រូវការសន្តិភាព • Together we stand for peace and sovereignty**
 
-> **📢 Peace Banner**: A prominent peace banner is displayed on the [live website](https://dobpi.netlify.app) to raise awareness and show support for Cambodia's call for peace during this difficult time.
-
 </div>
 
 ---
