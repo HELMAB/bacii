@@ -14,27 +14,23 @@
       <!-- Red top stripe (Cambodian flag inspired) -->
       <div class="w-full h-1.5 bg-red-600"></div>
 
-      <div class="py-3 px-4 text-white">
-        <div class="max-w-full mx-auto flex items-center justify-between gap-4">
-          <div class="flex items-center gap-3 flex-1">
-            <div class="flex-1 min-w-0">
-              <!-- Main message -->
-              <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                <div class="flex items-center gap-2">
-                  <span class="text-lg sm:text-xl font-bold">🕊️ កម្ពុជាត្រូវការសន្តិភាព</span>
-                </div>
-                <span class="hidden sm:inline text-white/60">•</span>
-                <div class="flex items-center gap-2">
-                  <span class="text-base sm:text-lg font-semibold">CAMBODIA NEEDS PEACE 🇰🇭</span>
-                </div>
-              </div>
-
-              <!-- Support message -->
-              <p class="text-xs sm:text-sm text-white/90 mt-1">
-                យើងគាំទ្រដល់ទាហានខ្មែរទាំងអស់ដែលការពារទឹកដីជាតិ • We stand with our brave soldiers defending our homeland
-              </p>
+      <div class="py-3 px-4 text-white text-center">
+        <div class="max-w-full mx-auto">
+          <!-- Main message -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 justify-center">
+            <div class="flex items-center gap-2 justify-center">
+              <span class="text-lg sm:text-xl font-bold">🕊️ កម្ពុជាត្រូវការសន្តិភាព</span>
+            </div>
+            <span class="hidden sm:inline text-white/60">•</span>
+            <div class="flex items-center gap-2 justify-center">
+              <span class="text-base sm:text-lg font-semibold">CAMBODIA NEEDS PEACE 🇰🇭</span>
             </div>
           </div>
+
+          <!-- Support message -->
+          <p class="text-xs sm:text-sm text-white/90 mt-1">
+            យើងគាំទ្រដល់ទាហានខ្មែរទាំងអស់ដែលការពារទឹកដីជាតិ • We stand with our brave soldiers defending our homeland
+          </p>
         </div>
       </div>
 
