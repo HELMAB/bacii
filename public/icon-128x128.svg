@@ -1,21 +1,14 @@
 <svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-
   <!-- Background -->
-  <rect width="128" height="128" fill="url(#grad)" rx="19.2"/>
+  <rect width="128" height="128" fill="#253c99" rx="19.2"/>
 
   <!-- Icon Design - Book/Document -->
   <g transform="translate(32, 25.6)">
     <!-- Book -->
     <rect x="0" y="0" width="64" height="76.8" fill="white" opacity="0.9" rx="6.4"/>
-    <rect x="6.4" y="12.8" width="51.2" height="6.4" fill="#3B82F6" opacity="0.7" rx="2.56"/>
-    <rect x="6.4" y="25.6" width="38.4" height="3.84" fill="#3B82F6" opacity="0.5" rx="1.92"/>
-    <rect x="6.4" y="34.56" width="44.8" height="3.84" fill="#3B82F6" opacity="0.5" rx="1.92"/>
+    <rect x="6.4" y="12.8" width="51.2" height="6.4" fill="#253c99" opacity="0.7" rx="2.56"/>
+    <rect x="6.4" y="25.6" width="38.4" height="3.84" fill="#253c99" opacity="0.5" rx="1.92"/>
+    <rect x="6.4" y="34.56" width="44.8" height="3.84" fill="#253c99" opacity="0.5" rx="1.92"/>
 
     <!-- Star accent -->
     <path d="M 53.76 6.4 L 57.6 15.36 L 66.56 15.36 L 60.16 21.76 L 62.72 30.72 L 53.76 24.32 L 44.8 30.72 L 47.36 21.76 L 40.96 15.36 L 49.92 15.36 Z"

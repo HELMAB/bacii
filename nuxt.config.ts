@@ -23,7 +23,7 @@ export default defineNuxtConfig({
         { name: 'keywords', content: 'ប្រឡងបាក់ឌុប, វិទ្យាសាស្ត្រសង្គម, ឯកសារប្រឡង, គណិតវិទ្យា, រូបវិទ្យា, គីមីវិទ្យា, ជីវវិទ្យា, អក្សរសាស្ត្រខ្មែរ, ប្រវត្តិសាស្ត្រ, ភូមិវិទ្យា, សីលធម៌, ភាសាអង់គ្លេស' },
         { name: 'author', content: 'Dobpi' },
         { name: 'robots', content: 'index, follow' },
-        { name: 'theme-color', content: '#3B82F6' },
+        { name: 'theme-color', content: '#253c99' },
 
         // Open Graph / Facebook
         { property: 'og:type', content: 'website' },

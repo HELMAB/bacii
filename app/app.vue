@@ -10,28 +10,6 @@
     <!-- Keyboard Shortcuts Modal -->
     <KeyboardShortcutsModal :show="showKeyboardShortcuts" @close="showKeyboardShortcuts = false" />
 
-    <!-- Confirm Clear Recently Viewed Modal -->
-    <ConfirmModal
-      :show="showClearConfirm"
-      title="បញ្ជាក់ការសម្អាត"
-      message="តើអ្នកប្រាកដថាចង់សម្អាតប្រវត្តិមើលថ្មីៗទេ?"
-      confirmText="សម្អាត"
-      cancelText="បោះបង់"
-      @confirm="handleClearConfirm"
-      @cancel="showClearConfirm = false"
-    />
-
-    <!-- Confirm Clear Favorites Modal -->
-    <ConfirmModal
-      :show="showClearFavoritesConfirm"
-      title="បញ្ជាក់ការសម្អាត"
-      message="តើអ្នកប្រាកដថាចង់សម្អាតចំណូលចិត្តទាំងអស់ទេ?"
-      confirmText="សម្អាត"
-      cancelText="បោះបង់"
-      @confirm="handleClearFavoritesConfirm"
-      @cancel="showClearFavoritesConfirm = false"
-    />
-
     <!-- PDF Selector Modal -->
     <PdfSelectorModal
       :show="showPdfSelector"
@@ -54,8 +32,6 @@
       :isDesktop="isDesktop"
       :isCompactMode="isCompactMode"
       v-model:searchQuery="searchQuery"
-      :recentlyViewed="recentlyViewed"
-      :favorites="favorites"
       :filteredData="filteredData"
       :expandedCategories="expandedCategories"
       :expandedYears="expandedYears"
@@ -64,9 +40,6 @@
       @toggleCategory="toggleCategory"
       @toggleYear="toggleYear"
       @selectPdf="handleSelectPdf"
-      @clearRecentlyViewed="clearRecentlyViewedWrapper"
-      @removeFavorite="removeFavorite"
-      @clearFavorites="clearFavoritesWrapper"
       @closeSidebar="toggleSidebar"
     />
 
@@ -107,12 +80,10 @@
           :zoomLevel="zoomLevel"
           :isDark="isDark"
           :isComparisonMode="isComparisonMode"
-          :isFavorite="isFavorite(selectedPdf)"
           @toggleSidebar="toggleSidebar"
           @previousPdf="goToPreviousPdf"
           @nextPdf="goToNextPdf"
           @showKeyboardShortcuts="showKeyboardShortcuts = true"
-          @toggleFavorite="handleToggleFavorite"
           @toggleComparison="handleToggleComparison"
           @zoomIn="zoomIn"
           @zoomOut="zoomOut"
@@ -153,7 +124,6 @@ import OfflineIndicator from './components/OfflineIndicator.vue'
 import PWAInstallPrompt from './components/PWAInstallPrompt.vue'
 import ToastNotification from './components/ToastNotification.vue'
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal.vue'
-import ConfirmModal from './components/ConfirmModal.vue'
 import SidebarMain from './components/Sidebar/SidebarMain.vue'
 import EmptyState from './components/PdfViewer/EmptyState.vue'
 import PdfViewerHeader from './components/PdfViewer/PdfViewerHeader.vue'
@@ -169,8 +139,6 @@ import { useToast } from './composables/useToast'
 import { useResponsive } from './composables/useResponsive'
 import { useSidebar } from './composables/useSidebar'
 import { useSearch } from './composables/useSearch'
-import { useRecentlyViewed } from './composables/useRecentlyViewed'
-import { useFavorites } from './composables/useFavorites'
 import { usePdfViewer } from './composables/usePdfViewer'
 import { useNavigation } from './composables/useNavigation'
 import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
@@ -202,14 +170,6 @@ const {
 
 // Search
 const { searchQuery, filteredData } = useSearch(data, expandedCategories, expandedYears)
-
-// Recently viewed
-const { recentlyViewed, addToRecentlyViewed, clearRecentlyViewed: clearRecent } = useRecentlyViewed()
-const showClearConfirm = ref(false)
-
-// Favorites
-const { favorites, isFavorite, toggleFavorite, removeFavorite, clearFavorites } = useFavorites()
-const showClearFavoritesConfirm = ref(false)
 
 // Comparison Mode
 const {
@@ -289,8 +249,6 @@ function selectPdf(subject, category, year) {
   selectedYear.value = year
   zoomLevel.value = isDesktop.value ? 0.75 : 1
 
-  addToRecentlyViewed(subject, category, year)
-
   if (pdfContainer.value) {
     pdfContainer.value.scrollTop = 0
   }
@@ -302,21 +260,8 @@ function selectPdf(subject, category, year) {
   }, 2000)
 }
 
-function clearRecentlyViewedWrapper() {
-  showClearConfirm.value = true
-}
-
-function handleClearConfirm() {
-  clearRecent(showToastNotification)
-  showClearConfirm.value = false
-}
-
-function handleSelectPdf(subject, category, year, isFromRecent = false) {
+function handleSelectPdf(subject, category, year) {
   selectPdf(subject, category, year)
-  if (isFromRecent) {
-    expandedCategories[category] = true
-    expandedYears[year] = true
-  }
 }
 
 // Comparison Mode Functions
@@ -350,30 +295,6 @@ function handlePdfSelection(subject, category, year) {
     setComparisonPdf2(subject, category, year)
     showToastNotification(`✓ បានជ្រើសរើសឯកសារ ២: ${subject.label}`)
   }
-}
-
-// Favorites Functions
-function handleToggleFavorite() {
-  if (!selectedPdf.value) return
-
-  const subject = { pdf: selectedPdf.value, label: selectedPdfTitle.value }
-  const isAdded = toggleFavorite(subject, selectedCategory.value, selectedYear.value)
-
-  if (isAdded) {
-    showToastNotification(`⭐ បានបន្ថែមទៅចំណូលចិត្ត: ${selectedPdfTitle.value}`)
-  } else {
-    showToastNotification(`✓ បានលុបចេញពីចំណូលចិត្ត: ${selectedPdfTitle.value}`)
-  }
-}
-
-function clearFavoritesWrapper() {
-  showClearFavoritesConfirm.value = true
-}
-
-function handleClearFavoritesConfirm() {
-  clearFavorites()
-  showClearFavoritesConfirm.value = false
-  showToastNotification('✓ បានសម្អាតចំណូលចិត្តទាំងអស់')
 }
 
 // Navigation

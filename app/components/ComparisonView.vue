@@ -13,7 +13,7 @@
             :class="[
               'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
               comparisonPdf1 && comparisonPdf2
-                ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50'
+                ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-900/50'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
             ]"
             title="ប្តូរឯកសារ"
@@ -35,7 +35,7 @@
       <!-- Left PDF Panel -->
       <div class="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <!-- Panel Header -->
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-3">
+        <div class="bg-primary-600 text-white p-3">
           <div class="flex items-center justify-between">
             <div class="flex-1">
               <h3 class="font-bold text-sm">ឯកសារ ១</h3>
@@ -58,9 +58,7 @@
         <div class="flex-1 overflow-auto" ref="pdfContainer1">
           <div v-if="!comparisonPdf1" class="flex items-center justify-center h-full">
             <div class="text-center text-gray-500 dark:text-gray-400">
-              <svg class="w-16 h-16 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+              <FileText class="w-16 h-16 mx-auto mb-3 opacity-50" />
               <p class="text-sm">សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប</p>
             </div>
           </div>
@@ -77,7 +75,7 @@
       <!-- Right PDF Panel -->
       <div class="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <!-- Panel Header -->
-        <div class="bg-gradient-to-r from-green-500 to-teal-600 text-white p-3">
+        <div class="bg-primary-600 text-white p-3">
           <div class="flex items-center justify-between">
             <div class="flex-1">
               <h3 class="font-bold text-sm">ឯកសារ ២</h3>
@@ -100,9 +98,7 @@
         <div class="flex-1 overflow-auto" ref="pdfContainer2">
           <div v-if="!comparisonPdf2" class="flex items-center justify-center h-full">
             <div class="text-center text-gray-500 dark:text-gray-400">
-              <svg class="w-16 h-16 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+              <FileText class="w-16 h-16 mx-auto mb-3 opacity-50" />
               <p class="text-sm">សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប</p>
             </div>
           </div>
@@ -121,6 +117,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { FileText } from '@lucide/vue'
 
 const VuePdfEmbed = ref(null)
 

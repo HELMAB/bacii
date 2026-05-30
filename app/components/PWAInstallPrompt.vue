@@ -9,7 +9,7 @@
   >
     <div
       v-if="showPrompt"
-      class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gradient-to-r from-blue-600 to-indigo-600 shadow-2xl border-t-4 border-white"
+      class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-primary-600 shadow-2xl border-t-4 border-white"
     >
       <div class="max-w-4xl mx-auto">
         <div class="flex items-center justify-between gap-4">
@@ -17,9 +17,7 @@
           <div class="flex items-center gap-4 flex-1">
             <!-- App Icon -->
             <div class="flex-shrink-0 w-16 h-16 bg-white rounded-xl shadow-lg flex items-center justify-center">
-              <svg class="w-10 h-10 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-              </svg>
+              <GraduationCap class="w-10 h-10 text-primary-600" />
             </div>
 
             <!-- Text Content -->
@@ -33,7 +31,7 @@
           <div class="flex items-center gap-2 flex-shrink-0">
             <button
               @click="installApp"
-              class="px-6 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
+              class="px-6 py-3 bg-white text-primary-600 font-bold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
             >
               ដំឡើង
             </button>
@@ -42,9 +40,7 @@
               class="px-4 py-3 text-white hover:bg-white/20 rounded-lg transition-colors"
               aria-label="បិទ"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X class="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -55,6 +51,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { GraduationCap, X } from '@lucide/vue'
 
 const showPrompt = ref(false)
 const deferredPrompt = ref(null)

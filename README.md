@@ -46,8 +46,6 @@ A modern, feature-rich PDF viewer application for Cambodian national exam papers
 ### Navigation
 - Organized by category, year, and subject
 - Quick navigation between PDFs with arrow keys
-- Recently viewed history (last 5 documents)
-- Favorites system with localStorage persistence
 - Search functionality across all subjects
 - Breadcrumb navigation
 - Current document position indicator
@@ -106,15 +104,13 @@ A modern, feature-rich PDF viewer application for Cambodian national exam papers
 
 ## State Management
 
-The application uses Vue 3 Composition API with 13 custom composables for state management:
+The application uses Vue 3 Composition API with 11 custom composables for state management:
 
 - `useComparison` - PDF comparison mode state
 - `useDocsCache` - Document data caching with 24-hour expiry
-- `useFavorites` - Favorites management with localStorage
 - `useKeyboardShortcuts` - Global keyboard navigation
 - `useNavigation` - PDF navigation and history
 - `usePdfViewer` - PDF viewer state (zoom, page, fullscreen)
-- `useRecentlyViewed` - Recently viewed tracking (max 5 items)
 - `useResponsive` - Responsive breakpoints detection
 - `useSearch` - Search functionality across documents
 - `useSidebar` - Sidebar state and compact mode
@@ -128,7 +124,6 @@ bacii/
 ├── app/
 │   ├── app.vue              # Main application component (443 lines)
 │   ├── components/
-│   │   ├── ConfirmModal.vue # Confirmation modal component
 │   │   ├── InstallPrompt.vue # PWA install prompt
 │   │   ├── KeyboardShortcutsModal.vue # Keyboard shortcuts help
 │   │   ├── OfflineIndicator.vue # Connection status indicator
@@ -139,18 +134,14 @@ bacii/
 │   │   │   ├── ComparisonView.vue  # Side-by-side comparison
 │   │   │   └── PdfControls.vue     # Zoom, print, download controls
 │   │   └── Sidebar/         # Sidebar components
-│   │       ├── FavoritesSection.vue # Favorites list
-│   │       ├── RecentSection.vue    # Recently viewed
 │   │       ├── SearchBar.vue        # Search functionality
 │   │       └── TreeView.vue         # Document tree navigation
-│   ├── composables/         # Vue composables (13 files)
+│   ├── composables/         # Vue composables (11 files)
 │   │   ├── useComparison.js
 │   │   ├── useDocsCache.js
-│   │   ├── useFavorites.js
 │   │   ├── useKeyboardShortcuts.js
 │   │   ├── useNavigation.js
 │   │   ├── usePdfViewer.js
-│   │   ├── useRecentlyViewed.js
 │   │   ├── useResponsive.js
 │   │   ├── useSearch.js
 │   │   ├── useSidebar.js
@@ -296,8 +287,6 @@ The application implements a comprehensive multi-layer caching system:
 - Cache keys:
   - `bacii_docs_data` - Document structure
   - `bacii_docs_version` - Cache timestamp
-  - `favorites` - User favorites list
-  - `recentlyViewed` - Recently viewed documents
   - `theme` - Dark mode preference
   - `compactMode` - Sidebar compact mode state
 
@@ -589,11 +578,6 @@ Check out the [Nuxt deployment documentation](https://nuxt.com/docs/getting-star
 - Verify `theme` key exists in localStorage
 - Clear localStorage and toggle dark mode again
 
-#### Recently Viewed/Favorites Not Saving
-- Check localStorage quota (usually 5-10MB)
-- Verify localStorage is not disabled
-- Check browser's privacy settings
-
 ### Development Tips
 
 #### Hot Module Replacement
@@ -623,7 +607,7 @@ View all app data in localStorage:
 // In browser console
 Object.keys(localStorage).filter(key =>
   key.startsWith('bacii') ||
-  ['favorites', 'recentlyViewed', 'theme', 'compactMode'].includes(key)
+  ['theme', 'compactMode'].includes(key)
 ).forEach(key => console.log(key, localStorage.getItem(key)))
 ```
 

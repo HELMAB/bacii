@@ -4,23 +4,16 @@ import { join } from 'path'
 // SVG template for the icon
 const createIconSVG = (size) => `
 <svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-
   <!-- Background -->
-  <rect width="${size}" height="${size}" fill="url(#grad)" rx="${size * 0.15}"/>
+  <rect width="${size}" height="${size}" fill="#253c99" rx="${size * 0.15}"/>
 
   <!-- Icon Design - Book/Document -->
   <g transform="translate(${size * 0.25}, ${size * 0.2})">
     <!-- Book -->
     <rect x="0" y="0" width="${size * 0.5}" height="${size * 0.6}" fill="white" opacity="0.9" rx="${size * 0.05}"/>
-    <rect x="${size * 0.05}" y="${size * 0.1}" width="${size * 0.4}" height="${size * 0.05}" fill="#3B82F6" opacity="0.7" rx="${size * 0.02}"/>
-    <rect x="${size * 0.05}" y="${size * 0.2}" width="${size * 0.3}" height="${size * 0.03}" fill="#3B82F6" opacity="0.5" rx="${size * 0.015}"/>
-    <rect x="${size * 0.05}" y="${size * 0.27}" width="${size * 0.35}" height="${size * 0.03}" fill="#3B82F6" opacity="0.5" rx="${size * 0.015}"/>
+    <rect x="${size * 0.05}" y="${size * 0.1}" width="${size * 0.4}" height="${size * 0.05}" fill="#253c99" opacity="0.7" rx="${size * 0.02}"/>
+    <rect x="${size * 0.05}" y="${size * 0.2}" width="${size * 0.3}" height="${size * 0.03}" fill="#253c99" opacity="0.5" rx="${size * 0.015}"/>
+    <rect x="${size * 0.05}" y="${size * 0.27}" width="${size * 0.35}" height="${size * 0.03}" fill="#253c99" opacity="0.5" rx="${size * 0.015}"/>
 
     <!-- Star accent -->
     <path d="M ${size * 0.42} ${size * 0.05} L ${size * 0.45} ${size * 0.12} L ${size * 0.52} ${size * 0.12} L ${size * 0.47} ${size * 0.17} L ${size * 0.49} ${size * 0.24} L ${size * 0.42} ${size * 0.19} L ${size * 0.35} ${size * 0.24} L ${size * 0.37} ${size * 0.17} L ${size * 0.32} ${size * 0.12} L ${size * 0.39} ${size * 0.12} Z"

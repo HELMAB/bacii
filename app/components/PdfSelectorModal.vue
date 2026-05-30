@@ -8,7 +8,7 @@
       class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
     >
       <!-- Header -->
-      <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4">
+      <div class="bg-primary-600 text-white p-4">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-xl font-bold">ជ្រើសរើសឯកសារ {{ pdfNumber }}</h2>
@@ -18,9 +18,7 @@
             @click="$emit('close')"
             class="p-2 hover:bg-white/20 rounded-lg transition-colors"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X class="w-6 h-6" />
           </button>
         </div>
       </div>
@@ -29,7 +27,7 @@
       <div class="flex-1 overflow-y-auto p-6">
         <!-- Categories -->
         <div v-for="category in data" :key="category.label" class="mb-6">
-          <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg p-3 mb-3">
+          <div class="bg-primary-600 text-white rounded-lg p-3 mb-3">
             <h3 class="font-bold">{{ category.label }}</h3>
           </div>
 
@@ -46,7 +44,7 @@
                   v-for="subject in year.children"
                   :key="subject.pdf"
                   @click="handleSelect(subject, category.label, year.label)"
-                  class="flex items-center gap-2 p-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all text-left"
+                  class="flex items-center gap-2 p-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-md transition-all text-left"
                 >
                   <span class="text-xl">{{ getSubjectIcon(subject.label) }}</span>
                   <span class="text-sm text-gray-700 dark:text-gray-300 font-medium">
@@ -63,6 +61,7 @@
 </template>
 
 <script setup>
+import { X } from '@lucide/vue'
 import { getSubjectIcon } from '../constants/icons'
 
 defineProps({

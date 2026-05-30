@@ -9,7 +9,7 @@
   >
     <div
       class="w-full shadow-lg flex-shrink-0"
-      style="background: linear-gradient(135deg, #032ea1 0%, #1e40af 50%, #032ea1 100%)"
+      style="background: #253c99"
     >
       <!-- Red top stripe (Cambodian flag inspired) -->
       <div class="w-full h-1.5 bg-red-600"></div>
