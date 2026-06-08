@@ -58,20 +58,22 @@
         </div>
 
         <!-- PDF Viewer 1 -->
-        <div ref="pdfContainer1" class="flex-1 overflow-auto">
+        <div ref="pdfContainer1" class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 py-4">
           <div v-if="!comparisonPdf1" class="flex items-center justify-center h-full">
             <div class="text-center text-gray-400 dark:text-gray-600">
               <FileText class="w-14 h-14 mx-auto mb-3" :stroke-width="1" />
               <p class="text-sm">សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប</p>
             </div>
           </div>
-          <component
-            :is="VuePdfEmbed"
-            v-else-if="VuePdfEmbed"
-            :source="comparisonPdf1"
-            class="w-full h-auto"
-            @rendered="onPdfRendered"
-          />
+          <div v-else class="w-fit mx-auto px-2">
+            <component
+              :is="VuePdfEmbed"
+              v-if="VuePdfEmbed"
+              :source="comparisonPdf1"
+              :width="COMPARISON_PDF_WIDTH"
+              @rendered="onPdfRendered"
+            />
+          </div>
         </div>
       </div>
 
@@ -102,20 +104,22 @@
         </div>
 
         <!-- PDF Viewer 2 -->
-        <div ref="pdfContainer2" class="flex-1 overflow-auto">
+        <div ref="pdfContainer2" class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 py-4">
           <div v-if="!comparisonPdf2" class="flex items-center justify-center h-full">
             <div class="text-center text-gray-400 dark:text-gray-600">
               <FileText class="w-14 h-14 mx-auto mb-3" :stroke-width="1" />
               <p class="text-sm">សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប</p>
             </div>
           </div>
-          <component
-            :is="VuePdfEmbed"
-            v-else-if="VuePdfEmbed"
-            :source="comparisonPdf2"
-            class="w-full h-auto"
-            @rendered="onPdfRendered"
-          />
+          <div v-else class="w-fit mx-auto px-2">
+            <component
+              :is="VuePdfEmbed"
+              v-if="VuePdfEmbed"
+              :source="comparisonPdf2"
+              :width="COMPARISON_PDF_WIDTH"
+              @rendered="onPdfRendered"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -127,6 +131,9 @@ import { ref, onMounted } from 'vue'
 import { FileText, X } from '@lucide/vue'
 
 const VuePdfEmbed = ref(null)
+
+// Render width for each comparison panel (px) — panels are roughly half-width on desktop.
+const COMPARISON_PDF_WIDTH = 520
 
 defineProps({
   comparisonPdf1: String,

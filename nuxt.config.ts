@@ -77,6 +77,20 @@ export default defineNuxtConfig({
       ],
       script: [
         {
+          // Apply the saved theme before first paint to avoid a light-mode flash (FOUC).
+          children: `
+            (function () {
+              try {
+                if (localStorage.getItem('theme') === 'dark') {
+                  document.documentElement.classList.add('dark');
+                }
+              } catch (e) {}
+            })();
+          `,
+          type: 'text/javascript',
+          tagPosition: 'head'
+        },
+        {
           children: `
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', () => {

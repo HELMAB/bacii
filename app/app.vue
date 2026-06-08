@@ -95,27 +95,43 @@
           :selected-pdf="selectedPdf"
           :is-loading="isLoading"
           :zoom-level="zoomLevel"
-          :current-page="currentPage"
-          :total-pages="totalPages"
           @rendered="onPdfRendered"
           @loading-failed="onPdfError"
           @internal-link-clicked="onInternalLinkClicked"
         />
+
+        <!-- Floating controls (positioned over the reader, not the viewport) -->
+        <template v-if="selectedPdf && !isComparisonMode">
+          <!-- Page progress indicator -->
+          <Transition
+            enter-active-class="transition-opacity duration-300 ease-out"
+            enter-from-class="opacity-0"
+            leave-active-class="transition-opacity duration-300 ease-in"
+            leave-to-class="opacity-0"
+          >
+            <div
+              v-if="totalPages > 0 && !isLoading"
+              class="absolute bottom-6 left-6 z-30 bg-gray-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-gray-900 px-3 py-1.5"
+            >
+              <span class="text-xs font-medium tabular-nums">
+                ទំព័រ {{ currentPage }} / {{ totalPages }}
+              </span>
+            </div>
+          </Transition>
+
+          <PdfPager
+            :current-pdf-index="currentPdfIndex"
+            :total-pdfs-count="totalPdfsCount"
+            :can-go-previous="canGoPrevious"
+            :can-go-next="canGoNext"
+            @previous="goToPreviousPdf"
+            @next="goToNextPdf"
+          />
+
+          <ScrollToTopButton :show="showScrollTop" @click="scrollToTop" />
+        </template>
       </main>
     </div>
-
-    <!-- Floating controls -->
-    <PdfPager
-      v-if="selectedPdf && !isComparisonMode"
-      :current-pdf-index="currentPdfIndex"
-      :total-pdfs-count="totalPdfsCount"
-      :can-go-previous="canGoPrevious"
-      :can-go-next="canGoNext"
-      @previous="goToPreviousPdf"
-      @next="goToNextPdf"
-    />
-
-    <ScrollToTopButton :show="showScrollTop && !isComparisonMode" @click="scrollToTop" />
   </div>
 </template>
 

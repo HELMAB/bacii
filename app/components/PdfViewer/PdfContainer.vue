@@ -38,23 +38,6 @@
         </ClientOnly>
       </div>
     </Transition>
-
-    <!-- Page Progress Indicator -->
-    <Transition
-      enter-active-class="transition-opacity duration-300 ease-out"
-      enter-from-class="opacity-0"
-      leave-active-class="transition-opacity duration-300 ease-in"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="selectedPdf && totalPages > 0 && !isLoading"
-        class="fixed bottom-6 left-6 z-30 bg-gray-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-gray-900 px-3 py-1.5"
-      >
-        <span class="text-xs font-medium tabular-nums">
-          ទំព័រ {{ currentPage }} / {{ totalPages }}
-        </span>
-      </div>
-    </Transition>
   </div>
 </template>
 
@@ -70,9 +53,7 @@ const BASE_PDF_WIDTH = 820
 const props = defineProps({
   selectedPdf: String,
   isLoading: Boolean,
-  zoomLevel: Number,
-  currentPage: Number,
-  totalPages: Number
+  zoomLevel: Number
 })
 
 defineEmits(['rendered', 'loadingFailed', 'internalLinkClicked'])
