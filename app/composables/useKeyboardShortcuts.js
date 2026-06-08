@@ -23,11 +23,12 @@ export function useKeyboardShortcuts({
     }
 
     switch (e.key) {
-      case '/':
+      case '/': {
         e.preventDefault()
         const searchInput = document.querySelector('input[type="text"]')
         searchInput?.focus()
         break
+      }
       case '?':
         e.preventDefault()
         showKeyboardShortcuts.value = !showKeyboardShortcuts.value

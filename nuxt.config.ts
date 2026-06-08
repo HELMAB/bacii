@@ -3,9 +3,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: [
-    '@nuxtjs/tailwindcss'
-  ],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint'],
+
+  eslint: {
+    config: {
+      stylistic: false
+    }
+  },
 
   css: ['~/assets/css/main.css'],
 
@@ -19,8 +23,16 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។' },
-        { name: 'keywords', content: 'ប្រឡងបាក់ឌុប, វិទ្យាសាស្ត្រសង្គម, ឯកសារប្រឡង, គណិតវិទ្យា, រូបវិទ្យា, គីមីវិទ្យា, ជីវវិទ្យា, អក្សរសាស្ត្រខ្មែរ, ប្រវត្តិសាស្ត្រ, ភូមិវិទ្យា, សីលធម៌, ភាសាអង់គ្លេស' },
+        {
+          name: 'description',
+          content:
+            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។'
+        },
+        {
+          name: 'keywords',
+          content:
+            'ប្រឡងបាក់ឌុប, វិទ្យាសាស្ត្រសង្គម, ឯកសារប្រឡង, គណិតវិទ្យា, រូបវិទ្យា, គីមីវិទ្យា, ជីវវិទ្យា, អក្សរសាស្ត្រខ្មែរ, ប្រវត្តិសាស្ត្រ, ភូមិវិទ្យា, សីលធម៌, ភាសាអង់គ្លេស'
+        },
         { name: 'author', content: 'Dobpi' },
         { name: 'robots', content: 'index, follow' },
         { name: 'theme-color', content: '#253c99' },
@@ -29,7 +41,11 @@ export default defineNuxtConfig({
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'Dobpi' },
         { property: 'og:title', content: 'Dobpi - ឯកសារប្រឡងបាក់ឌុប' },
-        { property: 'og:description', content: 'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។' },
+        {
+          property: 'og:description',
+          content:
+            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។'
+        },
         { property: 'og:image', content: '/og-image.png' },
         { property: 'og:image:alt', content: 'Dobpi - ឯកសារប្រឡងបាក់ឌុប' },
         { property: 'og:image:width', content: '1200' },
@@ -39,7 +55,11 @@ export default defineNuxtConfig({
         // Twitter Card
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: 'Dobpi - ឯកសារប្រឡងបាក់ឌុប' },
-        { name: 'twitter:description', content: 'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២៥. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។' },
+        {
+          name: 'twitter:description',
+          content:
+            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២៥. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។'
+        },
         { name: 'twitter:image', content: '/og-image.png' },
 
         // Additional SEO

@@ -14,12 +14,12 @@ export function useSidebar(isDesktop) {
     const isCurrentlyExpanded = expandedCategories[label]
 
     // Close all categories
-    Object.keys(expandedCategories).forEach(key => {
+    Object.keys(expandedCategories).forEach((key) => {
       expandedCategories[key] = false
     })
 
     // Close all years when switching categories
-    Object.keys(expandedYears).forEach(key => {
+    Object.keys(expandedYears).forEach((key) => {
       expandedYears[key] = false
     })
 
@@ -31,7 +31,7 @@ export function useSidebar(isDesktop) {
     const isCurrentlyExpanded = expandedYears[label]
 
     // Close all years
-    Object.keys(expandedYears).forEach(key => {
+    Object.keys(expandedYears).forEach((key) => {
       expandedYears[key] = false
     })
 

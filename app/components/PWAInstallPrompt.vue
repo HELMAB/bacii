@@ -9,36 +9,38 @@
   >
     <div
       v-if="showPrompt"
-      class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-primary-600 shadow-2xl border-t-4 border-white"
+      class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gray-950 border-t-2 border-primary-500"
     >
       <div class="max-w-4xl mx-auto">
         <div class="flex items-center justify-between gap-4">
           <!-- Icon & Content -->
           <div class="flex items-center gap-4 flex-1">
             <!-- App Icon -->
-            <div class="flex-shrink-0 w-16 h-16 bg-white rounded-xl shadow-lg flex items-center justify-center">
-              <GraduationCap class="w-10 h-10 text-primary-600" />
+            <div class="flex-shrink-0 w-14 h-14 bg-primary-600 flex items-center justify-center">
+              <GraduationCap class="w-8 h-8 text-white" />
             </div>
 
             <!-- Text Content -->
             <div class="text-white flex-1">
-              <h3 class="font-bold text-lg mb-1">ដំឡើង Dobpi</h3>
-              <p class="text-sm opacity-90">ប្រើប្រាស់កម្មវិធីដោយមិនចាំបាច់មានអ៊ីនធឺណិត និងចូលប្រើបានលឿនជាងមុន</p>
+              <h3 class="font-bold text-base mb-0.5">ដំឡើង Dobpi</h3>
+              <p class="text-sm text-white/70">
+                ប្រើប្រាស់កម្មវិធីដោយមិនចាំបាច់មានអ៊ីនធឺណិត និងចូលប្រើបានលឿនជាងមុន
+              </p>
             </div>
           </div>
 
           <!-- Actions -->
           <div class="flex items-center gap-2 flex-shrink-0">
             <button
+              class="px-6 py-3 bg-white text-gray-900 font-bold hover:bg-gray-200 transition-colors"
               @click="installApp"
-              class="px-6 py-3 bg-white text-primary-600 font-bold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
             >
               ដំឡើង
             </button>
             <button
-              @click="dismissPrompt"
-              class="px-4 py-3 text-white hover:bg-white/20 rounded-lg transition-colors"
+              class="px-4 py-3 text-white hover:bg-white/10 transition-colors"
               aria-label="បិទ"
+              @click="dismissPrompt"
             >
               <X class="w-5 h-5" />
             </button>
@@ -108,8 +110,11 @@ function dismissPrompt() {
   localStorage.setItem('pwa-install-dismissed', 'true')
 
   // Show again after 7 days
-  setTimeout(() => {
-    localStorage.removeItem('pwa-install-dismissed')
-  }, 7 * 24 * 60 * 60 * 1000)
+  setTimeout(
+    () => {
+      localStorage.removeItem('pwa-install-dismissed')
+    },
+    7 * 24 * 60 * 60 * 1000
+  )
 }
 </script>

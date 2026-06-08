@@ -1,8 +1,18 @@
 <template>
-  <Transition name="toast">
-    <div v-if="show" class="fixed top-20 right-4 z-50 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
+  <Transition
+    enter-active-class="transition duration-300 ease-out"
+    enter-from-class="translate-x-full opacity-0"
+    enter-to-class="translate-x-0 opacity-100"
+    leave-active-class="transition duration-300 ease-in"
+    leave-from-class="translate-y-0 opacity-100"
+    leave-to-class="-translate-y-5 opacity-0"
+  >
+    <div
+      v-if="show"
+      class="fixed top-20 right-4 z-50 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 py-3 flex items-center gap-2.5 border-l-2 border-primary-500"
+    >
       <Check class="w-5 h-5" />
-      {{ message }}
+      <span class="text-sm">{{ message }}</span>
     </div>
   </Transition>
 </template>
@@ -15,20 +25,3 @@ defineProps({
   message: String
 })
 </script>
-
-<style scoped>
-.toast-enter-active,
-.toast-leave-active {
-  transition: all 0.3s ease;
-}
-
-.toast-enter-from {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-.toast-leave-to {
-  transform: translateY(-20px);
-  opacity: 0;
-}
-</style>

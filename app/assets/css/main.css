@@ -5,8 +5,9 @@
 @layer base {
   @font-face {
     font-family: 'PengHuoth';
-    src: url('/fonts/PengHuoth/PengHuoth-Regular.woff2') format('woff2'),
-         url('/fonts/PengHuoth/PengHuoth-Regular.ttf') format('truetype');
+    src:
+      url('/fonts/PengHuoth/PengHuoth-Regular.woff2') format('woff2'),
+      url('/fonts/PengHuoth/PengHuoth-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -14,8 +15,9 @@
 
   @font-face {
     font-family: 'PengHuoth';
-    src: url('/fonts/PengHuoth/PengHuoth-Bold.woff2') format('woff2'),
-         url('/fonts/PengHuoth/PengHuoth-Bold.ttf') format('truetype');
+    src:
+      url('/fonts/PengHuoth/PengHuoth-Bold.woff2') format('woff2'),
+      url('/fonts/PengHuoth/PengHuoth-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -26,54 +28,11 @@
   }
 }
 
-@layer components {
-  /* Toast Animation */
-  .toast-enter-active,
-  .toast-leave-active {
-    transition: all 0.3s ease;
-  }
-
-  .toast-enter-from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-
-  .toast-leave-to {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-
-  /* Fade Animation */
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: all 0.3s ease;
-  }
-
-  .fade-enter-from,
-  .fade-leave-to {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  /* PDF Fade Animation */
-  .pdf-fade-enter-active,
-  .pdf-fade-leave-active {
-    transition: opacity 0.3s ease;
-  }
-
-  .pdf-fade-enter-from {
-    opacity: 0;
-  }
-
-  .pdf-fade-leave-to {
-    opacity: 0;
-  }
-
-  /* Focus visible styles */
+@layer base {
+  /* Focus visible styles — sharp, no radius */
   *:focus-visible {
     outline: 2px solid #253c99;
     outline-offset: 2px;
-    border-radius: 0.375rem;
   }
 
   /* Smooth scrolling */
@@ -81,27 +40,22 @@
     scroll-behavior: smooth;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar — minimal, square */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: rgb(243 244 246);
-  }
-
-  .dark ::-webkit-scrollbar-track {
-    background: rgb(31 41 55);
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
     background: rgb(209 213 219);
-    border-radius: 5px;
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    background: rgb(75 85 99);
+    background: rgb(55 65 81);
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -109,6 +63,6 @@
   }
 
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: rgb(107 114 128);
+    background: rgb(75 85 99);
   }
 }

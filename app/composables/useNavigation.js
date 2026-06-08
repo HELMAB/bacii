@@ -3,9 +3,9 @@ import { computed } from 'vue'
 export function useNavigation(data, selectedPdf, selectPdf, showToastNotification) {
   const allPdfs = computed(() => {
     const pdfs = []
-    data.value.forEach(category => {
-      category.children.forEach(year => {
-        year.children.forEach(subject => {
+    data.value.forEach((category) => {
+      category.children.forEach((year) => {
+        year.children.forEach((subject) => {
           pdfs.push({
             ...subject,
             category: category.label,
@@ -19,7 +19,7 @@ export function useNavigation(data, selectedPdf, selectPdf, showToastNotificatio
 
   const currentPdfIndex = computed(() => {
     if (!selectedPdf.value) return -1
-    return allPdfs.value.findIndex(pdf => pdf.pdf === selectedPdf.value)
+    return allPdfs.value.findIndex((pdf) => pdf.pdf === selectedPdf.value)
   })
 
   const totalPdfsCount = computed(() => allPdfs.value.length)

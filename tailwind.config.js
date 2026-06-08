@@ -25,13 +25,13 @@ export default {
           800: '#1d2c6b',
           900: '#1c2856',
           950: '#121833',
-          DEFAULT: '#253c99',
-        },
+          DEFAULT: '#253c99'
+        }
       },
       fontFamily: {
-        sans: ['PengHuoth', 'sans-serif'],
-      },
-    },
+        sans: ['PengHuoth', 'sans-serif']
+      }
+    }
   },
-  plugins: [],
+  plugins: []
 }

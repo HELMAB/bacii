@@ -94,7 +94,10 @@ export function usePdfViewer(isDesktop, showToastNotification) {
           const scrollTop = container.scrollTop
           const scrollHeight = container.scrollHeight - container.clientHeight
           const scrollPercent = scrollHeight > 0 ? scrollTop / scrollHeight : 0
-          currentPage.value = Math.min(Math.ceil(scrollPercent * totalPages.value) || 1, totalPages.value)
+          currentPage.value = Math.min(
+            Math.ceil(scrollPercent * totalPages.value) || 1,
+            totalPages.value
+          )
         }
       }
     }

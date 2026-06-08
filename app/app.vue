@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+  <div class="flex h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden">
     <!-- PWA Components -->
     <OfflineIndicator />
     <PWAInstallPrompt />
@@ -13,7 +13,7 @@
     <!-- PDF Selector Modal -->
     <PdfSelectorModal
       :show="showPdfSelector"
-      :pdfNumber="pdfSelectorNumber"
+      :pdf-number="pdfSelectorNumber"
       :data="data"
       @close="showPdfSelector = false"
       @select="handlePdfSelection"
@@ -22,44 +22,44 @@
     <!-- Overlay for mobile -->
     <div
       v-if="isSidebarOpen && !isDesktop"
+      class="lg:hidden fixed inset-0 bg-black/50 z-30 transition-opacity"
       @click="toggleSidebar"
-      class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity"
     ></div>
 
     <!-- Sidebar -->
     <SidebarMain
-      :isOpen="isSidebarOpen"
-      :isDesktop="isDesktop"
-      :isCompactMode="isCompactMode"
-      v-model:searchQuery="searchQuery"
-      :filteredData="filteredData"
-      :expandedCategories="expandedCategories"
-      :expandedYears="expandedYears"
-      :selectedPdf="selectedPdf"
-      @toggleCompactMode="isCompactMode = !isCompactMode"
-      @toggleCategory="toggleCategory"
-      @toggleYear="toggleYear"
-      @selectPdf="handleSelectPdf"
-      @closeSidebar="toggleSidebar"
+      v-model:search-query="searchQuery"
+      :is-open="isSidebarOpen"
+      :is-desktop="isDesktop"
+      :is-compact-mode="isCompactMode"
+      :filtered-data="filteredData"
+      :expanded-categories="expandedCategories"
+      :expanded-years="expandedYears"
+      :selected-pdf="selectedPdf"
+      @toggle-compact-mode="isCompactMode = !isCompactMode"
+      @toggle-category="toggleCategory"
+      @toggle-year="toggleYear"
+      @select-pdf="handleSelectPdf"
+      @close-sidebar="toggleSidebar"
     />
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col bg-gray-200 dark:bg-gray-900 overflow-hidden relative">
+    <div class="flex-1 flex flex-col bg-gray-100 dark:bg-gray-900 overflow-hidden relative">
       <!-- Peace Banner -->
       <PeaceBanner />
 
       <!-- Comparison View -->
       <ComparisonView
         v-if="isComparisonMode"
-        :comparisonPdf1="comparisonPdf1"
-        :comparisonPdf2="comparisonPdf2"
-        :comparisonPdf1Title="comparisonPdf1Title"
-        :comparisonPdf2Title="comparisonPdf2Title"
-        :comparisonPdf1Year="comparisonPdf1Year"
-        :comparisonPdf2Year="comparisonPdf2Year"
+        :comparison-pdf1="comparisonPdf1"
+        :comparison-pdf2="comparisonPdf2"
+        :comparison-pdf1-title="comparisonPdf1Title"
+        :comparison-pdf2-title="comparisonPdf2Title"
+        :comparison-pdf1-year="comparisonPdf1Year"
+        :comparison-pdf2-year="comparisonPdf2Year"
         @close="toggleComparisonMode"
         @swap="swapPdfs"
-        @selectPdf="openPdfSelector"
+        @select-pdf="openPdfSelector"
       />
 
       <!-- Empty State -->
@@ -69,41 +69,41 @@
       <div v-else class="flex-1 flex flex-col overflow-hidden py-2">
         <!-- PDF Viewer Header -->
         <PdfViewerHeader
-          :selectedCategory="selectedCategory"
-          :selectedYear="selectedYear"
-          :selectedPdfTitle="selectedPdfTitle"
-          :isSidebarOpen="isSidebarOpen"
-          :currentPdfIndex="currentPdfIndex"
-          :totalPdfsCount="totalPdfsCount"
-          :canGoPrevious="canGoPrevious"
-          :canGoNext="canGoNext"
-          :zoomLevel="zoomLevel"
-          :isDark="isDark"
-          :isComparisonMode="isComparisonMode"
-          @toggleSidebar="toggleSidebar"
-          @previousPdf="goToPreviousPdf"
-          @nextPdf="goToNextPdf"
-          @showKeyboardShortcuts="showKeyboardShortcuts = true"
-          @toggleComparison="handleToggleComparison"
-          @zoomIn="zoomIn"
-          @zoomOut="zoomOut"
-          @toggleFullscreen="toggleFullscreen"
+          :selected-category="selectedCategory"
+          :selected-year="selectedYear"
+          :selected-pdf-title="selectedPdfTitle"
+          :is-sidebar-open="isSidebarOpen"
+          :current-pdf-index="currentPdfIndex"
+          :total-pdfs-count="totalPdfsCount"
+          :can-go-previous="canGoPrevious"
+          :can-go-next="canGoNext"
+          :zoom-level="zoomLevel"
+          :is-dark="isDark"
+          :is-comparison-mode="isComparisonMode"
+          @toggle-sidebar="toggleSidebar"
+          @previous-pdf="goToPreviousPdf"
+          @next-pdf="goToNextPdf"
+          @show-keyboard-shortcuts="showKeyboardShortcuts = true"
+          @toggle-comparison="handleToggleComparison"
+          @zoom-in="zoomIn"
+          @zoom-out="zoomOut"
+          @toggle-fullscreen="toggleFullscreen"
           @print="printPdf"
           @download="downloadPdf"
-          @toggleDarkMode="toggleDarkMode"
+          @toggle-dark-mode="toggleDarkMode"
         />
 
         <!-- PDF Container -->
         <PdfContainer
           ref="pdfContainerComponent"
-          :selectedPdf="selectedPdf"
-          :isLoading="isLoading"
-          :zoomLevel="zoomLevel"
-          :currentPage="currentPage"
-          :totalPages="totalPages"
+          :selected-pdf="selectedPdf"
+          :is-loading="isLoading"
+          :zoom-level="zoomLevel"
+          :current-page="currentPage"
+          :total-pages="totalPages"
           @rendered="onPdfRendered"
-          @loadingFailed="onPdfError"
-          @internalLinkClicked="onInternalLinkClicked"
+          @loading-failed="onPdfError"
+          @internal-link-clicked="onInternalLinkClicked"
         />
 
         <!-- Scroll to Top Button -->
@@ -178,14 +178,11 @@ const {
   comparisonPdf2,
   comparisonPdf1Title,
   comparisonPdf2Title,
-  comparisonPdf1Category,
-  comparisonPdf2Category,
   comparisonPdf1Year,
   comparisonPdf2Year,
   toggleComparisonMode,
   setComparisonPdf1,
   setComparisonPdf2,
-  clearComparison,
   swapPdfs
 } = useComparison()
 
@@ -298,14 +295,8 @@ function handlePdfSelection(subject, category, year) {
 }
 
 // Navigation
-const {
-  currentPdfIndex,
-  totalPdfsCount,
-  canGoPrevious,
-  canGoNext,
-  goToPreviousPdf,
-  goToNextPdf
-} = useNavigation(data, selectedPdf, selectPdf, showToastNotification)
+const { currentPdfIndex, totalPdfsCount, canGoPrevious, canGoNext, goToPreviousPdf, goToNextPdf } =
+  useNavigation(data, selectedPdf, selectPdf, showToastNotification)
 
 // Keyboard shortcuts
 const { showKeyboardShortcuts } = useKeyboardShortcuts({
@@ -346,4 +337,3 @@ onMounted(async () => {
   }
 })
 </script>
-

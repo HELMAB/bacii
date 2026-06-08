@@ -9,7 +9,7 @@
   >
     <div
       v-if="!isOnline"
-      class="fixed top-0 left-0 right-0 z-50 bg-yellow-500 text-gray-900 py-2 px-4 text-center shadow-lg"
+      class="fixed top-0 left-0 right-0 z-50 bg-amber-400 text-gray-900 py-2 px-4 text-center border-b border-amber-500"
     >
       <div class="flex items-center justify-center gap-2">
         <WifiOff class="w-5 h-5 animate-pulse" />
@@ -31,13 +31,11 @@
   >
     <div
       v-if="showOnlineNotification"
-      class="fixed top-0 left-0 right-0 z-50 bg-green-500 text-white py-2 px-4 text-center shadow-lg"
+      class="fixed top-0 left-0 right-0 z-50 bg-gray-900 text-white py-2 px-4 text-center border-b border-primary-500"
     >
       <div class="flex items-center justify-center gap-2">
         <CircleCheck class="w-5 h-5" />
-        <span class="font-semibold text-sm">
-          បណ្តាញត្រលប់មកវិញហើយ
-        </span>
+        <span class="font-semibold text-sm">បណ្តាញត្រលប់មកវិញហើយ</span>
       </div>
     </div>
   </transition>

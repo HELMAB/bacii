@@ -73,7 +73,7 @@ export function useDocsCache() {
     try {
       const cached = localStorage.getItem(CACHE_KEY)
       return cached ? JSON.parse(cached) : null
-    } catch (err) {
+    } catch {
       return null
     }
   }
@@ -91,9 +91,12 @@ export function useDocsCache() {
     if (typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem(CACHE_KEY, JSON.stringify(freshData))
-        localStorage.setItem(CACHE_VERSION_KEY, JSON.stringify({
-          timestamp: Date.now()
-        }))
+        localStorage.setItem(
+          CACHE_VERSION_KEY,
+          JSON.stringify({
+            timestamp: Date.now()
+          })
+        )
       } catch (err) {
         // Handle quota exceeded errors gracefully
         console.warn('Failed to cache data:', err)

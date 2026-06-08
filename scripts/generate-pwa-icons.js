@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync } from 'fs'
+import { writeFileSync } from 'fs'
 import { join } from 'path'
 
 // SVG template for the icon
@@ -40,7 +40,7 @@ try {
   // Ensure public directory exists
   const publicDir = join(process.cwd(), 'public')
 
-  sizes.forEach(size => {
+  sizes.forEach((size) => {
     const svg = createIconSVG(size)
     const filename = `icon-${size}x${size}.svg`
     const filepath = join(publicDir, filename)
@@ -59,7 +59,6 @@ try {
   console.log('   you can convert them to PNG using an online tool or ImageMagick.')
   console.log('\n🔧 To convert to PNG with ImageMagick:')
   console.log('   for i in public/icon-*.svg; do convert $i ${i%.svg}.png && rm $i; done')
-
 } catch (error) {
   console.error('❌ Error generating icons:', error)
   process.exit(1)
