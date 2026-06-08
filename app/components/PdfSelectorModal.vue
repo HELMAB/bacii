@@ -52,7 +52,10 @@
                   class="flex items-center gap-2.5 p-3 border border-gray-200 dark:border-gray-800 hover:border-primary-600 dark:hover:border-primary-400 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-left"
                   @click="handleSelect(subject, category.label, year.label)"
                 >
-                  <span class="text-lg">{{ getSubjectIcon(subject.label) }}</span>
+                  <component
+                    :is="getSubjectIcon(subject.label)"
+                    class="w-5 h-5 shrink-0 text-primary-600 dark:text-primary-400"
+                  />
                   <span class="text-sm text-gray-700 dark:text-gray-300">
                     {{ subject.label }}
                   </span>

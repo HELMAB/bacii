@@ -29,7 +29,10 @@
         <h2
           class="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2"
         >
-          <span class="text-xl">{{ getSubjectIcon(selectedPdfTitle) }}</span>
+          <component
+            :is="subjectIcon"
+            class="w-5 h-5 shrink-0 text-primary-600 dark:text-primary-400"
+          />
           {{ selectedPdfTitle }}
         </h2>
       </div>
@@ -129,6 +132,7 @@ const props = defineProps({
 })
 
 const zoomPercent = computed(() => Math.round(props.zoomLevel * 100))
+const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
 
 defineEmits([
   'toggleSidebar',
