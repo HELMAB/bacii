@@ -30,6 +30,12 @@ export default {
       },
       fontFamily: {
         sans: ['PengHuoth', 'sans-serif']
+      },
+      backgroundImage: {
+        // Subtle dot grid (graph-paper feel) for reading surfaces. SVG tile, not a gradient.
+        dots: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23cbd5e1'/%3E%3C/svg%3E\")",
+        'dots-dark':
+          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23334155'/%3E%3C/svg%3E\")"
       }
     }
   },

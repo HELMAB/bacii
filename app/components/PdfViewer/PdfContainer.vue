@@ -1,7 +1,7 @@
 <template>
   <div
     ref="pdfContainer"
-    class="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto py-6 sm:py-10 relative"
+    class="flex-1 bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark overflow-auto py-6 sm:py-10 relative"
   >
     <!-- Skeleton Loader -->
     <div v-if="isLoading" class="absolute inset-0 bg-white dark:bg-gray-950 z-10 p-6 space-y-4">

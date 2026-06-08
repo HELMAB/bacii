@@ -58,7 +58,10 @@
         </div>
 
         <!-- PDF Viewer 1 -->
-        <div ref="pdfContainer1" class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 py-4">
+        <div
+          ref="pdfContainer1"
+          class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark py-4"
+        >
           <div v-if="!comparisonPdf1" class="flex items-center justify-center h-full">
             <div class="text-center text-gray-400 dark:text-gray-600">
               <FileText class="w-14 h-14 mx-auto mb-3" :stroke-width="1" />
@@ -104,7 +107,10 @@
         </div>
 
         <!-- PDF Viewer 2 -->
-        <div ref="pdfContainer2" class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 py-4">
+        <div
+          ref="pdfContainer2"
+          class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark py-4"
+        >
           <div v-if="!comparisonPdf2" class="flex items-center justify-center h-full">
             <div class="text-center text-gray-400 dark:text-gray-600">
               <FileText class="w-14 h-14 mx-auto mb-3" :stroke-width="1" />
