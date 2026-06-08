@@ -1,7 +1,7 @@
-import { ref, onMounted } from 'vue'
+import { shallowRef, onMounted } from 'vue'
 
 export function useTheme() {
-  const isDark = ref(false)
+  const isDark = shallowRef(false)
 
   function toggleDarkMode() {
     if (typeof window === 'undefined') return

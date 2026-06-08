@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { shallowRef, onMounted, onUnmounted } from 'vue'
 
 export function useKeyboardShortcuts({
   searchQuery,
@@ -11,7 +11,7 @@ export function useKeyboardShortcuts({
   zoomOut,
   toggleFullscreen
 }) {
-  const showKeyboardShortcuts = ref(false)
+  const showKeyboardShortcuts = shallowRef(false)
 
   function handleKeydown(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {

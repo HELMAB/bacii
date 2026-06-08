@@ -39,7 +39,7 @@
       @toggle-compact-mode="isCompactMode = !isCompactMode"
       @toggle-category="toggleCategory"
       @toggle-year="toggleYear"
-      @select-pdf="handleSelectPdf"
+      @select-pdf="selectPdf"
       @close-sidebar="toggleSidebar"
     />
 
@@ -202,6 +202,7 @@ const {
   totalPages,
   zoomIn,
   zoomOut,
+  createSelectPdf,
   createToggleFullscreen,
   createScrollToTop,
   createHandleScroll,
@@ -217,6 +218,7 @@ const pdfContainer = computed(() => pdfContainerComponent.value?.pdfContainer)
 const pdfRef = computed(() => pdfContainerComponent.value?.pdfRef)
 
 // Create functions that need access to refs
+const selectPdf = createSelectPdf(pdfContainer)
 const toggleFullscreen = createToggleFullscreen(pdfContainer)
 const scrollToTop = createScrollToTop(pdfContainer)
 const handleScroll = createHandleScroll(pdfContainer, pdfRef)
@@ -236,30 +238,6 @@ onUnmounted(() => {
     pdfContainer.value.removeEventListener('scroll', handleScroll)
   }
 })
-
-// Select PDF with history tracking
-function selectPdf(subject, category, year) {
-  isLoading.value = true
-  selectedPdf.value = subject.pdf
-  selectedPdfTitle.value = subject.label
-  selectedCategory.value = category
-  selectedYear.value = year
-  zoomLevel.value = isDesktop.value ? 0.75 : 1
-
-  if (pdfContainer.value) {
-    pdfContainer.value.scrollTop = 0
-  }
-
-  setTimeout(() => {
-    if (isLoading.value) {
-      isLoading.value = false
-    }
-  }, 2000)
-}
-
-function handleSelectPdf(subject, category, year) {
-  selectPdf(subject, category, year)
-}
 
 // Comparison Mode Functions
 function handleToggleComparison() {

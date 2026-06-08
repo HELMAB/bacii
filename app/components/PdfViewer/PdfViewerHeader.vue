@@ -72,7 +72,7 @@
           <span
             class="px-2 text-sm font-medium tabular-nums text-gray-700 dark:text-gray-300 min-w-[3.5rem] text-center border-x border-gray-200 dark:border-gray-800 self-stretch flex items-center justify-center"
           >
-            {{ Math.round(zoomLevel * 100) }}%
+            {{ zoomPercent }}%
           </span>
           <button
             class="px-2 py-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -109,11 +109,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { ChevronRight, ChevronLeft, X, Menu, ZoomIn, ZoomOut, Download } from '@lucide/vue'
 import { getSubjectIcon } from '../../constants/icons'
 import HeaderActionsDropdown from './HeaderActionsDropdown.vue'
 
-defineProps({
+const props = defineProps({
   selectedCategory: String,
   selectedYear: String,
   selectedPdfTitle: String,
@@ -126,6 +127,8 @@ defineProps({
   isDark: Boolean,
   isComparisonMode: Boolean
 })
+
+const zoomPercent = computed(() => Math.round(props.zoomLevel * 100))
 
 defineEmits([
   'toggleSidebar',

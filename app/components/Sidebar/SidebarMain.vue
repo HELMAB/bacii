@@ -32,9 +32,7 @@
       <!-- Search Bar -->
       <SearchBar
         :model-value="searchQuery"
-        :focused="isSearchFocused"
         @update:model-value="$emit('update:searchQuery', $event)"
-        @update:focused="isSearchFocused = $event"
       />
 
       <!-- Category List -->
@@ -55,7 +53,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { Rows2, Rows4 } from '@lucide/vue'
 import SearchBar from './SearchBar.vue'
 import CategoryList from './CategoryList.vue'
@@ -79,8 +76,6 @@ const emit = defineEmits([
   'selectPdf',
   'closeSidebar'
 ])
-
-const isSearchFocused = ref(false)
 
 function handleSelectPdf(subject, category, year) {
   emit('selectPdf', subject, category, year)

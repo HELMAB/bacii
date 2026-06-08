@@ -1,15 +1,15 @@
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 
 export function useComparison() {
-  const isComparisonMode = ref(false)
-  const comparisonPdf1 = ref(null)
-  const comparisonPdf2 = ref(null)
-  const comparisonPdf1Title = ref('')
-  const comparisonPdf2Title = ref('')
-  const comparisonPdf1Category = ref('')
-  const comparisonPdf2Category = ref('')
-  const comparisonPdf1Year = ref('')
-  const comparisonPdf2Year = ref('')
+  const isComparisonMode = shallowRef(false)
+  const comparisonPdf1 = shallowRef(null)
+  const comparisonPdf2 = shallowRef(null)
+  const comparisonPdf1Title = shallowRef('')
+  const comparisonPdf2Title = shallowRef('')
+  const comparisonPdf1Category = shallowRef('')
+  const comparisonPdf2Category = shallowRef('')
+  const comparisonPdf1Year = shallowRef('')
+  const comparisonPdf2Year = shallowRef('')
 
   function toggleComparisonMode() {
     isComparisonMode.value = !isComparisonMode.value

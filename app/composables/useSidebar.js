@@ -1,10 +1,10 @@
-import { ref, reactive, watch, onMounted } from 'vue'
+import { shallowRef, reactive, watch, onMounted } from 'vue'
 
 export function useSidebar(isDesktop) {
-  const isSidebarOpen = ref(true)
+  const isSidebarOpen = shallowRef(true)
   const expandedCategories = reactive({})
   const expandedYears = reactive({})
-  const isCompactMode = ref(false)
+  const isCompactMode = shallowRef(false)
 
   function toggleSidebar() {
     isSidebarOpen.value = !isSidebarOpen.value

@@ -1,8 +1,7 @@
-import { ref, computed, watch } from 'vue'
+import { shallowRef, computed, watch } from 'vue'
 
 export function useSearch(data, expandedCategories, expandedYears) {
-  const searchQuery = ref('')
-  const isSearchFocused = ref(false)
+  const searchQuery = shallowRef('')
 
   const filteredData = computed(() => {
     if (!searchQuery.value.trim()) return data.value
@@ -34,7 +33,6 @@ export function useSearch(data, expandedCategories, expandedYears) {
 
   return {
     searchQuery,
-    isSearchFocused,
     filteredData
   }
 }

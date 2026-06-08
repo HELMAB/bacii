@@ -1,13 +1,15 @@
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 
 const CACHE_KEY = 'bacii_docs_data'
 const CACHE_VERSION_KEY = 'bacii_docs_version'
 const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 
 export function useDocsCache() {
-  const data = ref([])
-  const isLoading = ref(false)
-  const error = ref(null)
+  // The docs tree is large and only ever replaced wholesale (never mutated in place),
+  // so a shallowRef avoids deep-proxying the entire nested structure.
+  const data = shallowRef([])
+  const isLoading = shallowRef(false)
+  const error = shallowRef(null)
 
   async function loadDocs() {
     isLoading.value = true
