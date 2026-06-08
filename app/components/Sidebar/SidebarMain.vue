@@ -2,6 +2,7 @@
 import { X, Rows2, Rows4 } from '@lucide/vue'
 import SearchBar from './SearchBar.vue'
 import CategoryList from './CategoryList.vue'
+import DisclaimerNotice from './DisclaimerNotice.vue'
 import PeaceBanner from '../PeaceBanner.vue'
 import AppFooter from '../AppFooter.vue'
 
@@ -104,6 +105,7 @@ function handleSelectPdf(subject, category, year) {
 
       <!-- Pinned chrome -->
       <div class="shrink-0">
+        <DisclaimerNotice />
         <PeaceBanner />
         <AppFooter />
       </div>
