@@ -1,9 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Comparison Header -->
-    <div
-      class="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 p-3 mx-2 sm:mx-4 mt-2 border-x border-t"
-    >
+    <div class="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 p-3">
       <div class="flex items-center justify-between flex-wrap gap-2">
         <div class="flex items-center gap-3">
           <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">មុខងារប្រៀបធៀប</h2>
@@ -32,9 +30,7 @@
     </div>
 
     <!-- Comparison Container -->
-    <div
-      class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2 p-2 mx-2 sm:mx-4 mb-2 sm:mb-4 overflow-hidden"
-    >
+    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2 p-2 overflow-hidden">
       <!-- Left PDF Panel -->
       <div
         class="flex flex-col bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 overflow-hidden"

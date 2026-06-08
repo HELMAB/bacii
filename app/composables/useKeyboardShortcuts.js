@@ -4,7 +4,6 @@ export function useKeyboardShortcuts({
   searchQuery,
   toggleSidebar,
   isSidebarOpen,
-  isDesktop,
   goToPreviousPdf,
   goToNextPdf,
   zoomIn,
@@ -36,7 +35,7 @@ export function useKeyboardShortcuts({
       case 'Escape':
         if (showKeyboardShortcuts.value) {
           showKeyboardShortcuts.value = false
-        } else if (isSidebarOpen.value && !isDesktop.value) {
+        } else if (isSidebarOpen.value) {
           toggleSidebar()
         }
         break

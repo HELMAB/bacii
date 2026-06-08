@@ -1,6 +1,6 @@
 import { shallowRef, watch } from 'vue'
 
-const SELECTED_ZOOM_DESKTOP = 0.75
+const SELECTED_ZOOM_DESKTOP = 1
 const SELECTED_ZOOM_MOBILE = 1
 const LOADING_FALLBACK_MS = 2000
 

@@ -90,8 +90,7 @@ defineProps({
   expandedYears: Object,
   selectedPdf: String,
   searchQuery: String,
-  isCompactMode: Boolean,
-  isDesktop: Boolean
+  isCompactMode: Boolean
 })
 
 defineEmits(['toggleCategory', 'toggleYear', 'selectPdf'])

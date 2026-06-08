@@ -1,7 +1,7 @@
 <template>
   <div
     ref="pdfContainer"
-    class="flex-1 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 overflow-auto mx-2 sm:mx-4 mb-2 sm:mb-4 py-6 sm:py-8 relative"
+    class="flex-1 bg-gray-100 dark:bg-gray-900 overflow-auto py-6 sm:py-10 relative"
   >
     <!-- Skeleton Loader -->
     <div v-if="isLoading" class="absolute inset-0 bg-white dark:bg-gray-950 z-10 p-6 space-y-4">
@@ -25,13 +25,12 @@
       leave-to-class="opacity-0"
       mode="out-in"
     >
-      <div v-if="selectedPdf && !isLoading" :key="selectedPdf" class="w-full">
+      <div v-if="selectedPdf && !isLoading" :key="selectedPdf" class="w-fit mx-auto px-2 sm:px-4">
         <ClientOnly>
           <VuePdfEmbed
             ref="pdfRef"
             :source="selectedPdf"
-            :style="{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center' }"
-            class="w-full transition-transform duration-200"
+            :width="pdfWidth"
             @rendered="$emit('rendered', $event)"
             @loading-failed="$emit('loadingFailed')"
             @internal-link-clicked="$emit('internalLinkClicked', $event)"
@@ -49,9 +48,9 @@
     >
       <div
         v-if="selectedPdf && totalPages > 0 && !isLoading"
-        class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 z-40"
+        class="fixed bottom-6 left-6 z-30 bg-gray-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-gray-900 px-3 py-1.5"
       >
-        <span class="text-sm font-medium tabular-nums">
+        <span class="text-xs font-medium tabular-nums">
           ទំព័រ {{ currentPage }} / {{ totalPages }}
         </span>
       </div>
@@ -60,11 +59,15 @@
 </template>
 
 <script setup>
-import { ref, defineAsyncComponent } from 'vue'
+import { ref, computed, defineAsyncComponent } from 'vue'
 
 const VuePdfEmbed = defineAsyncComponent(() => import('vue-pdf-embed'))
 
-defineProps({
+// Reading-column width at 100% zoom (px). Zoom scales this so the PDF
+// re-renders crisply at each level instead of being upscaled with a CSS transform.
+const BASE_PDF_WIDTH = 820
+
+const props = defineProps({
   selectedPdf: String,
   isLoading: Boolean,
   zoomLevel: Number,
@@ -73,6 +76,8 @@ defineProps({
 })
 
 defineEmits(['rendered', 'loadingFailed', 'internalLinkClicked'])
+
+const pdfWidth = computed(() => Math.round(BASE_PDF_WIDTH * (props.zoomLevel || 1)))
 
 const pdfContainer = ref(null)
 const pdfRef = ref(null)

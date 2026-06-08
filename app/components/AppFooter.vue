@@ -1,10 +1,9 @@
 <template>
   <footer
-    class="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 py-2 px-2 sm:py-3 sm:px-4 text-center text-xs text-gray-500 dark:text-gray-400"
+    class="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 px-5 py-3 text-xs text-gray-500 dark:text-gray-400 space-y-1"
   >
-    <div class="flex items-center justify-center gap-2 sm:gap-4 flex-wrap">
+    <div class="flex items-center justify-between">
       <span>© 2025 Dobpi</span>
-      <span class="hidden sm:inline">•</span>
       <a
         href="https://github.com/HELMAB/bacii"
         target="_blank"
@@ -20,13 +19,12 @@
         </svg>
         GitHub
       </a>
-      <span class="hidden sm:inline">•</span>
-      <span class="text-gray-500 dark:text-gray-500">
-        Made with
-        <span class="text-red-500">❤</span>
-        for Cambodian students
-      </span>
     </div>
+    <p class="text-[11px] text-gray-400 dark:text-gray-500">
+      Made with
+      <span class="text-red-500">❤</span>
+      for Cambodian students
+    </p>
   </footer>
 </template>
 

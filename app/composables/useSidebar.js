@@ -1,6 +1,7 @@
 import { shallowRef, reactive, watch, onMounted } from 'vue'
 
 export function useSidebar(isDesktop) {
+  // Open by default on desktop (split view); closed on mobile where it overlays.
   const isSidebarOpen = shallowRef(true)
   const expandedCategories = reactive({})
   const expandedYears = reactive({})
@@ -46,6 +47,11 @@ export function useSidebar(isDesktop) {
         isCompactMode.value = true
       }
     }
+
+    // Start closed on mobile; the split view only makes sense on desktop.
+    if (!isDesktop.value) {
+      isSidebarOpen.value = false
+    }
   })
 
   watch(isCompactMode, (newVal) => {
@@ -54,12 +60,9 @@ export function useSidebar(isDesktop) {
     }
   })
 
-  watch(isDesktop, (newVal) => {
-    if (newVal) {
-      isSidebarOpen.value = true
-    } else {
-      isSidebarOpen.value = false
-    }
+  // Follow viewport changes: open when entering desktop, close when leaving.
+  watch(isDesktop, (desktop) => {
+    isSidebarOpen.value = desktop
   })
 
   return {

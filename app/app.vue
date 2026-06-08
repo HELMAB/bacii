@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden">
+  <div class="flex h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
     <!-- PWA Components -->
     <OfflineIndicator />
     <PWAInstallPrompt />
@@ -19,14 +19,21 @@
       @select="handlePdfSelection"
     />
 
-    <!-- Overlay for mobile -->
-    <div
-      v-if="isSidebarOpen && !isDesktop"
-      class="lg:hidden fixed inset-0 bg-black/50 z-30 transition-opacity"
-      @click="toggleSidebar"
-    ></div>
+    <!-- Backdrop (mobile overlay only) -->
+    <Transition
+      enter-active-class="transition-opacity duration-300 ease-out"
+      enter-from-class="opacity-0"
+      leave-active-class="transition-opacity duration-300 ease-in"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isSidebarOpen && !isDesktop"
+        class="fixed inset-0 bg-black/50 z-40"
+        @click="toggleSidebar"
+      ></div>
+    </Transition>
 
-    <!-- Sidebar -->
+    <!-- Navigation sidebar (pushes content on desktop, overlays on mobile) -->
     <SidebarMain
       v-model:search-query="searchQuery"
       :is-open="isSidebarOpen"
@@ -43,58 +50,47 @@
       @close-sidebar="toggleSidebar"
     />
 
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col bg-gray-100 dark:bg-gray-900 overflow-hidden relative">
-      <!-- Peace Banner -->
-      <PeaceBanner />
-
-      <!-- Comparison View -->
-      <ComparisonView
-        v-if="isComparisonMode"
-        :comparison-pdf1="comparisonPdf1"
-        :comparison-pdf2="comparisonPdf2"
-        :comparison-pdf1-title="comparisonPdf1Title"
-        :comparison-pdf2-title="comparisonPdf2Title"
-        :comparison-pdf1-year="comparisonPdf1Year"
-        :comparison-pdf2-year="comparisonPdf2Year"
-        @close="toggleComparisonMode"
-        @swap="swapPdfs"
-        @select-pdf="openPdfSelector"
+    <!-- Reader column -->
+    <div class="flex-1 flex flex-col min-w-0 h-full">
+      <ReaderTopBar
+        :has-pdf="!!selectedPdf && !isComparisonMode"
+        :selected-year="selectedYear"
+        :selected-pdf-title="selectedPdfTitle"
+        :zoom-level="zoomLevel"
+        :is-dark="isDark"
+        :is-comparison-mode="isComparisonMode"
+        @toggle-drawer="toggleSidebar"
+        @show-keyboard-shortcuts="showKeyboardShortcuts = true"
+        @toggle-comparison="handleToggleComparison"
+        @zoom-in="zoomIn"
+        @zoom-out="zoomOut"
+        @toggle-fullscreen="toggleFullscreen"
+        @print="printPdf"
+        @download="downloadPdf"
+        @toggle-dark-mode="toggleDarkMode"
       />
 
-      <!-- Empty State -->
-      <EmptyState v-else-if="!selectedPdf" />
-
-      <!-- PDF Viewer -->
-      <div v-else class="flex-1 flex flex-col overflow-hidden py-2">
-        <!-- PDF Viewer Header -->
-        <PdfViewerHeader
-          :selected-category="selectedCategory"
-          :selected-year="selectedYear"
-          :selected-pdf-title="selectedPdfTitle"
-          :is-sidebar-open="isSidebarOpen"
-          :current-pdf-index="currentPdfIndex"
-          :total-pdfs-count="totalPdfsCount"
-          :can-go-previous="canGoPrevious"
-          :can-go-next="canGoNext"
-          :zoom-level="zoomLevel"
-          :is-dark="isDark"
-          :is-comparison-mode="isComparisonMode"
-          @toggle-sidebar="toggleSidebar"
-          @previous-pdf="goToPreviousPdf"
-          @next-pdf="goToNextPdf"
-          @show-keyboard-shortcuts="showKeyboardShortcuts = true"
-          @toggle-comparison="handleToggleComparison"
-          @zoom-in="zoomIn"
-          @zoom-out="zoomOut"
-          @toggle-fullscreen="toggleFullscreen"
-          @print="printPdf"
-          @download="downloadPdf"
-          @toggle-dark-mode="toggleDarkMode"
+      <main class="flex-1 flex flex-col overflow-hidden relative">
+        <!-- Comparison View -->
+        <ComparisonView
+          v-if="isComparisonMode"
+          :comparison-pdf1="comparisonPdf1"
+          :comparison-pdf2="comparisonPdf2"
+          :comparison-pdf1-title="comparisonPdf1Title"
+          :comparison-pdf2-title="comparisonPdf2Title"
+          :comparison-pdf1-year="comparisonPdf1Year"
+          :comparison-pdf2-year="comparisonPdf2Year"
+          @close="toggleComparisonMode"
+          @swap="swapPdfs"
+          @select-pdf="openPdfSelector"
         />
+
+        <!-- Empty State -->
+        <EmptyState v-else-if="!selectedPdf" />
 
         <!-- PDF Container -->
         <PdfContainer
+          v-else
           ref="pdfContainerComponent"
           :selected-pdf="selectedPdf"
           :is-loading="isLoading"
@@ -105,14 +101,21 @@
           @loading-failed="onPdfError"
           @internal-link-clicked="onInternalLinkClicked"
         />
-
-        <!-- Scroll to Top Button -->
-        <ScrollToTopButton :show="showScrollTop" @click="scrollToTop" />
-      </div>
-
-      <!-- Footer -->
-      <AppFooter />
+      </main>
     </div>
+
+    <!-- Floating controls -->
+    <PdfPager
+      v-if="selectedPdf && !isComparisonMode"
+      :current-pdf-index="currentPdfIndex"
+      :total-pdfs-count="totalPdfsCount"
+      :can-go-previous="canGoPrevious"
+      :can-go-next="canGoNext"
+      @previous="goToPreviousPdf"
+      @next="goToNextPdf"
+    />
+
+    <ScrollToTopButton :show="showScrollTop && !isComparisonMode" @click="scrollToTop" />
   </div>
 </template>
 
@@ -126,12 +129,12 @@ import ToastNotification from './components/ToastNotification.vue'
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal.vue'
 import SidebarMain from './components/Sidebar/SidebarMain.vue'
 import EmptyState from './components/PdfViewer/EmptyState.vue'
-import PdfViewerHeader from './components/PdfViewer/PdfViewerHeader.vue'
+import ReaderTopBar from './components/PdfViewer/ReaderTopBar.vue'
 import PdfContainer from './components/PdfViewer/PdfContainer.vue'
+import PdfPager from './components/PdfViewer/PdfPager.vue'
 import ScrollToTopButton from './components/ScrollToTopButton.vue'
 import ComparisonView from './components/ComparisonView.vue'
 import PdfSelectorModal from './components/PdfSelectorModal.vue'
-import AppFooter from './components/AppFooter.vue'
 
 // Composables
 import { useTheme } from './composables/useTheme'
@@ -281,7 +284,6 @@ const { showKeyboardShortcuts } = useKeyboardShortcuts({
   searchQuery,
   toggleSidebar,
   isSidebarOpen,
-  isDesktop,
   goToPreviousPdf,
   goToNextPdf,
   zoomIn,
@@ -292,10 +294,6 @@ const { showKeyboardShortcuts } = useKeyboardShortcuts({
 onMounted(async () => {
   // Load docs data with caching
   await loadDocs()
-
-  if (!isDesktop.value) {
-    isSidebarOpen.value = false
-  }
 
   if (data.value.length > 0 && data.value[0].children.length > 0) {
     const firstCategory = data.value[0]
