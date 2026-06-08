@@ -1,17 +1,16 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { shallowRef, onMounted, onUnmounted } from 'vue'
 
 export function useKeyboardShortcuts({
   searchQuery,
   toggleSidebar,
   isSidebarOpen,
-  isDesktop,
   goToPreviousPdf,
   goToNextPdf,
   zoomIn,
   zoomOut,
   toggleFullscreen
 }) {
-  const showKeyboardShortcuts = ref(false)
+  const showKeyboardShortcuts = shallowRef(false)
 
   function handleKeydown(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
@@ -23,11 +22,12 @@ export function useKeyboardShortcuts({
     }
 
     switch (e.key) {
-      case '/':
+      case '/': {
         e.preventDefault()
         const searchInput = document.querySelector('input[type="text"]')
         searchInput?.focus()
         break
+      }
       case '?':
         e.preventDefault()
         showKeyboardShortcuts.value = !showKeyboardShortcuts.value
@@ -35,7 +35,7 @@ export function useKeyboardShortcuts({
       case 'Escape':
         if (showKeyboardShortcuts.value) {
           showKeyboardShortcuts.value = false
-        } else if (isSidebarOpen.value && !isDesktop.value) {
+        } else if (isSidebarOpen.value) {
           toggleSidebar()
         }
         break

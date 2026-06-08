@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+  <div class="flex h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
     <!-- PWA Components -->
     <OfflineIndicator />
     <PWAInstallPrompt />
@@ -10,137 +10,127 @@
     <!-- Keyboard Shortcuts Modal -->
     <KeyboardShortcutsModal :show="showKeyboardShortcuts" @close="showKeyboardShortcuts = false" />
 
-    <!-- Confirm Clear Recently Viewed Modal -->
-    <ConfirmModal
-      :show="showClearConfirm"
-      title="បញ្ជាក់ការសម្អាត"
-      message="តើអ្នកប្រាកដថាចង់សម្អាតប្រវត្តិមើលថ្មីៗទេ?"
-      confirmText="សម្អាត"
-      cancelText="បោះបង់"
-      @confirm="handleClearConfirm"
-      @cancel="showClearConfirm = false"
-    />
-
-    <!-- Confirm Clear Favorites Modal -->
-    <ConfirmModal
-      :show="showClearFavoritesConfirm"
-      title="បញ្ជាក់ការសម្អាត"
-      message="តើអ្នកប្រាកដថាចង់សម្អាតចំណូលចិត្តទាំងអស់ទេ?"
-      confirmText="សម្អាត"
-      cancelText="បោះបង់"
-      @confirm="handleClearFavoritesConfirm"
-      @cancel="showClearFavoritesConfirm = false"
-    />
-
     <!-- PDF Selector Modal -->
     <PdfSelectorModal
       :show="showPdfSelector"
-      :pdfNumber="pdfSelectorNumber"
+      :pdf-number="pdfSelectorNumber"
       :data="data"
       @close="showPdfSelector = false"
       @select="handlePdfSelection"
     />
 
-    <!-- Overlay for mobile -->
-    <div
-      v-if="isSidebarOpen && !isDesktop"
-      @click="toggleSidebar"
-      class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity"
-    ></div>
+    <!-- Backdrop (mobile overlay only) -->
+    <Transition
+      enter-active-class="transition-opacity duration-300 ease-out"
+      enter-from-class="opacity-0"
+      leave-active-class="transition-opacity duration-300 ease-in"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isSidebarOpen && !isDesktop"
+        class="fixed inset-0 bg-black/50 z-40"
+        @click="toggleSidebar"
+      ></div>
+    </Transition>
 
-    <!-- Sidebar -->
+    <!-- Navigation sidebar (pushes content on desktop, overlays on mobile) -->
     <SidebarMain
-      :isOpen="isSidebarOpen"
-      :isDesktop="isDesktop"
-      :isCompactMode="isCompactMode"
-      v-model:searchQuery="searchQuery"
-      :recentlyViewed="recentlyViewed"
-      :favorites="favorites"
-      :filteredData="filteredData"
-      :expandedCategories="expandedCategories"
-      :expandedYears="expandedYears"
-      :selectedPdf="selectedPdf"
-      @toggleCompactMode="isCompactMode = !isCompactMode"
-      @toggleCategory="toggleCategory"
-      @toggleYear="toggleYear"
-      @selectPdf="handleSelectPdf"
-      @clearRecentlyViewed="clearRecentlyViewedWrapper"
-      @removeFavorite="removeFavorite"
-      @clearFavorites="clearFavoritesWrapper"
-      @closeSidebar="toggleSidebar"
+      v-model:search-query="searchQuery"
+      :is-open="isSidebarOpen"
+      :is-desktop="isDesktop"
+      :is-compact-mode="isCompactMode"
+      :filtered-data="filteredData"
+      :expanded-categories="expandedCategories"
+      :expanded-years="expandedYears"
+      :selected-pdf="selectedPdf"
+      @toggle-compact-mode="isCompactMode = !isCompactMode"
+      @toggle-category="toggleCategory"
+      @toggle-year="toggleYear"
+      @select-pdf="selectPdf"
+      @close-sidebar="toggleSidebar"
     />
 
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col bg-gray-200 dark:bg-gray-900 overflow-hidden relative">
-      <!-- Peace Banner -->
-      <PeaceBanner />
-
-      <!-- Comparison View -->
-      <ComparisonView
-        v-if="isComparisonMode"
-        :comparisonPdf1="comparisonPdf1"
-        :comparisonPdf2="comparisonPdf2"
-        :comparisonPdf1Title="comparisonPdf1Title"
-        :comparisonPdf2Title="comparisonPdf2Title"
-        :comparisonPdf1Year="comparisonPdf1Year"
-        :comparisonPdf2Year="comparisonPdf2Year"
-        @close="toggleComparisonMode"
-        @swap="swapPdfs"
-        @selectPdf="openPdfSelector"
+    <!-- Reader column -->
+    <div class="flex-1 flex flex-col min-w-0 h-full">
+      <ReaderTopBar
+        :has-pdf="!!selectedPdf && !isComparisonMode"
+        :selected-year="selectedYear"
+        :selected-pdf-title="selectedPdfTitle"
+        :zoom-level="zoomLevel"
+        :is-dark="isDark"
+        :is-comparison-mode="isComparisonMode"
+        @toggle-drawer="toggleSidebar"
+        @show-keyboard-shortcuts="showKeyboardShortcuts = true"
+        @toggle-comparison="handleToggleComparison"
+        @zoom-in="zoomIn"
+        @zoom-out="zoomOut"
+        @toggle-fullscreen="toggleFullscreen"
+        @print="printPdf"
+        @download="downloadPdf"
+        @toggle-dark-mode="toggleDarkMode"
       />
 
-      <!-- Empty State -->
-      <EmptyState v-else-if="!selectedPdf" />
-
-      <!-- PDF Viewer -->
-      <div v-else class="flex-1 flex flex-col overflow-hidden py-2">
-        <!-- PDF Viewer Header -->
-        <PdfViewerHeader
-          :selectedCategory="selectedCategory"
-          :selectedYear="selectedYear"
-          :selectedPdfTitle="selectedPdfTitle"
-          :isSidebarOpen="isSidebarOpen"
-          :currentPdfIndex="currentPdfIndex"
-          :totalPdfsCount="totalPdfsCount"
-          :canGoPrevious="canGoPrevious"
-          :canGoNext="canGoNext"
-          :zoomLevel="zoomLevel"
-          :isDark="isDark"
-          :isComparisonMode="isComparisonMode"
-          :isFavorite="isFavorite(selectedPdf)"
-          @toggleSidebar="toggleSidebar"
-          @previousPdf="goToPreviousPdf"
-          @nextPdf="goToNextPdf"
-          @showKeyboardShortcuts="showKeyboardShortcuts = true"
-          @toggleFavorite="handleToggleFavorite"
-          @toggleComparison="handleToggleComparison"
-          @zoomIn="zoomIn"
-          @zoomOut="zoomOut"
-          @toggleFullscreen="toggleFullscreen"
-          @print="printPdf"
-          @download="downloadPdf"
-          @toggleDarkMode="toggleDarkMode"
+      <main class="flex-1 flex flex-col overflow-hidden relative">
+        <!-- Comparison View -->
+        <ComparisonView
+          v-if="isComparisonMode"
+          :comparison-pdf1="comparisonPdf1"
+          :comparison-pdf2="comparisonPdf2"
+          :comparison-pdf1-title="comparisonPdf1Title"
+          :comparison-pdf2-title="comparisonPdf2Title"
+          :comparison-pdf1-year="comparisonPdf1Year"
+          :comparison-pdf2-year="comparisonPdf2Year"
+          @close="toggleComparisonMode"
+          @swap="swapPdfs"
+          @select-pdf="openPdfSelector"
         />
+
+        <!-- Empty State -->
+        <EmptyState v-else-if="!selectedPdf" />
 
         <!-- PDF Container -->
         <PdfContainer
+          v-else
           ref="pdfContainerComponent"
-          :selectedPdf="selectedPdf"
-          :isLoading="isLoading"
-          :zoomLevel="zoomLevel"
-          :currentPage="currentPage"
-          :totalPages="totalPages"
+          :selected-pdf="selectedPdf"
+          :is-loading="isLoading"
+          :zoom-level="zoomLevel"
           @rendered="onPdfRendered"
-          @loadingFailed="onPdfError"
-          @internalLinkClicked="onInternalLinkClicked"
+          @loading-failed="onPdfError"
+          @internal-link-clicked="onInternalLinkClicked"
         />
 
-        <!-- Scroll to Top Button -->
-        <ScrollToTopButton :show="showScrollTop" @click="scrollToTop" />
-      </div>
+        <!-- Floating controls (positioned over the reader, not the viewport) -->
+        <template v-if="selectedPdf && !isComparisonMode">
+          <!-- Page progress indicator -->
+          <Transition
+            enter-active-class="transition-opacity duration-300 ease-out"
+            enter-from-class="opacity-0"
+            leave-active-class="transition-opacity duration-300 ease-in"
+            leave-to-class="opacity-0"
+          >
+            <div
+              v-if="totalPages > 0 && !isLoading"
+              class="absolute bottom-6 left-6 z-30 bg-gray-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-gray-900 px-3 py-1.5"
+            >
+              <span class="text-xs font-medium tabular-nums">
+                ទំព័រ {{ currentPage }} / {{ totalPages }}
+              </span>
+            </div>
+          </Transition>
 
-      <!-- Footer -->
-      <AppFooter />
+          <PdfPager
+            :current-pdf-index="currentPdfIndex"
+            :total-pdfs-count="totalPdfsCount"
+            :can-go-previous="canGoPrevious"
+            :can-go-next="canGoNext"
+            @previous="goToPreviousPdf"
+            @next="goToNextPdf"
+          />
+
+          <ScrollToTopButton :show="showScrollTop" @click="scrollToTop" />
+        </template>
+      </main>
     </div>
   </div>
 </template>
@@ -153,15 +143,14 @@ import OfflineIndicator from './components/OfflineIndicator.vue'
 import PWAInstallPrompt from './components/PWAInstallPrompt.vue'
 import ToastNotification from './components/ToastNotification.vue'
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal.vue'
-import ConfirmModal from './components/ConfirmModal.vue'
 import SidebarMain from './components/Sidebar/SidebarMain.vue'
 import EmptyState from './components/PdfViewer/EmptyState.vue'
-import PdfViewerHeader from './components/PdfViewer/PdfViewerHeader.vue'
+import ReaderTopBar from './components/PdfViewer/ReaderTopBar.vue'
 import PdfContainer from './components/PdfViewer/PdfContainer.vue'
+import PdfPager from './components/PdfViewer/PdfPager.vue'
 import ScrollToTopButton from './components/ScrollToTopButton.vue'
 import ComparisonView from './components/ComparisonView.vue'
 import PdfSelectorModal from './components/PdfSelectorModal.vue'
-import AppFooter from './components/AppFooter.vue'
 
 // Composables
 import { useTheme } from './composables/useTheme'
@@ -169,8 +158,6 @@ import { useToast } from './composables/useToast'
 import { useResponsive } from './composables/useResponsive'
 import { useSidebar } from './composables/useSidebar'
 import { useSearch } from './composables/useSearch'
-import { useRecentlyViewed } from './composables/useRecentlyViewed'
-import { useFavorites } from './composables/useFavorites'
 import { usePdfViewer } from './composables/usePdfViewer'
 import { useNavigation } from './composables/useNavigation'
 import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
@@ -203,14 +190,6 @@ const {
 // Search
 const { searchQuery, filteredData } = useSearch(data, expandedCategories, expandedYears)
 
-// Recently viewed
-const { recentlyViewed, addToRecentlyViewed, clearRecentlyViewed: clearRecent } = useRecentlyViewed()
-const showClearConfirm = ref(false)
-
-// Favorites
-const { favorites, isFavorite, toggleFavorite, removeFavorite, clearFavorites } = useFavorites()
-const showClearFavoritesConfirm = ref(false)
-
 // Comparison Mode
 const {
   isComparisonMode,
@@ -218,14 +197,11 @@ const {
   comparisonPdf2,
   comparisonPdf1Title,
   comparisonPdf2Title,
-  comparisonPdf1Category,
-  comparisonPdf2Category,
   comparisonPdf1Year,
   comparisonPdf2Year,
   toggleComparisonMode,
   setComparisonPdf1,
   setComparisonPdf2,
-  clearComparison,
   swapPdfs
 } = useComparison()
 
@@ -245,6 +221,7 @@ const {
   totalPages,
   zoomIn,
   zoomOut,
+  createSelectPdf,
   createToggleFullscreen,
   createScrollToTop,
   createHandleScroll,
@@ -260,6 +237,7 @@ const pdfContainer = computed(() => pdfContainerComponent.value?.pdfContainer)
 const pdfRef = computed(() => pdfContainerComponent.value?.pdfRef)
 
 // Create functions that need access to refs
+const selectPdf = createSelectPdf(pdfContainer)
 const toggleFullscreen = createToggleFullscreen(pdfContainer)
 const scrollToTop = createScrollToTop(pdfContainer)
 const handleScroll = createHandleScroll(pdfContainer, pdfRef)
@@ -279,45 +257,6 @@ onUnmounted(() => {
     pdfContainer.value.removeEventListener('scroll', handleScroll)
   }
 })
-
-// Select PDF with history tracking
-function selectPdf(subject, category, year) {
-  isLoading.value = true
-  selectedPdf.value = subject.pdf
-  selectedPdfTitle.value = subject.label
-  selectedCategory.value = category
-  selectedYear.value = year
-  zoomLevel.value = isDesktop.value ? 0.75 : 1
-
-  addToRecentlyViewed(subject, category, year)
-
-  if (pdfContainer.value) {
-    pdfContainer.value.scrollTop = 0
-  }
-
-  setTimeout(() => {
-    if (isLoading.value) {
-      isLoading.value = false
-    }
-  }, 2000)
-}
-
-function clearRecentlyViewedWrapper() {
-  showClearConfirm.value = true
-}
-
-function handleClearConfirm() {
-  clearRecent(showToastNotification)
-  showClearConfirm.value = false
-}
-
-function handleSelectPdf(subject, category, year, isFromRecent = false) {
-  selectPdf(subject, category, year)
-  if (isFromRecent) {
-    expandedCategories[category] = true
-    expandedYears[year] = true
-  }
-}
 
 // Comparison Mode Functions
 function handleToggleComparison() {
@@ -352,46 +291,15 @@ function handlePdfSelection(subject, category, year) {
   }
 }
 
-// Favorites Functions
-function handleToggleFavorite() {
-  if (!selectedPdf.value) return
-
-  const subject = { pdf: selectedPdf.value, label: selectedPdfTitle.value }
-  const isAdded = toggleFavorite(subject, selectedCategory.value, selectedYear.value)
-
-  if (isAdded) {
-    showToastNotification(`⭐ បានបន្ថែមទៅចំណូលចិត្ត: ${selectedPdfTitle.value}`)
-  } else {
-    showToastNotification(`✓ បានលុបចេញពីចំណូលចិត្ត: ${selectedPdfTitle.value}`)
-  }
-}
-
-function clearFavoritesWrapper() {
-  showClearFavoritesConfirm.value = true
-}
-
-function handleClearFavoritesConfirm() {
-  clearFavorites()
-  showClearFavoritesConfirm.value = false
-  showToastNotification('✓ បានសម្អាតចំណូលចិត្តទាំងអស់')
-}
-
 // Navigation
-const {
-  currentPdfIndex,
-  totalPdfsCount,
-  canGoPrevious,
-  canGoNext,
-  goToPreviousPdf,
-  goToNextPdf
-} = useNavigation(data, selectedPdf, selectPdf, showToastNotification)
+const { currentPdfIndex, totalPdfsCount, canGoPrevious, canGoNext, goToPreviousPdf, goToNextPdf } =
+  useNavigation(data, selectedPdf, selectPdf, showToastNotification)
 
 // Keyboard shortcuts
 const { showKeyboardShortcuts } = useKeyboardShortcuts({
   searchQuery,
   toggleSidebar,
   isSidebarOpen,
-  isDesktop,
   goToPreviousPdf,
   goToNextPdf,
   zoomIn,
@@ -402,10 +310,6 @@ const { showKeyboardShortcuts } = useKeyboardShortcuts({
 onMounted(async () => {
   // Load docs data with caching
   await loadDocs()
-
-  if (!isDesktop.value) {
-    isSidebarOpen.value = false
-  }
 
   if (data.value.length > 0 && data.value[0].children.length > 0) {
     const firstCategory = data.value[0]
@@ -425,4 +329,3 @@ onMounted(async () => {
   }
 })
 </script>
-

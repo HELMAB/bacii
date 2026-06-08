@@ -1,8 +1,8 @@
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 
 export function useToast() {
-  const showToast = ref(false)
-  const toastMessage = ref('')
+  const showToast = shallowRef(false)
+  const toastMessage = shallowRef('')
 
   function showToastNotification(message) {
     toastMessage.value = message

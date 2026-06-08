@@ -1,29 +1,33 @@
+import {
+  BookOpen,
+  Calculator,
+  Atom,
+  FlaskConical,
+  Dna,
+  Scroll,
+  Globe,
+  Mountain,
+  Scale,
+  HeartHandshake,
+  Languages,
+  FileText
+} from '@lucide/vue'
+
 export const subjectIcons = {
-  'អក្សរសាស្ត្រខ្មែរ': '📚',
-  'គណិតវិទ្យា': '🧮',
-  'រូបវិទ្យា': '⚛️',
-  'គីមីវិទ្យា': '🧪',
-  'ជីវវិទ្យា': '🧬',
-  'ប្រវត្តិសាស្ត្រ': '📜',
-  'ភូមិវិទ្យា': '🌍',
-  'ផែនដីវិទ្យា': '⛰️',
-  'សីលធម៌': '🕊️',
-  'សីលធម៌-ពលរដ្ឋ': '❤️',
-  'ភាសាអង់គ្លេស': '🇬🇧',
-  'ភាសាបារាំង': '🇫🇷'
-}
-
-export const categoryGradients = {
-  'វិទ្យាសាស្ត្រសង្គម': 'from-blue-500 to-indigo-600',
-  'វិទ្យាសាស្ត្រធម្មជាតិ': 'from-green-500 to-teal-600',
-  'គណិតវិទ្យា': 'from-purple-500 to-pink-600',
-  'ប្រវត្តិសាស្ត្រ': 'from-amber-500 to-orange-600'
-}
-
-export function getCategoryGradient(categoryLabel) {
-  return categoryGradients[categoryLabel] || 'from-blue-500 to-purple-600'
+  អក្សរសាស្ត្រខ្មែរ: BookOpen,
+  គណិតវិទ្យា: Calculator,
+  រូបវិទ្យា: Atom,
+  គីមីវិទ្យា: FlaskConical,
+  ជីវវិទ្យា: Dna,
+  ប្រវត្តិសាស្ត្រ: Scroll,
+  ភូមិវិទ្យា: Globe,
+  ផែនដីវិទ្យា: Mountain,
+  សីលធម៌: Scale,
+  'សីលធម៌-ពលរដ្ឋ': HeartHandshake,
+  ភាសាអង់គ្លេស: Languages,
+  ភាសាបារាំង: Languages
 }
 
 export function getSubjectIcon(label) {
-  return subjectIcons[label] || '📄'
+  return subjectIcons[label] || FileText
 }

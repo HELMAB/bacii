@@ -1,53 +1,56 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Comparison Header -->
-    <div class="bg-white dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 p-3">
+    <div class="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 p-3">
       <div class="flex items-center justify-between flex-wrap gap-2">
-        <div class="flex items-center gap-2">
-          <h2 class="text-lg font-bold text-gray-800 dark:text-white">
-            📊 មុខងារប្រៀបធៀប
-          </h2>
+        <div class="flex items-center gap-3">
+          <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">មុខងារប្រៀបធៀប</h2>
           <button
-            @click="$emit('swap')"
             :disabled="!comparisonPdf1 || !comparisonPdf2"
             :class="[
-              'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
+              'px-3 py-1.5 text-sm font-medium transition-colors border',
               comparisonPdf1 && comparisonPdf2
-                ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
+                ? 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                : 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-700 cursor-not-allowed'
             ]"
             title="ប្តូរឯកសារ"
+            @click="$emit('swap')"
           >
             ⇄ ប្តូរ
           </button>
         </div>
         <button
+          class="px-4 py-1.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-medium transition-colors flex items-center gap-1.5"
           @click="$emit('close')"
-          class="px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium transition-colors"
         >
-          ✕ ចេញពីការប្រៀបធៀប
+          <X class="w-4 h-4" />
+          ចេញ
         </button>
       </div>
     </div>
 
     <!-- Comparison Container -->
-    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2 p-2 bg-gray-100 dark:bg-gray-900 overflow-hidden">
+    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2 p-2 overflow-hidden">
       <!-- Left PDF Panel -->
-      <div class="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+      <div
+        class="flex flex-col bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 overflow-hidden"
+      >
         <!-- Panel Header -->
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-3">
+        <div class="border-b border-gray-200 dark:border-gray-800 p-3">
           <div class="flex items-center justify-between">
             <div class="flex-1">
-              <h3 class="font-bold text-sm">ឯកសារ ១</h3>
-              <div v-if="comparisonPdf1Title" class="text-xs opacity-90 mt-1">
+              <h3 class="text-[11px] font-bold uppercase text-gray-400 dark:text-gray-500">
+                ឯកសារ ១
+              </h3>
+              <div v-if="comparisonPdf1Title" class="text-sm mt-1 text-gray-900 dark:text-gray-100">
                 <span class="font-semibold">{{ comparisonPdf1Title }}</span>
-                <span class="mx-1">•</span>
-                <span>{{ comparisonPdf1Year }}</span>
+                <span class="mx-1 text-gray-400">•</span>
+                <span class="text-gray-500 dark:text-gray-400">{{ comparisonPdf1Year }}</span>
               </div>
             </div>
             <button
+              class="px-3 py-1 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-xs font-medium transition-colors"
               @click="$emit('selectPdf', 1)"
-              class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded text-xs font-medium transition-colors"
             >
               ផ្លាស់ប្តូរ
             </button>
@@ -55,41 +58,48 @@
         </div>
 
         <!-- PDF Viewer 1 -->
-        <div class="flex-1 overflow-auto" ref="pdfContainer1">
+        <div
+          ref="pdfContainer1"
+          class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark py-4"
+        >
           <div v-if="!comparisonPdf1" class="flex items-center justify-center h-full">
-            <div class="text-center text-gray-500 dark:text-gray-400">
-              <svg class="w-16 h-16 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+            <div class="text-center text-gray-400 dark:text-gray-600">
+              <FileText class="w-14 h-14 mx-auto mb-3" :stroke-width="1" />
               <p class="text-sm">សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប</p>
             </div>
           </div>
-          <component
-            v-else-if="VuePdfEmbed"
-            :is="VuePdfEmbed"
-            :source="comparisonPdf1"
-            class="pdf-document"
-            @rendered="onPdfRendered"
-          />
+          <div v-else class="w-fit mx-auto px-2">
+            <component
+              :is="VuePdfEmbed"
+              v-if="VuePdfEmbed"
+              :source="comparisonPdf1"
+              :width="COMPARISON_PDF_WIDTH"
+              @rendered="onPdfRendered"
+            />
+          </div>
         </div>
       </div>
 
       <!-- Right PDF Panel -->
-      <div class="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+      <div
+        class="flex flex-col bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 overflow-hidden"
+      >
         <!-- Panel Header -->
-        <div class="bg-gradient-to-r from-green-500 to-teal-600 text-white p-3">
+        <div class="border-b border-gray-200 dark:border-gray-800 p-3">
           <div class="flex items-center justify-between">
             <div class="flex-1">
-              <h3 class="font-bold text-sm">ឯកសារ ២</h3>
-              <div v-if="comparisonPdf2Title" class="text-xs opacity-90 mt-1">
+              <h3 class="text-[11px] font-bold uppercase text-gray-400 dark:text-gray-500">
+                ឯកសារ ២
+              </h3>
+              <div v-if="comparisonPdf2Title" class="text-sm mt-1 text-gray-900 dark:text-gray-100">
                 <span class="font-semibold">{{ comparisonPdf2Title }}</span>
-                <span class="mx-1">•</span>
-                <span>{{ comparisonPdf2Year }}</span>
+                <span class="mx-1 text-gray-400">•</span>
+                <span class="text-gray-500 dark:text-gray-400">{{ comparisonPdf2Year }}</span>
               </div>
             </div>
             <button
+              class="px-3 py-1 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-xs font-medium transition-colors"
               @click="$emit('selectPdf', 2)"
-              class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded text-xs font-medium transition-colors"
             >
               ផ្លាស់ប្តូរ
             </button>
@@ -97,22 +107,25 @@
         </div>
 
         <!-- PDF Viewer 2 -->
-        <div class="flex-1 overflow-auto" ref="pdfContainer2">
+        <div
+          ref="pdfContainer2"
+          class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark py-4"
+        >
           <div v-if="!comparisonPdf2" class="flex items-center justify-center h-full">
-            <div class="text-center text-gray-500 dark:text-gray-400">
-              <svg class="w-16 h-16 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+            <div class="text-center text-gray-400 dark:text-gray-600">
+              <FileText class="w-14 h-14 mx-auto mb-3" :stroke-width="1" />
               <p class="text-sm">សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប</p>
             </div>
           </div>
-          <component
-            v-else-if="VuePdfEmbed"
-            :is="VuePdfEmbed"
-            :source="comparisonPdf2"
-            class="pdf-document"
-            @rendered="onPdfRendered"
-          />
+          <div v-else class="w-fit mx-auto px-2">
+            <component
+              :is="VuePdfEmbed"
+              v-if="VuePdfEmbed"
+              :source="comparisonPdf2"
+              :width="COMPARISON_PDF_WIDTH"
+              @rendered="onPdfRendered"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -121,8 +134,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { FileText, X } from '@lucide/vue'
 
 const VuePdfEmbed = ref(null)
+
+// Render width for each comparison panel (px) — panels are roughly half-width on desktop.
+const COMPARISON_PDF_WIDTH = 520
 
 defineProps({
   comparisonPdf1: String,
@@ -144,10 +161,3 @@ function onPdfRendered() {
   // PDF rendered successfully
 }
 </script>
-
-<style scoped>
-.pdf-document {
-  width: 100%;
-  height: auto;
-}
-</style>

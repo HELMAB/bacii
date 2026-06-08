@@ -1,35 +1,25 @@
+<script setup>
+import { Search, X } from '@lucide/vue'
+
+const search = defineModel({ type: String, default: '' })
+</script>
+
 <template>
-  <div class="mb-4 relative">
+  <div class="mb-6 relative">
+    <Search class="w-4 h-4 absolute left-0 top-3 text-gray-400 dark:text-gray-500" />
     <input
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-      @keydown.escape="$emit('update:modelValue', '')"
+      v-model="search"
       type="text"
-      placeholder="ស្វែងរកមុខវិជ្ជា... (ចុច / ដើម្បីស្វែងរក)"
-      class="w-full px-4 py-2 pl-10 pr-10 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-sm"
-      @focus="$emit('update:focused', true)"
-      @blur="$emit('update:focused', false)"
+      placeholder="ស្វែងរក... ( / )"
+      class="w-full py-2.5 pl-7 pr-7 bg-transparent border-0 border-b border-gray-300 dark:border-gray-700 focus:outline-none focus:border-primary-600 dark:focus:border-primary-400 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-600 text-sm transition-colors"
+      @keydown.escape="search = ''"
     />
-    <svg class="w-4 h-4 absolute left-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-    </svg>
     <button
-      v-if="modelValue"
-      @click="$emit('update:modelValue', '')"
-      class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+      v-if="search"
+      class="absolute right-0 top-3 text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+      @click="search = ''"
     >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
+      <X class="w-4 h-4" />
     </button>
   </div>
 </template>
-
-<script setup>
-defineProps({
-  modelValue: String,
-  focused: Boolean
-})
-
-defineEmits(['update:modelValue', 'update:focused'])
-</script>

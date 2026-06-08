@@ -1,10 +1,11 @@
-import { ref, reactive, watch, onMounted } from 'vue'
+import { shallowRef, reactive, watch, onMounted } from 'vue'
 
 export function useSidebar(isDesktop) {
-  const isSidebarOpen = ref(true)
+  // Open by default on desktop (split view); closed on mobile where it overlays.
+  const isSidebarOpen = shallowRef(true)
   const expandedCategories = reactive({})
   const expandedYears = reactive({})
-  const isCompactMode = ref(false)
+  const isCompactMode = shallowRef(false)
 
   function toggleSidebar() {
     isSidebarOpen.value = !isSidebarOpen.value
@@ -14,12 +15,12 @@ export function useSidebar(isDesktop) {
     const isCurrentlyExpanded = expandedCategories[label]
 
     // Close all categories
-    Object.keys(expandedCategories).forEach(key => {
+    Object.keys(expandedCategories).forEach((key) => {
       expandedCategories[key] = false
     })
 
     // Close all years when switching categories
-    Object.keys(expandedYears).forEach(key => {
+    Object.keys(expandedYears).forEach((key) => {
       expandedYears[key] = false
     })
 
@@ -31,7 +32,7 @@ export function useSidebar(isDesktop) {
     const isCurrentlyExpanded = expandedYears[label]
 
     // Close all years
-    Object.keys(expandedYears).forEach(key => {
+    Object.keys(expandedYears).forEach((key) => {
       expandedYears[key] = false
     })
 
@@ -46,6 +47,11 @@ export function useSidebar(isDesktop) {
         isCompactMode.value = true
       }
     }
+
+    // Start closed on mobile; the split view only makes sense on desktop.
+    if (!isDesktop.value) {
+      isSidebarOpen.value = false
+    }
   })
 
   watch(isCompactMode, (newVal) => {
@@ -54,12 +60,9 @@ export function useSidebar(isDesktop) {
     }
   })
 
-  watch(isDesktop, (newVal) => {
-    if (newVal) {
-      isSidebarOpen.value = true
-    } else {
-      isSidebarOpen.value = false
-    }
+  // Follow viewport changes: open when entering desktop, close when leaving.
+  watch(isDesktop, (desktop) => {
+    isSidebarOpen.value = desktop
   })
 
   return {

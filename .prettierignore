@@ -1,0 +1,17 @@
+# Build output & dependencies
+.nuxt
+.output
+.netlify
+dist
+node_modules
+
+# Generated / vendored
+public/sw.js
+public/docs.json
+package-lock.json
+
+# Non-source assets
+public/pdfs
+public/fonts
+*.svg
+*.min.js

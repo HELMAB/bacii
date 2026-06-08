@@ -1,100 +1,16 @@
-<template>
-  <div
-    :class="[
-      'bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-2xl overflow-y-auto transition-all duration-300 ease-in-out z-40 border-r border-gray-200 dark:border-gray-700',
-      isDesktop ? 'relative' : 'fixed inset-y-0 left-0',
-      isOpen ? 'w-80 md:w-96' : 'w-0',
-      !isDesktop && isOpen ? 'translate-x-0' : (!isDesktop ? '-translate-x-full' : '')
-    ]"
-  >
-    <div class="p-6">
-      <!-- Header -->
-      <div class="mb-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">ឯកសារប្រឡង</h2>
-            <div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-          </div>
-          <!-- Compact Mode Toggle -->
-          <button
-            @click="$emit('toggleCompactMode')"
-            :class="[
-              'hidden md:block p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500',
-              isCompactMode
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-            ]"
-            title="Toggle compact mode"
-          >
-            <svg v-if="isCompactMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
-            </svg>
-            <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Search Bar -->
-      <SearchBar
-        :modelValue="searchQuery"
-        :focused="isSearchFocused"
-        @update:modelValue="$emit('update:searchQuery', $event)"
-        @update:focused="isSearchFocused = $event"
-      />
-
-      <!-- Recently Viewed -->
-      <RecentlyViewed
-        v-if="isDesktop"
-        :items="recentlyViewed"
-        :searchQuery="searchQuery"
-        @select="handleRecentSelect"
-        @clear="$emit('clearRecentlyViewed')"
-      />
-
-      <!-- Favorites List -->
-      <FavoritesList
-        v-if="!searchQuery && isDesktop"
-        :favorites="favorites"
-        :selectedPdf="selectedPdf"
-        :isCompactMode="isCompactMode"
-        @selectPdf="handleFavoriteSelect"
-        @removeFavorite="$emit('removeFavorite', $event)"
-        @clearFavorites="$emit('clearFavorites')"
-      />
-
-      <!-- Category List -->
-      <CategoryList
-        :categories="filteredData"
-        :expandedCategories="expandedCategories"
-        :expandedYears="expandedYears"
-        :selectedPdf="selectedPdf"
-        :searchQuery="searchQuery"
-        :isCompactMode="isCompactMode"
-        :isDesktop="isDesktop"
-        @toggleCategory="$emit('toggleCategory', $event)"
-        @toggleYear="$emit('toggleYear', $event)"
-        @selectPdf="handleSelectPdf"
-      />
-    </div>
-  </div>
-</template>
-
 <script setup>
-import { ref } from 'vue'
+import { X, Rows2, Rows4 } from '@lucide/vue'
 import SearchBar from './SearchBar.vue'
-import RecentlyViewed from './RecentlyViewed.vue'
-import FavoritesList from './FavoritesList.vue'
 import CategoryList from './CategoryList.vue'
+import DisclaimerNotice from './DisclaimerNotice.vue'
+import PeaceBanner from '../PeaceBanner.vue'
+import AppFooter from '../AppFooter.vue'
 
 const props = defineProps({
   isOpen: Boolean,
   isDesktop: Boolean,
   isCompactMode: Boolean,
   searchQuery: String,
-  recentlyViewed: Array,
-  favorites: Array,
   filteredData: Array,
   expandedCategories: Object,
   expandedYears: Object,
@@ -107,32 +23,92 @@ const emit = defineEmits([
   'toggleCategory',
   'toggleYear',
   'selectPdf',
-  'clearRecentlyViewed',
-  'removeFavorite',
-  'clearFavorites',
   'closeSidebar'
 ])
 
-const isSearchFocused = ref(false)
-
 function handleSelectPdf(subject, category, year) {
   emit('selectPdf', subject, category, year)
-  if (!props.isDesktop) {
-    emit('closeSidebar')
-  }
-}
-
-function handleRecentSelect(item) {
-  emit('selectPdf', item, item.category, item.year, true)
-  if (!props.isDesktop) {
-    emit('closeSidebar')
-  }
-}
-
-function handleFavoriteSelect(favorite) {
-  emit('selectPdf', { pdf: favorite.pdf, label: favorite.label }, favorite.category, favorite.year, true)
+  // On mobile the sidebar overlays the reader, so close it after picking.
   if (!props.isDesktop) {
     emit('closeSidebar')
   }
 }
 </script>
+
+<template>
+  <aside
+    :class="[
+      isDesktop
+        ? [
+            'relative shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out',
+            isOpen ? 'w-80 sm:w-96' : 'w-0'
+          ]
+        : [
+            'fixed inset-y-0 left-0 z-50 w-80 sm:w-96 transition-transform duration-300 ease-in-out',
+            isOpen ? 'translate-x-0' : '-translate-x-full'
+          ]
+    ]"
+  >
+    <div
+      class="flex flex-col h-full w-80 sm:w-96 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800"
+    >
+      <!-- Header -->
+      <div
+        class="shrink-0 flex items-center justify-between px-6 h-14 border-b border-gray-200 dark:border-gray-800"
+      >
+        <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">ឯកសារប្រឡង</h2>
+        <div class="flex items-center gap-1">
+          <!-- Compact Mode Toggle -->
+          <button
+            :class="[
+              'p-1.5 transition-colors',
+              isCompactMode
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+            ]"
+            title="Toggle compact mode"
+            @click="$emit('toggleCompactMode')"
+          >
+            <Rows2 v-if="isCompactMode" class="w-5 h-5" />
+            <Rows4 v-else class="w-5 h-5" />
+          </button>
+          <!-- Close sidebar -->
+          <button
+            class="p-1.5 text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            aria-label="Close navigation"
+            @click="$emit('closeSidebar')"
+          >
+            <X class="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable nav -->
+      <div class="flex-1 overflow-y-auto px-6 pt-5 pb-6">
+        <SearchBar
+          :model-value="searchQuery"
+          @update:model-value="$emit('update:searchQuery', $event)"
+        />
+
+        <CategoryList
+          :categories="filteredData"
+          :expanded-categories="expandedCategories"
+          :expanded-years="expandedYears"
+          :selected-pdf="selectedPdf"
+          :search-query="searchQuery"
+          :is-compact-mode="isCompactMode"
+          @toggle-category="$emit('toggleCategory', $event)"
+          @toggle-year="$emit('toggleYear', $event)"
+          @select-pdf="handleSelectPdf"
+        />
+      </div>
+
+      <!-- Pinned chrome -->
+      <div class="shrink-0">
+        <DisclaimerNotice />
+        <PeaceBanner />
+        <AppFooter />
+      </div>
+    </div>
+  </aside>
+</template>

@@ -1,26 +1,28 @@
 <template>
   <div
     v-if="show"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60"
     @click.self="$emit('close')"
   >
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+      class="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
     >
       <!-- Header -->
-      <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4">
+      <div class="border-b border-gray-200 dark:border-gray-800 p-5">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-xl font-bold">ជ្រើសរើសឯកសារ {{ pdfNumber }}</h2>
-            <p class="text-sm opacity-90 mt-1">ជ្រើសរើសឯកសារប្រឡងដើម្បីប្រៀបធៀប</p>
+            <h2 class="text-lg font-bold uppercase text-gray-900 dark:text-white">
+              ជ្រើសរើសឯកសារ {{ pdfNumber }}
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              ជ្រើសរើសឯកសារប្រឡងដើម្បីប្រៀបធៀប
+            </p>
           </div>
           <button
+            class="p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
             @click="$emit('close')"
-            class="p-2 hover:bg-white/20 rounded-lg transition-colors"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X class="w-6 h-6" />
           </button>
         </div>
       </div>
@@ -28,28 +30,33 @@
       <!-- Content -->
       <div class="flex-1 overflow-y-auto p-6">
         <!-- Categories -->
-        <div v-for="category in data" :key="category.label" class="mb-6">
-          <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg p-3 mb-3">
-            <h3 class="font-bold">{{ category.label }}</h3>
-          </div>
+        <div v-for="category in data" :key="category.label" class="mb-8 last:mb-0">
+          <h3
+            class="text-xs font-bold uppercase text-gray-900 dark:text-white pb-2 mb-4 border-b border-gray-200 dark:border-gray-800"
+          >
+            {{ category.label }}
+          </h3>
 
           <!-- Years -->
-          <div class="space-y-3 ml-4">
+          <div class="space-y-5">
             <div v-for="year in category.children" :key="year.label">
-              <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-2.5 mb-2">
-                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">{{ year.label }}</h4>
-              </div>
+              <h4 class="text-xs font-semibold uppercase text-gray-400 dark:text-gray-500 mb-2.5">
+                {{ year.label }}
+              </h4>
 
               <!-- Subjects -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 ml-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                 <button
                   v-for="subject in year.children"
                   :key="subject.pdf"
+                  class="flex items-center gap-2.5 p-3 border border-gray-200 dark:border-gray-800 hover:border-primary-600 dark:hover:border-primary-400 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors text-left"
                   @click="handleSelect(subject, category.label, year.label)"
-                  class="flex items-center gap-2 p-3 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all text-left"
                 >
-                  <span class="text-xl">{{ getSubjectIcon(subject.label) }}</span>
-                  <span class="text-sm text-gray-700 dark:text-gray-300 font-medium">
+                  <component
+                    :is="getSubjectIcon(subject.label)"
+                    class="w-5 h-5 shrink-0 text-primary-600 dark:text-primary-400"
+                  />
+                  <span class="text-sm text-gray-700 dark:text-gray-300">
                     {{ subject.label }}
                   </span>
                 </button>
@@ -63,6 +70,7 @@
 </template>
 
 <script setup>
+import { X } from '@lucide/vue'
 import { getSubjectIcon } from '../constants/icons'
 
 defineProps({

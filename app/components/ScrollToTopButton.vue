@@ -1,34 +1,30 @@
 <template>
-  <Transition name="fade">
+  <Transition
+    enter-active-class="transition duration-200 ease-out"
+    enter-from-class="opacity-0 translate-y-2"
+    enter-to-class="opacity-100 translate-y-0"
+    leave-active-class="transition duration-150 ease-in"
+    leave-from-class="opacity-100 translate-y-0"
+    leave-to-class="opacity-0 translate-y-2"
+  >
     <button
       v-if="show"
-      @click="$emit('click')"
-      class="fixed bottom-6 right-6 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 z-50"
+      class="fixed bottom-6 right-6 z-50 grid place-items-center w-11 h-11 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-primary-600 dark:hover:bg-primary-400 transition-colors duration-200"
+      aria-label="Scroll to top"
       title="Scroll to top"
+      @click="$emit('click')"
     >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-      </svg>
+      <ArrowUp class="w-5 h-5" />
     </button>
   </Transition>
 </template>
 
 <script setup>
+import { ArrowUp } from '@lucide/vue'
+
 defineProps({
   show: Boolean
 })
 
 defineEmits(['click'])
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

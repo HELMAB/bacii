@@ -1,7 +1,7 @@
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { shallowRef, computed, onMounted, onUnmounted } from 'vue'
 
 export function useResponsive() {
-  const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1024)
+  const windowWidth = shallowRef(typeof window !== 'undefined' ? window.innerWidth : 1024)
   const isDesktop = computed(() => windowWidth.value >= 1024)
 
   function handleResize() {

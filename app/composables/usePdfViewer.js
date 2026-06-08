@@ -1,15 +1,23 @@
-import { ref, watch } from 'vue'
+import { shallowRef, watch } from 'vue'
+
+const SELECTED_ZOOM_DESKTOP = 1
+const SELECTED_ZOOM_MOBILE = 1
+const LOADING_FALLBACK_MS = 2000
 
 export function usePdfViewer(isDesktop, showToastNotification) {
-  const selectedPdf = ref(null)
-  const selectedPdfTitle = ref('')
-  const selectedCategory = ref('')
-  const selectedYear = ref('')
-  const zoomLevel = ref(typeof window !== 'undefined' && window.innerWidth >= 1024 ? 0.75 : 1)
-  const isLoading = ref(false)
-  const showScrollTop = ref(false)
-  const currentPage = ref(1)
-  const totalPages = ref(0)
+  const selectedPdf = shallowRef(null)
+  const selectedPdfTitle = shallowRef('')
+  const selectedCategory = shallowRef('')
+  const selectedYear = shallowRef('')
+  const zoomLevel = shallowRef(
+    typeof window !== 'undefined' && window.innerWidth >= 1024
+      ? SELECTED_ZOOM_DESKTOP
+      : SELECTED_ZOOM_MOBILE
+  )
+  const isLoading = shallowRef(false)
+  const showScrollTop = shallowRef(false)
+  const currentPage = shallowRef(1)
+  const totalPages = shallowRef(0)
 
   function zoomIn() {
     if (zoomLevel.value < 2) {
@@ -44,6 +52,28 @@ export function usePdfViewer(isDesktop, showToastNotification) {
       if (container) {
         container.scrollTo({ top: 0, behavior: 'smooth' })
       }
+    }
+  }
+
+  function createSelectPdf(pdfContainerRef) {
+    return function selectPdf(subject, category, year) {
+      isLoading.value = true
+      selectedPdf.value = subject.pdf
+      selectedPdfTitle.value = subject.label
+      selectedCategory.value = category
+      selectedYear.value = year
+      zoomLevel.value = isDesktop.value ? SELECTED_ZOOM_DESKTOP : SELECTED_ZOOM_MOBILE
+
+      if (pdfContainerRef.value) {
+        pdfContainerRef.value.scrollTop = 0
+      }
+
+      // Fail-safe: clear the skeleton even if the PDF never reports as rendered.
+      setTimeout(() => {
+        if (isLoading.value) {
+          isLoading.value = false
+        }
+      }, LOADING_FALLBACK_MS)
     }
   }
 
@@ -94,7 +124,10 @@ export function usePdfViewer(isDesktop, showToastNotification) {
           const scrollTop = container.scrollTop
           const scrollHeight = container.scrollHeight - container.clientHeight
           const scrollPercent = scrollHeight > 0 ? scrollTop / scrollHeight : 0
-          currentPage.value = Math.min(Math.ceil(scrollPercent * totalPages.value) || 1, totalPages.value)
+          currentPage.value = Math.min(
+            Math.ceil(scrollPercent * totalPages.value) || 1,
+            totalPages.value
+          )
         }
       }
     }
@@ -102,7 +135,7 @@ export function usePdfViewer(isDesktop, showToastNotification) {
 
   watch(isDesktop, () => {
     if (selectedPdf.value) {
-      zoomLevel.value = isDesktop.value ? 0.75 : 1
+      zoomLevel.value = isDesktop.value ? SELECTED_ZOOM_DESKTOP : SELECTED_ZOOM_MOBILE
     }
   })
 
@@ -118,6 +151,7 @@ export function usePdfViewer(isDesktop, showToastNotification) {
     totalPages,
     zoomIn,
     zoomOut,
+    createSelectPdf,
     createToggleFullscreen,
     createScrollToTop,
     createHandleScroll,

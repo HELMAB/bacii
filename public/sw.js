@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'dobpi-v2'
+const CACHE_VERSION = 'dobpi-v3'
 const STATIC_CACHE = `${CACHE_VERSION}-static`
 const PDF_CACHE = `${CACHE_VERSION}-pdfs`
 const DATA_CACHE = `${CACHE_VERSION}-data`
