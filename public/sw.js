@@ -1,6 +1,8 @@
-const CACHE_VERSION = 'dobpi-v3'
+const CACHE_VERSION = 'dobpi-v4'
 const STATIC_CACHE = `${CACHE_VERSION}-static`
-const PDF_CACHE = `${CACHE_VERSION}-pdfs`
+// Unversioned on purpose: downloaded PDFs survive app-shell version bumps so
+// users don't have to re-download hundreds of MB after every deploy.
+const PDF_CACHE = 'dobpi-pdfs'
 const DATA_CACHE = `${CACHE_VERSION}-data`
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`
 
@@ -211,11 +213,16 @@ async function handlePdfRequest(request) {
 
 // Listen for messages from clients
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  const data = event.data
+  if (!data) {
+    return
+  }
+
+  if (data.type === 'SKIP_WAITING') {
     self.skipWaiting()
   }
 
-  if (event.data && event.data.type === 'CLEAR_CACHE') {
+  if (data.type === 'CLEAR_CACHE') {
     event.waitUntil(
       caches.keys().then((cacheNames) => {
         return Promise.all(
@@ -224,4 +231,95 @@ self.addEventListener('message', (event) => {
       })
     )
   }
+
+  if (data.type === 'GET_PDF_CACHE_STATUS') {
+    event.waitUntil(reportPdfCacheStatus(event.source, data.urls || []))
+  }
+
+  if (data.type === 'CACHE_PDFS') {
+    event.waitUntil(cacheAllPdfs(event.source, data.urls || []))
+  }
 })
+
+// Report how many of the given PDF URLs are already cached
+async function reportPdfCacheStatus(client, urls) {
+  if (!client) {
+    return
+  }
+
+  const cache = await caches.open(PDF_CACHE)
+  let cachedCount = 0
+
+  for (const url of urls) {
+    const match = await cache.match(url)
+    if (match) {
+      cachedCount++
+    }
+  }
+
+  client.postMessage({
+    type: 'PDF_CACHE_STATUS',
+    cachedCount,
+    total: urls.length
+  })
+}
+
+// Download every PDF and store it for offline access, reporting progress
+async function cacheAllPdfs(client, urls) {
+  const cache = await caches.open(PDF_CACHE)
+  const CONCURRENCY = 4
+
+  // Skip files that are already cached so re-runs only fetch what's missing.
+  const pending = []
+  let completed = 0
+
+  for (const url of urls) {
+    const existing = await cache.match(url)
+    if (existing) {
+      completed++
+    } else {
+      pending.push(url)
+    }
+  }
+
+  let failedCount = 0
+
+  const postProgress = (type) => {
+    client?.postMessage({ type, completed, failedCount, total: urls.length })
+  }
+
+  postProgress('PDF_CACHE_PROGRESS')
+
+  let index = 0
+
+  async function worker() {
+    while (index < pending.length) {
+      const url = pending[index++]
+
+      try {
+        const response = await fetch(url)
+
+        if (response.ok) {
+          await cache.put(url, response.clone())
+        } else {
+          failedCount++
+        }
+      } catch (error) {
+        failedCount++
+        console.error('[Service Worker] Failed to cache PDF:', url, error)
+      }
+
+      completed++
+      postProgress('PDF_CACHE_PROGRESS')
+    }
+  }
+
+  const workers = []
+  for (let i = 0; i < Math.min(CONCURRENCY, pending.length); i++) {
+    workers.push(worker())
+  }
+
+  await Promise.all(workers)
+
+  postProgress('PDF_CACHE_COMPLETE')
+}

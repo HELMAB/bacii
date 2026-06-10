@@ -1,4 +1,4 @@
-import { shallowRef, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 
 export function useKeyboardShortcuts({
   searchQuery,
@@ -10,8 +10,6 @@ export function useKeyboardShortcuts({
   zoomOut,
   toggleFullscreen
 }) {
-  const showKeyboardShortcuts = shallowRef(false)
-
   function handleKeydown(e) {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
       if (e.key === 'Escape') {
@@ -28,14 +26,8 @@ export function useKeyboardShortcuts({
         searchInput?.focus()
         break
       }
-      case '?':
-        e.preventDefault()
-        showKeyboardShortcuts.value = !showKeyboardShortcuts.value
-        break
       case 'Escape':
-        if (showKeyboardShortcuts.value) {
-          showKeyboardShortcuts.value = false
-        } else if (isSidebarOpen.value) {
+        if (isSidebarOpen.value) {
           toggleSidebar()
         }
         break
@@ -74,7 +66,6 @@ export function useKeyboardShortcuts({
   })
 
   return {
-    showKeyboardShortcuts,
     handleKeydown
   }
 }

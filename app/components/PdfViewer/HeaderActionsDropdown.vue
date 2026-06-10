@@ -69,16 +69,6 @@
             <span>បោះពុម្ពឯកសារ</span>
           </button>
 
-          <!-- Keyboard Shortcuts -->
-          <button
-            class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
-            role="menuitem"
-            @click="handleAction('showKeyboardShortcuts')"
-          >
-            <CircleHelp class="w-5 h-5 flex-shrink-0" />
-            <span>គ្លីដកាត់</span>
-          </button>
-
           <div class="border-t border-gray-200 dark:border-gray-800 my-1"></div>
 
           <!-- Dark Mode Toggle -->
@@ -105,7 +95,6 @@ import {
   Columns2,
   Maximize,
   Printer,
-  CircleHelp,
   Sun,
   Moon
 } from '@lucide/vue'
@@ -119,7 +108,6 @@ const emit = defineEmits([
   'toggleComparison',
   'toggleFullscreen',
   'print',
-  'showKeyboardShortcuts',
   'toggleDarkMode'
 ])
 

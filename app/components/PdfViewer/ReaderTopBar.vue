@@ -15,7 +15,6 @@ const props = defineProps({
 
 defineEmits([
   'toggleDrawer',
-  'showKeyboardShortcuts',
   'toggleComparison',
   'zoomIn',
   'zoomOut',
@@ -118,7 +117,6 @@ const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
         @toggle-comparison="$emit('toggleComparison')"
         @toggle-fullscreen="$emit('toggleFullscreen')"
         @print="$emit('print')"
-        @show-keyboard-shortcuts="$emit('showKeyboardShortcuts')"
         @toggle-dark-mode="$emit('toggleDarkMode')"
       />
     </div>

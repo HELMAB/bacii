@@ -1,6 +1,7 @@
 <script setup>
 import SearchBar from './SearchBar.vue'
 import CategoryList from './CategoryList.vue'
+import OfflineDownload from './OfflineDownload.vue'
 import DisclaimerNotice from './DisclaimerNotice.vue'
 import PeaceBanner from '../PeaceBanner.vue'
 import AppFooter from '../AppFooter.vue'
@@ -10,6 +11,7 @@ const props = defineProps({
   isDesktop: Boolean,
   isCompactMode: Boolean,
   searchQuery: String,
+  data: Array,
   filteredData: Array,
   expandedCategories: Object,
   expandedYears: Object,
@@ -79,6 +81,7 @@ function handleSelectPdf(subject, category, year) {
 
       <!-- Pinned chrome -->
       <div class="shrink-0">
+        <OfflineDownload :data="data" />
         <DisclaimerNotice />
         <PeaceBanner />
         <AppFooter />

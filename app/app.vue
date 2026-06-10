@@ -7,9 +7,6 @@
     <!-- Toast Notification -->
     <ToastNotification :show="showToast" :message="toastMessage" />
 
-    <!-- Keyboard Shortcuts Modal -->
-    <KeyboardShortcutsModal :show="showKeyboardShortcuts" @close="showKeyboardShortcuts = false" />
-
     <!-- PDF Selector Modal -->
     <PdfSelectorModal
       :show="showPdfSelector"
@@ -39,6 +36,7 @@
       :is-open="isSidebarOpen"
       :is-desktop="isDesktop"
       :is-compact-mode="isCompactMode"
+      :data="data"
       :filtered-data="filteredData"
       :expanded-categories="expandedCategories"
       :expanded-years="expandedYears"
@@ -60,7 +58,6 @@
         :is-dark="isDark"
         :is-comparison-mode="isComparisonMode"
         @toggle-drawer="toggleSidebar"
-        @show-keyboard-shortcuts="showKeyboardShortcuts = true"
         @toggle-comparison="handleToggleComparison"
         @zoom-in="zoomIn"
         @zoom-out="zoomOut"
@@ -142,7 +139,6 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import OfflineIndicator from './components/OfflineIndicator.vue'
 import PWAInstallPrompt from './components/PWAInstallPrompt.vue'
 import ToastNotification from './components/ToastNotification.vue'
-import KeyboardShortcutsModal from './components/KeyboardShortcutsModal.vue'
 import SidebarMain from './components/Sidebar/SidebarMain.vue'
 import EmptyState from './components/PdfViewer/EmptyState.vue'
 import ReaderTopBar from './components/PdfViewer/ReaderTopBar.vue'
@@ -296,7 +292,7 @@ const { currentPdfIndex, totalPdfsCount, canGoPrevious, canGoNext, goToPreviousP
   useNavigation(data, selectedPdf, selectPdf, showToastNotification)
 
 // Keyboard shortcuts
-const { showKeyboardShortcuts } = useKeyboardShortcuts({
+useKeyboardShortcuts({
   searchQuery,
   toggleSidebar,
   isSidebarOpen,
