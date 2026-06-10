@@ -17,6 +17,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "generate-icons": "node scripts/generate-pwa-icons.js",
+    "generate-png-assets": "node scripts/generate-png-assets.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

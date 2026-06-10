@@ -1,11 +1,19 @@
 import { shallowRef, computed } from 'vue'
 
-// Drives the "download all PDFs for offline reading" flow by messaging the
-// Service Worker (see public/sw.js). The SW does the fetching/caching and posts
-// progress back; this composable mirrors that into reactive state for the UI.
+// Name must match PDF_CACHE in public/sw.js — the Service Worker serves offline
+// reads from this same cache, so whatever the page stores here is what the SW
+// hands back when there's no network.
+const PDF_CACHE = 'dobpi-pdfs'
+const CONCURRENCY = 4
+
+// Drives the "download all PDFs for offline reading" flow.
+//
+// Caching is done here in the page (not via the Service Worker) using the Cache
+// API, which the page and the SW share. This avoids fragile postMessage
+// round-trips and makes the downloads show up as normal network requests.
 export function useOfflineDownload() {
   const isSupported = shallowRef(
-    typeof navigator !== 'undefined' && 'serviceWorker' in navigator
+    typeof window !== 'undefined' && 'caches' in window && 'serviceWorker' in navigator
   )
   const status = shallowRef('idle') // idle | downloading | complete | error
   const cachedCount = shallowRef(0)
@@ -19,77 +27,39 @@ export function useOfflineDownload() {
     () => totalCount.value > 0 && cachedCount.value >= totalCount.value
   )
 
-  let listening = false
-
-  function handleMessage(event) {
-    const data = event.data
-    if (!data) {
-      return
-    }
-
-    if (data.type === 'PDF_CACHE_STATUS') {
-      cachedCount.value = data.cachedCount
-      totalCount.value = data.total
-
-      if (status.value !== 'downloading') {
-        status.value = data.total > 0 && data.cachedCount >= data.total ? 'complete' : 'idle'
-      }
-    }
-
-    if (data.type === 'PDF_CACHE_PROGRESS') {
-      cachedCount.value = data.completed
-      failedCount.value = data.failedCount
-      totalCount.value = data.total
-      status.value = 'downloading'
-    }
-
-    if (data.type === 'PDF_CACHE_COMPLETE') {
-      cachedCount.value = data.completed
-      failedCount.value = data.failedCount
-      totalCount.value = data.total
-      status.value = data.failedCount > 0 ? 'error' : 'complete'
-    }
-  }
-
-  function ensureListener() {
-    if (listening || !isSupported.value) {
-      return
-    }
-
-    navigator.serviceWorker.addEventListener('message', handleMessage)
-    listening = true
-  }
-
-  async function send(message) {
-    if (!isSupported.value) {
-      return
-    }
-
-    const registration = await navigator.serviceWorker.ready
-    const target = navigator.serviceWorker.controller || registration.active
-    target?.postMessage(message)
-  }
-
   async function checkStatus(urls) {
     if (!isSupported.value || !urls.length) {
       return
     }
 
-    ensureListener()
-    await send({ type: 'GET_PDF_CACHE_STATUS', urls })
+    const cache = await caches.open(PDF_CACHE)
+
+    let cached = 0
+    for (const url of urls) {
+      if (await cache.match(url)) {
+        cached++
+      }
+    }
+
+    cachedCount.value = cached
+    totalCount.value = urls.length
+
+    if (status.value !== 'downloading') {
+      status.value = cached >= urls.length ? 'complete' : 'idle'
+    }
   }
 
   async function downloadAll(urls) {
-    if (!isSupported.value || !urls.length) {
+    if (!isSupported.value || !urls.length || status.value === 'downloading') {
       return
     }
 
-    ensureListener()
     status.value = 'downloading'
+    failedCount.value = 0
     totalCount.value = urls.length
 
-    // Ask the browser to keep this cache from being evicted under storage
-    // pressure (best-effort — iOS in particular may still decline).
+    // Ask the browser not to evict this cache under storage pressure
+    // (best-effort — iOS in particular may still decline).
     if (navigator.storage?.persist) {
       try {
         await navigator.storage.persist()
@@ -98,7 +68,55 @@ export function useOfflineDownload() {
       }
     }
 
-    await send({ type: 'CACHE_PDFS', urls })
+    const cache = await caches.open(PDF_CACHE)
+
+    // Only fetch what's missing so re-runs (e.g. after a failure) are cheap.
+    const pending = []
+    let completed = 0
+
+    for (const url of urls) {
+      if (await cache.match(url)) {
+        completed++
+      } else {
+        pending.push(url)
+      }
+    }
+
+    cachedCount.value = completed
+
+    let failures = 0
+    let index = 0
+
+    async function worker() {
+      while (index < pending.length) {
+        const url = pending[index++]
+
+        try {
+          const response = await fetch(url, { cache: 'no-store' })
+          if (response.ok) {
+            await cache.put(url, response.clone())
+          } else {
+            failures++
+          }
+        } catch (error) {
+          failures++
+          console.error('[OfflineDownload] Failed to cache PDF:', url, error)
+        }
+
+        completed++
+        cachedCount.value = completed
+      }
+    }
+
+    const workers = []
+    for (let i = 0; i < Math.min(CONCURRENCY, pending.length); i++) {
+      workers.push(worker())
+    }
+
+    await Promise.all(workers)
+
+    failedCount.value = failures
+    status.value = failures > 0 ? 'error' : 'complete'
   }
 
   return {
