@@ -57,3 +57,10 @@
   for = "/*.jpg"
   [headers.values]
     Cache-Control = "public, max-age=2592000"
+
+# Must come after /*.js so the service worker is never cached as immutable —
+# clients have to see new versions promptly.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"

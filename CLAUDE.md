@@ -46,7 +46,7 @@ To add an exam paper:
 ### Caching is multi-layered — keep the layers in sync
 
 1. **`useDocsCache`** caches `docs.json` in `localStorage` for 24h (`bacii_docs_data` / `bacii_docs_version`) and does stale-while-revalidate: serves cache instantly, refreshes in background.
-2. **Service Worker** (`public/sw.js`) — custom, hand-written, with four named caches keyed off `CACHE_VERSION` (`dobpi-vN`). **Any change to cached assets or to `sw.js` itself requires bumping `CACHE_VERSION`** or clients will keep stale caches; old caches are purged on activate only when the version string changes.
+2. **Service Worker** (`app/service-worker/sw.js`, built by `@vite-pwa/nuxt` in `injectManifest` mode — see `pwa` in `nuxt.config.ts`) — Workbox precaches every build asset (hashed JS/CSS chunks including the lazy `vue-pdf-embed` chunk, fonts, icons) and versioning is automatic per build; no manual cache-version bumps. Runtime routes: PDFs are cache-first in the **unversioned `dobpi-pdfs` cache, shared with `useOfflineDownload`** (the names must stay in sync), `docs.json` is stale-while-revalidate, navigations are network-first with `/` warmed at install as the offline fallback.
 3. **Netlify CDN headers** (`netlify.toml`) — long immutable caching for `/pdfs`, JS/CSS, fonts; stale-while-revalidate for `/docs.json`.
 
 The Service Worker only runs against a real build — test it with `npm run preview`, not `npm run dev`.
@@ -56,6 +56,6 @@ The Service Worker only runs against a real build — test it with `npm run prev
 - Composables are `.js` (not TS) and use `<script setup>` in components.
 - Styling is TailwindCSS; dark mode is class-based and toggled/persisted by `useTheme` (`theme` localStorage key). Global styles/animations live in `app/assets/css/main.css`.
 - Icons come from `@lucide/vue`; subject emojis and category gradient classes are centralized in `app/constants/icons.js`.
-- The Service Worker is registered via an inline script in `nuxt.config.ts` `app.head.script`, which is also where all SEO/OG/PWA meta tags live.
+- The Service Worker is registered automatically by `@vite-pwa/nuxt` (`registerType: 'autoUpdate'`). All SEO/OG/PWA meta tags live in `nuxt.config.ts` `app.head`; the PWA manifest is the hand-maintained `public/manifest.json` (`pwa.manifest: false`).
 
 > Note: `README.md` is extensive but has partially drifted from the code (some component names and the theme color differ). Treat the actual files as source of truth.

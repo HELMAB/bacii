@@ -3,11 +3,27 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', '@vite-pwa/nuxt'],
 
   eslint: {
     config: {
       stylistic: false
+    }
+  },
+
+  pwa: {
+    strategies: 'injectManifest',
+    srcDir: 'service-worker',
+    filename: 'sw.js',
+    registerType: 'autoUpdate',
+    // public/manifest.json is hand-maintained and linked in app.head below.
+    manifest: false,
+    injectManifest: {
+      globPatterns: ['**/*.{js,css,html,svg,ico,woff,woff2,wasm}'],
+      // PDFs are cached on demand (see service-worker/sw.js), never precached.
+      globIgnores: ['pdfs/**'],
+      // The pdf.js worker chunk is larger than the 2 MB Workbox default.
+      maximumFileSizeToCacheInBytes: 4 * 1024 * 1024
     }
   },
 
@@ -89,22 +105,6 @@ export default defineNuxtConfig({
           `,
           type: 'text/javascript',
           tagPosition: 'head'
-        },
-        {
-          innerHTML: `
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                  .then(registration => {
-                    console.log('Service Worker registered:', registration);
-                  })
-                  .catch(error => {
-                    console.error('Service Worker registration failed:', error);
-                  });
-              });
-            }
-          `,
-          type: 'text/javascript'
         }
       ]
     }
