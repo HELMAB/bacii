@@ -1,5 +1,4 @@
 <script setup>
-import { X, Rows2, Rows4 } from '@lucide/vue'
 import SearchBar from './SearchBar.vue'
 import CategoryList from './CategoryList.vue'
 import DisclaimerNotice from './DisclaimerNotice.vue'
@@ -19,7 +18,6 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:searchQuery',
-  'toggleCompactMode',
   'toggleCategory',
   'toggleYear',
   'selectPdf',
@@ -54,33 +52,9 @@ function handleSelectPdf(subject, category, year) {
     >
       <!-- Header -->
       <div
-        class="shrink-0 flex items-center justify-between px-6 h-14 border-b border-gray-200 dark:border-gray-800"
+        class="shrink-0 flex items-center px-6 h-14 border-b border-gray-200 dark:border-gray-800"
       >
         <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">ឯកសារប្រឡង</h2>
-        <div class="flex items-center gap-1">
-          <!-- Compact Mode Toggle -->
-          <button
-            :class="[
-              'p-1.5 transition-colors',
-              isCompactMode
-                ? 'text-primary-600 dark:text-primary-400'
-                : 'text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
-            ]"
-            title="Toggle compact mode"
-            @click="$emit('toggleCompactMode')"
-          >
-            <Rows2 v-if="isCompactMode" class="w-5 h-5" />
-            <Rows4 v-else class="w-5 h-5" />
-          </button>
-          <!-- Close sidebar -->
-          <button
-            class="p-1.5 text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            aria-label="Close navigation"
-            @click="$emit('closeSidebar')"
-          >
-            <X class="w-5 h-5" />
-          </button>
-        </div>
       </div>
 
       <!-- Scrollable nav -->

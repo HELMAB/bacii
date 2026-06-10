@@ -25,7 +25,7 @@
       leave-to-class="opacity-0"
       mode="out-in"
     >
-      <div v-if="selectedPdf && !isLoading" :key="selectedPdf" class="w-fit mx-auto px-2 sm:px-4">
+      <div v-if="selectedPdf" :key="selectedPdf" class="w-fit mx-auto px-2 sm:px-4">
         <ClientOnly>
           <VuePdfEmbed
             ref="pdfRef"
