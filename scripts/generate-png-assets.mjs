@@ -16,10 +16,23 @@ const targets = [
 
 const chromeBin = process.env.CHROME_BIN || 'google-chrome'
 
+// Loaded from disk so Khmer text renders in the app's font rather than a system fallback.
+const fontsDir = join(publicDir, 'fonts/PengHuoth')
+const fontFaces = [
+  { file: 'PengHuoth-Regular.ttf', weight: 400 },
+  { file: 'PengHuoth-Bold.ttf', weight: 700 }
+]
+  .map(
+    ({ file, weight }) =>
+      `@font-face{font-family:'PengHuoth';font-weight:${weight};src:url('file://${join(fontsDir, file)}')}`
+  )
+  .join('')
+
 function rasterize({ svg, png, width, height }) {
   const svgMarkup = readFileSync(join(publicDir, svg), 'utf8')
 
   const html = `<!doctype html><html><head><meta charset="utf-8"><style>
+    ${fontFaces}
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{width:${width}px;height:${height}px;overflow:hidden}
     svg{display:block;width:${width}px;height:${height}px}
@@ -29,17 +42,22 @@ function rasterize({ svg, png, width, height }) {
   const outPath = join(publicDir, png)
   writeFileSync(htmlPath, html)
 
-  execFileSync(chromeBin, [
-    '--headless=new',
-    '--no-sandbox',
-    '--disable-gpu',
-    '--hide-scrollbars',
-    '--force-device-scale-factor=1',
-    '--default-background-color=00000000',
-    `--window-size=${width},${height}`,
-    `--screenshot=${outPath}`,
-    `file://${htmlPath}`
-  ], { stdio: 'ignore' })
+  execFileSync(
+    chromeBin,
+    [
+      '--headless=new',
+      '--no-sandbox',
+      '--disable-gpu',
+      '--hide-scrollbars',
+      '--virtual-time-budget=3000',
+      '--force-device-scale-factor=1',
+      '--default-background-color=00000000',
+      `--window-size=${width},${height}`,
+      `--screenshot=${outPath}`,
+      `file://${htmlPath}`
+    ],
+    { stdio: 'ignore' }
+  )
 
   rmSync(htmlPath, { force: true })
   console.log(`✅ ${png} (${width}x${height}) from ${svg}`)

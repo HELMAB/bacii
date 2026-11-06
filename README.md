@@ -1,6 +1,6 @@
 # Bacii — ឯកសារប្រឡងបាក់ឌុប
 
-![dobpi](./public/og-image.svg)
+![Dobpi: free Cambodian national exam papers, 2014 to 2022](./public/og-image.png)
 
 ---
 
@@ -29,19 +29,21 @@ We stand in solidarity with our brave soldiers defending Cambodia's sovereignty 
 
 ### 📖 Reading exam papers
 
-- Smooth, full-screen PDF reading
-- Zoom in and out (50% – 200%)
+- Pages fit your screen automatically, on phones, tablets, and desktops
+- Zoom in and out (50% – 200%) without losing your place
 - Fullscreen mode for distraction-free study
 - Download or print any paper
-- Page progress indicator while you scroll
+- Page counter while you scroll
 - Jump through internal document links
 - Quick scroll-to-top button
+- Clear loading progress, and a retry button if a paper can't be opened
 
 ### 🔀 Compare two papers
 
 - View two exam papers side by side
 - Pick any document for each side
 - Swap the two papers with one tap
+- Zoom each paper on its own
 - Great for comparing subjects or different years
 
 ### 🧭 Finding documents
@@ -50,11 +52,15 @@ We stand in solidarity with our brave soldiers defending Cambodia's sovereignty 
 - Search across every subject instantly
 - Move to the previous/next paper with the arrow keys
 - Current document title, year, and position always shown
+- Every paper has its own link you can bookmark or share
+- The app reopens at the paper and page where you stopped
+- The Back button moves between papers and closes open panels
 
 ### 📲 Works offline (installable app)
 
 - Install it on your phone or computer like a normal app
 - Papers you've opened stay available without internet
+- Download every paper for offline reading (about 250 MB), with the size shown first and the option to cancel
 - Connection status indicator when you go offline
 - Fast loading thanks to smart caching
 
@@ -62,7 +68,7 @@ We stand in solidarity with our brave soldiers defending Cambodia's sovereignty 
 
 - Clean, minimal design that keeps the focus on the documents
 - Light and dark mode, with your choice remembered
-- Collapsible sidebar with a compact view option
+- Collapsible sidebar
 - Responsive layout for mobile, tablet, and desktop
 - Helpful toast messages and smooth transitions
 
@@ -70,20 +76,19 @@ We stand in solidarity with our brave soldiers defending Cambodia's sovereignty 
 
 - Full Khmer language interface (km-KH)
 - Authentic Khmer typography with the PengHuoth font
-- Keyboard navigation and touch-friendly controls
+- Keyboard shortcuts and large, touch-friendly controls
 
 ## Keyboard shortcuts
 
-| Key   | Action                  |
-| ----- | ----------------------- |
-| `/`   | Focus the search box    |
-| `←`   | Previous document       |
-| `→`   | Next document           |
-| `+`   | Zoom in                 |
-| `-`   | Zoom out                |
-| `F`   | Toggle fullscreen       |
-| `?`   | Show keyboard shortcuts |
-| `ESC` | Close sidebar or dialog |
+| Key   | Action               |
+| ----- | -------------------- |
+| `/`   | Focus the search box |
+| `←`   | Previous document    |
+| `→`   | Next document        |
+| `+`   | Zoom in              |
+| `-`   | Zoom out             |
+| `F`   | Toggle fullscreen    |
+| `ESC` | Close sidebar        |
 
 ## Available exam papers
 
@@ -95,7 +100,7 @@ We stand in solidarity with our brave soldiers defending Cambodia's sovereignty 
 
 អក្សរសាស្ត្រខ្មែរ • គណិតវិទ្យា • រូបវិទ្យា • គីមីវិទ្យា • ជីវវិទ្យា • ប្រវត្តិសាស្ត្រ • ភាសាអង់គ្លេស • ភាសាបារាំង
 
-Covering exam papers across multiple years for both streams.
+138 papers from 2014 to 2022 across both streams, including both 2014 exam sessions.
 
 ## Install on your device
 
@@ -116,6 +121,26 @@ Covering exam papers across multiple years for both streams.
 1. Open the site in Safari
 2. Tap the Share button
 3. Choose "Add to Home Screen"
+
+## Development
+
+Requires Node 22 (see `.nvmrc`).
+
+```bash
+npm install
+npm run dev        # Dev server at http://localhost:3000
+npm run build      # Production build in .output/public
+npm run preview    # Serve the build locally (needed to test the Service Worker)
+npm run lint       # ESLint
+```
+
+**Add an exam paper**
+
+1. Put the PDF at `public/pdfs/{category}/{year}/{subject}.pdf`
+2. Add an entry for it to `public/docs.json`, which sets the sidebar and navigation order
+3. For a new subject, add its icon to `app/constants/icons.js`
+
+**Update the banner**: edit `public/og-image.svg`, then run `npm run generate-png-assets`. This requires Google Chrome, plus the Niradei font for the Khmer text.
 
 ## License
 

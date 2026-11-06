@@ -52,9 +52,9 @@ const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
           :is="subjectIcon"
           class="w-5 h-5 shrink-0 text-primary-600 dark:text-primary-400"
         />
-        <h1 class="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
+        <p class="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
           {{ selectedPdfTitle }}
-        </h1>
+        </p>
         <span
           class="hidden sm:inline shrink-0 text-xs tabular-nums uppercase text-gray-400 dark:text-gray-500"
         >

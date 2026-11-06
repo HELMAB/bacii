@@ -46,8 +46,8 @@ const pdfUrls = computed(() => {
 
 // Once the docs tree is loaded, ask the SW how many PDFs are already cached.
 watch(
-  pdfUrls,
-  (urls) => {
+  [pdfUrls, isSupported],
+  ([urls]) => {
     if (urls.length) {
       checkStatus(urls)
     }

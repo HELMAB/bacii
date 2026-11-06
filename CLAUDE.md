@@ -47,9 +47,13 @@ To add an exam paper:
 
 There is no router: `useReaderHistory` drives the History API directly. The open document lives in the `?pdf=` query param, Back walks through opened documents and closes overlays (drawer, comparison, PDF picker), and the last position is saved in `localStorage` (`dobpi_reading_position`). All `?pdf=` URLs share the `/` HTML shell, so the Service Worker's navigation route matches with `ignoreSearch`.
 
+### SEO
+
+`useSeo` sets titles, descriptions, canonicals and JSON-LD from the document in the URL (`urlPdf`), not the open document: `/` opens the first exam but stays the homepage, so the default document must never rewrite the URL. Document URLs must come from `getDocPath` (`app/utils/docUrl.js`) so links, canonicals and the sitemap match exactly. The sitemap is `server/routes/sitemap.xml.js`, built from `docs.json` and prerendered. `useDocsCache` starts from the bundled `docs.json` so the server can render every document link.
+
 ### Caching is multi-layered — keep the layers in sync
 
-1. **`useDocsCache`** caches `docs.json` in `localStorage` for 24h (`bacii_docs_data` / `bacii_docs_version`) and does stale-while-revalidate: serves cache instantly, refreshes in background.
+1. **`useDocsCache`** starts from the bundled `docs.json`, then caches the fetched copy in `localStorage` for 24h (`bacii_docs_data` / `bacii_docs_version`) and does stale-while-revalidate: serves cache instantly, refreshes in background.
 2. **Service Worker** (`app/service-worker/sw.js`, built by `@vite-pwa/nuxt` in `injectManifest` mode — see `pwa` in `nuxt.config.ts`) — Workbox precaches every build asset (hashed JS/CSS chunks including the lazy `vue-pdf-embed` chunk, fonts, icons) and versioning is automatic per build; no manual cache-version bumps. Runtime routes: PDFs are cache-first in the **unversioned `dobpi-pdfs` cache, shared with `useOfflineDownload`** (the names must stay in sync), `docs.json` is stale-while-revalidate, navigations are network-first with `/` warmed at install as the offline fallback.
 3. **Netlify CDN headers** (`netlify.toml`) — long immutable caching for `/pdfs`, JS/CSS, fonts; stale-while-revalidate for `/docs.json`.
 

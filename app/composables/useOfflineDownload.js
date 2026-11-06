@@ -1,4 +1,4 @@
-import { shallowRef, computed } from 'vue'
+import { shallowRef, computed, onMounted } from 'vue'
 
 // Name must match PDF_CACHE in public/sw.js — the Service Worker serves offline
 // reads from this same cache, so whatever the page stores here is what the SW
@@ -12,14 +12,17 @@ const CONCURRENCY = 4
 // API, which the page and the SW share. This avoids fragile postMessage
 // round-trips and makes the downloads show up as normal network requests.
 export function useOfflineDownload() {
-  const isSupported = shallowRef(
-    typeof window !== 'undefined' && 'caches' in window && 'serviceWorker' in navigator
-  )
+  // Set after mount so server and client render the same first markup.
+  const isSupported = shallowRef(false)
   const status = shallowRef('idle') // idle | downloading | complete | error
   const cachedCount = shallowRef(0)
   const totalCount = shallowRef(0)
   const failedCount = shallowRef(0)
   let abortController = null
+
+  onMounted(() => {
+    isSupported.value = 'caches' in window && 'serviceWorker' in navigator
+  })
 
   const progress = computed(() =>
     totalCount.value > 0 ? Math.round((cachedCount.value / totalCount.value) * 100) : 0

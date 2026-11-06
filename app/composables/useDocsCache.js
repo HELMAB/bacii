@@ -1,4 +1,5 @@
 import { shallowRef } from 'vue'
+import bundledDocs from '../../public/docs.json'
 
 const CACHE_KEY = 'bacii_docs_data'
 const CACHE_VERSION_KEY = 'bacii_docs_version'
@@ -7,7 +8,9 @@ const CACHE_DURATION = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 export function useDocsCache() {
   // The docs tree is large and only ever replaced wholesale (never mutated in place),
   // so a shallowRef avoids deep-proxying the entire nested structure.
-  const data = shallowRef([])
+  // Starts from the bundled copy so the server can render every document link for
+  // crawlers, and a failed fetch can't leave the app without a list.
+  const data = shallowRef(bundledDocs)
   // Starts true: the first render shouldn't flash the "pick a document" empty state.
   const isLoading = shallowRef(true)
   const error = shallowRef(null)
