@@ -1,65 +1,71 @@
 import { writeFileSync } from 'fs'
 import { join } from 'path'
+import { LETTER_PATH } from '../app/constants/logo.js'
 
-// SVG template for the icon
-const createIconSVG = (size) => `
-<svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="${size}" height="${size}" fill="#253c99" rx="${size * 0.15}"/>
+// The logo: the letter ឌ, the sound Dobpi starts with, on a red and black record
+// label, after 1970s Khmer record sleeves. Run `npm run generate-png-assets` afterwards
+// to rebuild the PNG and ICO versions.
 
-  <!-- Icon Design - Book/Document -->
-  <g transform="translate(${size * 0.25}, ${size * 0.2})">
-    <!-- Book -->
-    <rect x="0" y="0" width="${size * 0.5}" height="${size * 0.6}" fill="white" opacity="0.9" rx="${size * 0.05}"/>
-    <rect x="${size * 0.05}" y="${size * 0.1}" width="${size * 0.4}" height="${size * 0.05}" fill="#253c99" opacity="0.7" rx="${size * 0.02}"/>
-    <rect x="${size * 0.05}" y="${size * 0.2}" width="${size * 0.3}" height="${size * 0.03}" fill="#253c99" opacity="0.5" rx="${size * 0.015}"/>
-    <rect x="${size * 0.05}" y="${size * 0.27}" width="${size * 0.35}" height="${size * 0.03}" fill="#253c99" opacity="0.5" rx="${size * 0.015}"/>
+const RED = '#c7231f'
+const MUSTARD = '#e8c34a'
+const INK = '#14110d'
+const WHITE = '#ffffff'
 
-    <!-- Star accent -->
-    <path d="M ${size * 0.42} ${size * 0.05} L ${size * 0.45} ${size * 0.12} L ${size * 0.52} ${size * 0.12} L ${size * 0.47} ${size * 0.17} L ${size * 0.49} ${size * 0.24} L ${size * 0.42} ${size * 0.19} L ${size * 0.35} ${size * 0.24} L ${size * 0.37} ${size * 0.17} L ${size * 0.32} ${size * 0.12} L ${size * 0.39} ${size * 0.12} Z"
-          fill="#FCD34D" stroke="#F59E0B" stroke-width="${size * 0.005}"/>
-  </g>
+const BEAD_COUNT = 32
 
-  <!-- Text "D" for Dobpi -->
-  <text x="${size * 0.5}" y="${size * 0.88}"
-        font-family="Arial, sans-serif"
-        font-weight="bold"
-        font-size="${size * 0.15}"
-        fill="white"
-        text-anchor="middle">D</text>
+const letter = (size, fill, offset = 0) => {
+  const position = 50 - size / 2 + offset
+  return `<path d="${LETTER_PATH}" fill="${fill}" transform="translate(${position} ${position}) scale(${size / 100})"/>`
+}
+
+function createBeads() {
+  const beads = []
+  for (let index = 0; index < BEAD_COUNT; index++) {
+    const angle = (index / BEAD_COUNT) * Math.PI * 2
+    const x = (50 + 36.4 * Math.cos(angle)).toFixed(2)
+    const y = (50 + 36.4 * Math.sin(angle)).toFixed(2)
+    beads.push(`<circle cx="${x}" cy="${y}" r="1.15" fill="${MUSTARD}"/>`)
+  }
+  return beads.join('')
+}
+
+// Full logo for app icons. The background bleeds to the edges and the label stays
+// inside the central 80% circle, so it survives Android's maskable crop.
+const createIconSVG = (
+  size
+) => `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="${MUSTARD}"/>
+  <circle cx="50" cy="50" r="39.5" fill="${INK}"/>
+  ${createBeads()}
+  <circle cx="50" cy="50" r="33" fill="${RED}"/>
+  ${letter(42, INK, 1.6)}
+  ${letter(42, WHITE)}
 </svg>
 `
 
-// Icon sizes needed
-const sizes = [72, 96, 128, 144, 152, 192, 384, 512]
+// Simplified for browser tabs: no fine detail, a larger letter, transparent corners.
+const faviconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="50" fill="${MUSTARD}"/>
+  <circle cx="50" cy="50" r="46" fill="${INK}"/>
+  <circle cx="50" cy="50" r="41" fill="${RED}"/>
+  ${letter(58, WHITE)}
+</svg>
+`
 
-// Generate icons
+const sizes = [72, 96, 128, 144, 152, 192, 384, 512]
+const publicDir = join(process.cwd(), 'public')
+
 console.log('🎨 Generating PWA icons...\n')
 
-try {
-  // Ensure public directory exists
-  const publicDir = join(process.cwd(), 'public')
-
-  sizes.forEach((size) => {
-    const svg = createIconSVG(size)
-    const filename = `icon-${size}x${size}.svg`
-    const filepath = join(publicDir, filename)
-
-    writeFileSync(filepath, svg.trim())
-    console.log(`✅ Generated: ${filename}`)
-  })
-
-  // Create apple-touch-icon (180x180)
-  const appleIcon = createIconSVG(180)
-  writeFileSync(join(publicDir, 'apple-touch-icon.png.svg'), appleIcon.trim())
-  console.log(`✅ Generated: apple-touch-icon.png.svg`)
-
-  console.log('\n✨ All icons generated successfully!')
-  console.log('\n📝 Note: SVG icons are being used. For better compatibility,')
-  console.log('   you can convert them to PNG using an online tool or ImageMagick.')
-  console.log('\n🔧 To convert to PNG with ImageMagick:')
-  console.log('   for i in public/icon-*.svg; do convert $i ${i%.svg}.png && rm $i; done')
-} catch (error) {
-  console.error('❌ Error generating icons:', error)
-  process.exit(1)
+for (const size of sizes) {
+  writeFileSync(join(publicDir, `icon-${size}x${size}.svg`), createIconSVG(size))
+  console.log(`✅ icon-${size}x${size}.svg`)
 }
+
+writeFileSync(join(publicDir, 'apple-touch-icon.png.svg'), createIconSVG(180))
+console.log('✅ apple-touch-icon.png.svg')
+
+writeFileSync(join(publicDir, 'favicon.svg'), faviconSVG)
+console.log('✅ favicon.svg')
+
+console.log('\n✨ Done. Now run: npm run generate-png-assets')
