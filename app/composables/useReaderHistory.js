@@ -1,5 +1,6 @@
-import { computed, onMounted, onUnmounted, watch } from 'vue'
-import { useHead } from '#imports'
+import { onMounted, onUnmounted, shallowRef, watch } from 'vue'
+import { useRequestURL } from '#imports'
+import { getDocPath } from '../utils/docUrl'
 
 const PDF_PARAM = 'pdf'
 const POSITION_KEY = 'dobpi_reading_position'
@@ -30,24 +31,14 @@ function writeSavedPosition(position) {
 // its history entry becomes the document's, so Back doesn't land on a dead entry.
 export function useReaderHistory({ allPdfs, selectedPdf, selectPdf, overlays }) {
   const openOverlays = []
+  // The document named in the URL. `/` has none, even with the first exam open.
+  const urlPdf = shallowRef(useRequestURL().searchParams.get(PDF_PARAM))
   let isHistorySelection = false
   let isInitialSelection = false
+  let skipUrlUpdate = false
 
   function findDoc(pdf) {
     return allPdfs.value.find((doc) => doc.pdf === pdf)
-  }
-
-  useHead({
-    title: computed(() => {
-      const doc = findDoc(selectedPdf.value)
-      return doc ? `${doc.label} — Dobpi` : 'Home — Dobpi'
-    })
-  })
-
-  function buildUrl(pdf) {
-    const url = new URL(window.location.href)
-    url.searchParams.set(PDF_PARAM, pdf)
-    return url.pathname + url.search
   }
 
   function historyState() {
@@ -55,16 +46,18 @@ export function useReaderHistory({ allPdfs, selectedPdf, selectPdf, overlays }) 
   }
 
   function recordDocInHistory(pdf) {
-    if (isHistorySelection) return
+    if (isHistorySelection || skipUrlUpdate) return
 
+    urlPdf.value = pdf
+    const url = getDocPath(pdf)
     const topOverlay = openOverlays.at(-1)
     if (isInitialSelection) {
-      history.replaceState(historyState(), '', buildUrl(pdf))
+      history.replaceState(historyState(), '', url)
     } else if (topOverlay?.replacedByDoc) {
       openOverlays.pop()
-      history.replaceState(historyState(), '', buildUrl(pdf))
+      history.replaceState(historyState(), '', url)
     } else {
-      history.pushState(historyState(), '', buildUrl(pdf))
+      history.pushState(historyState(), '', url)
     }
   }
 
@@ -111,8 +104,11 @@ export function useReaderHistory({ allPdfs, selectedPdf, selectPdf, overlays }) 
     }
 
     const pdf = new URLSearchParams(window.location.search).get(PDF_PARAM)
-    const doc = findDoc(pdf)
-    if (doc && pdf !== selectedPdf.value) {
+    urlPdf.value = pdf
+
+    // No document in the URL means the `/` entry, which shows the first exam.
+    const doc = findDoc(pdf) ?? allPdfs.value[0]
+    if (doc && doc.pdf !== selectedPdf.value) {
       isHistorySelection = true
       selectPdf(doc, doc.category, doc.year)
       isHistorySelection = false
@@ -125,13 +121,21 @@ export function useReaderHistory({ allPdfs, selectedPdf, selectPdf, overlays }) 
     const saved = readSavedPosition()
     const savedDoc = findDoc(saved?.pdf)
     const doc = urlDoc ?? savedDoc ?? allPdfs.value[0]
-    return { doc, position: doc && doc === savedDoc ? saved : null }
+    return {
+      doc,
+      position: doc && doc === savedDoc ? saved : null,
+      isDefaultDoc: !urlDoc && !savedDoc
+    }
   }
 
-  function openDocWithoutHistoryEntry(doc) {
+  // The default document leaves the URL at `/`, so that page stays the homepage for
+  // search engines and first-time visitors.
+  function openDocWithoutHistoryEntry(doc, { isDefaultDoc }) {
     isInitialSelection = true
+    skipUrlUpdate = isDefaultDoc
     selectPdf(doc, doc.category, doc.year)
     isInitialSelection = false
+    skipUrlUpdate = false
   }
 
   function savePosition(anchor) {
@@ -143,5 +147,5 @@ export function useReaderHistory({ allPdfs, selectedPdf, selectPdf, overlays }) 
   onMounted(() => window.addEventListener('popstate', handlePopState))
   onUnmounted(() => window.removeEventListener('popstate', handlePopState))
 
-  return { resolveInitialDoc, openDocWithoutHistoryEntry, savePosition }
+  return { urlPdf, resolveInitialDoc, openDocWithoutHistoryEntry, savePosition }
 }

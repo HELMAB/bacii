@@ -25,7 +25,7 @@
 
       <!-- Years -->
       <div
-        v-if="expandedCategories[category.label]"
+        v-show="expandedCategories[category.label]"
         :class="[isCompactMode ? 'mt-1 ml-3 space-y-0.5' : 'mt-1.5 ml-4 space-y-1']"
       >
         <div v-for="year in category.children" :key="year.label">
@@ -52,10 +52,12 @@
           </button>
 
           <!-- Subjects -->
-          <div v-if="expandedYears[year.label]" :class="[isCompactMode ? 'ml-3' : 'ml-4']">
-            <button
+          <!-- Real links, kept in the markup while collapsed so crawlers can follow them -->
+          <div v-show="expandedYears[year.label]" :class="[isCompactMode ? 'ml-3' : 'ml-4']">
+            <a
               v-for="subject in year.children"
               :key="subject.label"
+              :href="getDocPath(subject.pdf)"
               :class="[
                 'flex items-center w-full text-left border-l transition-colors duration-150',
                 isCompactMode ? 'text-xs py-1 px-3' : 'text-sm py-3 lg:py-1.5 px-3',
@@ -63,10 +65,10 @@
                   ? 'border-l-2 border-primary-600 bg-gray-50 dark:bg-gray-900 text-primary-700 dark:text-primary-300 font-semibold'
                   : 'border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-600 hover:text-gray-900 dark:hover:text-gray-100'
               ]"
-              @click="$emit('selectPdf', subject, category.label, year.label)"
+              @click.exact.prevent="$emit('selectPdf', subject, category.label, year.label)"
             >
               <span>{{ subject.label }}</span>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -83,6 +85,7 @@
 <script setup>
 import { ChevronRight, SearchX } from '@lucide/vue'
 import { extractYear } from '../../utils/helpers'
+import { getDocPath } from '../../utils/docUrl'
 
 defineProps({
   categories: Array,

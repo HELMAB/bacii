@@ -1,5 +1,7 @@
 <template>
   <div class="flex h-dvh w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
+    <h1 class="sr-only">{{ pageHeading }}</h1>
+
     <!-- Toast Notification -->
     <ToastNotification :show="showToast" :message="toastMessage" />
 
@@ -85,12 +87,7 @@
         />
 
         <!-- Empty State -->
-        <EmptyState
-          v-else-if="!selectedPdf"
-          :is-loading="isDocsLoading"
-          :load-failed="!!docsError"
-          @retry="retryDocs"
-        />
+        <EmptyState v-else-if="!selectedPdf" :is-loading="isDocsLoading" />
 
         <!-- PDF Container -->
         <PdfContainer
@@ -176,13 +173,14 @@ import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
 import { useComparison } from './composables/useComparison'
 import { useDocsCache } from './composables/useDocsCache'
 import { useReaderHistory } from './composables/useReaderHistory'
+import { useSeo } from './composables/useSeo'
 import { getPdfScrollAnchor } from './utils/pdfScroll'
 
 // How long scrolling must pause before the reading position is saved.
 const SAVE_POSITION_DELAY_MS = 500
 
 // Load docs data with caching
-const { data, isLoading: isDocsLoading, error: docsError, loadDocs } = useDocsCache()
+const { data, isLoading: isDocsLoading, loadDocs } = useDocsCache()
 
 // Theme
 const { isDark, toggleDarkMode } = useTheme()
@@ -351,7 +349,7 @@ const {
 } = useNavigation(data, selectedPdf, selectPdf, showToastNotification)
 
 // URLs, Back button and reading position
-const { resolveInitialDoc, openDocWithoutHistoryEntry, savePosition } = useReaderHistory({
+const { urlPdf, resolveInitialDoc, openDocWithoutHistoryEntry, savePosition } = useReaderHistory({
   allPdfs,
   selectedPdf,
   selectPdf,
@@ -366,6 +364,9 @@ const { resolveInitialDoc, openDocWithoutHistoryEntry, savePosition } = useReade
   ]
 })
 
+// Search engine metadata
+const { pageHeading } = useSeo({ allPdfs, urlPdf })
+
 // Keyboard shortcuts
 useKeyboardShortcuts({
   searchQuery,
@@ -379,22 +380,17 @@ useKeyboardShortcuts({
 })
 
 async function openInitialDoc() {
-  const { doc, position } = resolveInitialDoc()
+  const { doc, position, isDefaultDoc } = resolveInitialDoc()
   if (!doc) return
 
   expandedCategories[doc.category] = true
   expandedYears[doc.year] = true
-  openDocWithoutHistoryEntry(doc)
+  openDocWithoutHistoryEntry(doc, { isDefaultDoc })
 
   if (position) {
     await nextTick()
     pdfContainerComponent.value?.restorePosition(position)
   }
-}
-
-async function retryDocs() {
-  await loadDocs()
-  await openInitialDoc()
 }
 
 onMounted(async () => {
