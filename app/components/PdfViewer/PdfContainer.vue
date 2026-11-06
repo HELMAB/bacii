@@ -1,7 +1,7 @@
 <template>
   <div
     ref="pdfContainer"
-    class="flex-1 bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark overflow-auto py-6 sm:py-10 relative"
+    class="flex-1 bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark overflow-auto pt-2 sm:pt-10 pb-24 relative"
   >
     <!-- Skeleton Loader -->
     <div v-if="isLoading" class="absolute inset-0 bg-white dark:bg-gray-950 z-10 p-6 space-y-4">
@@ -25,7 +25,7 @@
       leave-to-class="opacity-0"
       mode="out-in"
     >
-      <div v-if="selectedPdf" :key="selectedPdf" class="w-fit mx-auto px-2 sm:px-4">
+      <div v-if="selectedPdf" :key="selectedPdf" class="w-fit mx-auto px-2">
         <ClientOnly>
           <VuePdfEmbed
             ref="pdfRef"
@@ -43,11 +43,13 @@
 
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue'
+import { useFitPdfWidth } from '../../composables/useFitPdfWidth'
 
 const VuePdfEmbed = defineAsyncComponent(() => import('vue-pdf-embed'))
 
-// Reading-column width at 100% zoom (px). Zoom scales this so the PDF
-// re-renders crisply at each level instead of being upscaled with a CSS transform.
+// Widest reading column at 100% zoom (px); narrower screens fit the page to the
+// container instead. Zoom scales this so the PDF re-renders crisply at each level
+// instead of being upscaled with a CSS transform.
 const BASE_PDF_WIDTH = 820
 
 const props = defineProps({
@@ -58,10 +60,11 @@ const props = defineProps({
 
 defineEmits(['rendered', 'loadingFailed', 'internalLinkClicked'])
 
-const pdfWidth = computed(() => Math.round(BASE_PDF_WIDTH * (props.zoomLevel || 1)))
-
 const pdfContainer = ref(null)
 const pdfRef = ref(null)
+
+const fitWidth = useFitPdfWidth(pdfContainer, BASE_PDF_WIDTH)
+const pdfWidth = computed(() => Math.round(fitWidth.value * (props.zoomLevel || 1)))
 
 defineExpose({
   pdfContainer,

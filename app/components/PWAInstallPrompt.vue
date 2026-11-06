@@ -9,21 +9,23 @@
   >
     <div
       v-if="showPrompt"
-      class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gray-950 border-t-2 border-primary-500"
+      class="fixed bottom-0 left-0 right-0 z-50 p-3 sm:p-4 bg-gray-950 border-t-2 border-primary-500"
     >
       <div class="max-w-4xl mx-auto">
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center justify-between gap-2 sm:gap-4">
           <!-- Icon & Content -->
           <div class="flex items-center gap-4 flex-1">
             <!-- App Icon -->
-            <div class="flex-shrink-0 w-14 h-14 bg-primary-600 flex items-center justify-center">
+            <div
+              class="hidden sm:flex flex-shrink-0 w-14 h-14 bg-primary-600 items-center justify-center"
+            >
               <GraduationCap class="w-8 h-8 text-white" />
             </div>
 
             <!-- Text Content -->
-            <div class="text-white flex-1">
+            <div class="text-white flex-1 min-w-0">
               <h3 class="font-bold text-base mb-0.5">ដំឡើង Dobpi</h3>
-              <p class="text-sm text-white/70">
+              <p class="text-xs sm:text-sm text-white/70">
                 ប្រើប្រាស់កម្មវិធីដោយមិនចាំបាច់មានអ៊ីនធឺណិត និងចូលប្រើបានលឿនជាងមុន
               </p>
             </div>
@@ -32,13 +34,13 @@
           <!-- Actions -->
           <div class="flex items-center gap-2 flex-shrink-0">
             <button
-              class="px-6 py-3 bg-white text-gray-900 font-bold hover:bg-gray-200 transition-colors"
+              class="px-4 sm:px-6 py-3 bg-white text-gray-900 font-bold hover:bg-gray-200 transition-colors"
               @click="installApp"
             >
               ដំឡើង
             </button>
             <button
-              class="px-4 py-3 text-white hover:bg-white/10 transition-colors"
+              class="px-2 sm:px-4 py-3 text-white hover:bg-white/10 transition-colors"
               aria-label="បិទ"
               @click="dismissPrompt"
             >

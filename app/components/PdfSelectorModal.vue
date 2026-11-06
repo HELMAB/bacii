@@ -5,7 +5,7 @@
     @click.self="$emit('close')"
   >
     <div
-      class="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+      class="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 max-w-4xl w-full max-h-[90dvh] overflow-hidden flex flex-col"
     >
       <!-- Header -->
       <div class="border-b border-gray-200 dark:border-gray-800 p-5">
