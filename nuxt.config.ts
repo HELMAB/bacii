@@ -42,7 +42,7 @@ export default defineNuxtConfig({
         {
           name: 'description',
           content:
-            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។'
+            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ'
         },
         {
           name: 'keywords',
@@ -60,7 +60,7 @@ export default defineNuxtConfig({
         {
           property: 'og:description',
           content:
-            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។'
+            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ'
         },
         { property: 'og:image', content: '/og-image.png' },
         { property: 'og:image:alt', content: 'Dobpi - ឯកសារប្រឡងបាក់ឌុប' },
@@ -74,7 +74,7 @@ export default defineNuxtConfig({
         {
           name: 'twitter:description',
           content:
-            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២៥. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ។'
+            'ឯកសារប្រឡងបាក់ឌុបសម្រាប់វិទ្យាសាស្ត្រសង្គម - ឆ្នាំ២០១៤ ដល់ ២០២២. មើលនិងទាញយកឯកសារប្រឡងគ្រប់មុខវិជ្ជាទាំងអស់ដោយឥតគិតថ្លៃ'
         },
         { name: 'twitter:image', content: '/og-image.png' },
 
@@ -82,7 +82,7 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' },
         { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-capable', content: 'yes' },
-        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
         { name: 'apple-mobile-web-app-title', content: 'Dobpi' }
       ],
       link: [

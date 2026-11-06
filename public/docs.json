@@ -657,7 +657,7 @@
           },
           {
             "label": "ភាសាបារាំង",
-            "pdf": "/pdfs/science/2017/french.pdf",
+            "pdf": "/pdfs/science/2018/french.pdf",
             "icon": "flag-fr"
           }
         ]
@@ -739,6 +739,11 @@
             "label": "ភាសាអង់គ្លេស",
             "pdf": "/pdfs/science/2021/english.pdf",
             "icon": "language"
+          },
+          {
+            "label": "ភាសាបារាំង",
+            "pdf": "/pdfs/science/2021/french.pdf",
+            "icon": "flag-fr"
           }
         ]
       },

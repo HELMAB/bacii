@@ -10,7 +10,10 @@ const props = defineProps({
   selectedPdfTitle: String,
   zoomLevel: Number,
   isDark: Boolean,
-  isComparisonMode: Boolean
+  isComparisonMode: Boolean,
+  isDrawerOpen: Boolean,
+  isFullscreen: Boolean,
+  isFullscreenSupported: Boolean
 })
 
 defineEmits([
@@ -30,12 +33,13 @@ const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
 
 <template>
   <header
-    class="relative z-30 shrink-0 h-14 flex items-center gap-2 px-2 sm:px-4 bg-white/90 dark:bg-gray-950/90 backdrop-blur border-b border-gray-200 dark:border-gray-800"
+    class="relative z-30 shrink-0 h-14 flex items-center gap-1 sm:gap-2 px-1 sm:px-4 sm:px-4 bg-white/90 dark:bg-gray-950/90 backdrop-blur border-b border-gray-200 dark:border-gray-800"
   >
     <!-- Drawer toggle -->
     <button
-      class="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-1 focus:ring-primary-600"
-      aria-label="Open navigation"
+      class="p-3 sm:p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-1 focus:ring-primary-600"
+      aria-label="បើកបញ្ជីឯកសារ"
+      :aria-expanded="isDrawerOpen"
       @click="$emit('toggleDrawer')"
     >
       <Menu class="w-5 h-5" />
@@ -69,7 +73,8 @@ const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
       >
         <button
           class="px-2 py-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Zoom Out"
+          aria-label="បង្រួម"
+          title="បង្រួម"
           @click="$emit('zoomOut')"
         >
           <ZoomOut class="w-4 h-4" />
@@ -81,17 +86,20 @@ const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
         </span>
         <button
           class="px-2 py-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          title="Zoom In"
+          aria-label="ពង្រីក"
+          title="ពង្រីក"
           @click="$emit('zoomIn')"
         >
           <ZoomIn class="w-4 h-4" />
         </button>
       </div>
 
-      <!-- Theme toggle (always available) -->
+      <!-- Theme toggle (on phones it lives in the actions menu once a PDF is open) -->
       <button
-        class="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-        :title="isDark ? 'Light mode' : 'Dark mode'"
+        class="p-3 sm:p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        :class="{ 'hidden sm:block': hasPdf }"
+        :aria-label="isDark ? 'ពន្លឺថ្ងៃ' : 'ពន្លឺយប់'"
+        :title="isDark ? 'ពន្លឺថ្ងៃ' : 'ពន្លឺយប់'"
         @click="$emit('toggleDarkMode')"
       >
         <Sun v-if="isDark" class="w-5 h-5" />
@@ -101,8 +109,9 @@ const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
       <!-- Download -->
       <button
         v-if="hasPdf"
-        class="px-3 py-2 bg-primary-600 text-white text-sm hover:bg-primary-700 transition-colors flex items-center gap-1.5"
-        title="Download"
+        class="p-3.5 sm:px-3 sm:py-2 bg-primary-600 text-white text-sm hover:bg-primary-700 transition-colors flex items-center gap-1.5"
+        aria-label="ទាញយក"
+        title="ទាញយក"
         @click="$emit('download')"
       >
         <Download class="w-4 h-4" />
@@ -114,6 +123,8 @@ const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
         v-if="hasPdf"
         :is-dark="isDark"
         :is-comparison-mode="isComparisonMode"
+        :is-fullscreen="isFullscreen"
+        :is-fullscreen-supported="isFullscreenSupported"
         :zoom-percent="zoomPercent"
         @zoom-in="$emit('zoomIn')"
         @zoom-out="$emit('zoomOut')"

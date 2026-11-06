@@ -12,7 +12,7 @@ import { Info } from '@lucide/vue'
         ឯកសារទាំងអស់ជាកម្មសិទ្ធិរបស់ម្ចាស់ដើម។ គេហទំព័រនេះបង្កើតឡើងគ្រាន់តែដើម្បីជួយសិស្សកម្ពុជា
         ស្វែងរកឯកសារសិក្សាបានងាយស្រួល។ សូមអរគុណ និងគោរពដល់ម្ចាស់ឯកសារទាំងអស់។
       </p>
-      <p class="text-[11px] leading-relaxed text-gray-400 dark:text-gray-500">
+      <p class="text-[11px] leading-relaxed text-gray-600 dark:text-gray-400">
         All documents belong to their respective owners. This site was built only to help Cambodian
         students find study materials easily — full credit to the original owners.
       </p>

@@ -7,10 +7,7 @@
     leave-from-class="translate-y-0 opacity-100"
     leave-to-class="translate-y-full opacity-0"
   >
-    <div
-      v-if="showPrompt"
-      class="fixed bottom-0 left-0 right-0 z-50 p-3 sm:p-4 bg-gray-950 border-t-2 border-primary-500"
-    >
+    <div v-if="showPrompt" class="shrink-0 p-3 sm:p-4 bg-gray-950 border-t-2 border-primary-500">
       <div class="max-w-4xl mx-auto">
         <div class="flex items-center justify-between gap-2 sm:gap-4">
           <!-- Icon & Content -->
@@ -40,7 +37,7 @@
               ដំឡើង
             </button>
             <button
-              class="px-2 sm:px-4 py-3 text-white hover:bg-white/10 transition-colors"
+              class="p-3 text-white hover:bg-white/10 transition-colors"
               aria-label="បិទ"
               @click="dismissPrompt"
             >

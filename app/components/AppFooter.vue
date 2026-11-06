@@ -3,12 +3,12 @@
     class="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 px-5 py-3 text-xs text-gray-500 dark:text-gray-400 space-y-1"
   >
     <div class="flex items-center justify-between">
-      <span>© 2025 Dobpi</span>
+      <span>© {{ currentYear }} Dobpi</span>
       <a
         href="https://github.com/HELMAB/bacii"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1.5"
+        class="-my-3 -mr-2 p-3 pr-2 hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1.5"
       >
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
           <path
@@ -20,7 +20,7 @@
         GitHub
       </a>
     </div>
-    <p class="text-[11px] text-gray-400 dark:text-gray-500">
+    <p class="text-[11px] text-gray-600 dark:text-gray-400">
       Made with
       <span class="text-red-500">❤</span>
       for Cambodian students
@@ -28,4 +28,6 @@
   </footer>
 </template>
 
-<script setup></script>
+<script setup>
+const currentYear = new Date().getFullYear()
+</script>

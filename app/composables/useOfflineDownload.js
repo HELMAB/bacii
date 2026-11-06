@@ -19,13 +19,12 @@ export function useOfflineDownload() {
   const cachedCount = shallowRef(0)
   const totalCount = shallowRef(0)
   const failedCount = shallowRef(0)
+  let abortController = null
 
   const progress = computed(() =>
     totalCount.value > 0 ? Math.round((cachedCount.value / totalCount.value) * 100) : 0
   )
-  const isComplete = computed(
-    () => totalCount.value > 0 && cachedCount.value >= totalCount.value
-  )
+  const isComplete = computed(() => totalCount.value > 0 && cachedCount.value >= totalCount.value)
 
   async function checkStatus(urls) {
     if (!isSupported.value || !urls.length) {
@@ -56,6 +55,8 @@ export function useOfflineDownload() {
 
     status.value = 'downloading'
     failedCount.value = 0
+    abortController = new AbortController()
+    const { signal } = abortController
     totalCount.value = urls.length
 
     // Ask the browser not to evict this cache under storage pressure
@@ -88,17 +89,18 @@ export function useOfflineDownload() {
     let index = 0
 
     async function worker() {
-      while (index < pending.length) {
+      while (index < pending.length && !signal.aborted) {
         const url = pending[index++]
 
         try {
-          const response = await fetch(url, { cache: 'no-store' })
+          const response = await fetch(url, { cache: 'no-store', signal })
           if (response.ok) {
             await cache.put(url, response.clone())
           } else {
             failures++
           }
         } catch (error) {
+          if (signal.aborted) return
           failures++
           console.error('[OfflineDownload] Failed to cache PDF:', url, error)
         }
@@ -115,8 +117,18 @@ export function useOfflineDownload() {
 
     await Promise.all(workers)
 
+    if (signal.aborted) {
+      status.value = 'idle'
+      return
+    }
+
     failedCount.value = failures
     status.value = failures > 0 ? 'error' : 'complete'
+  }
+
+  // Already-saved PDFs stay cached, so downloading again resumes from here.
+  function cancelDownload() {
+    abortController?.abort()
   }
 
   return {
@@ -128,6 +140,7 @@ export function useOfflineDownload() {
     progress,
     isComplete,
     checkStatus,
-    downloadAll
+    downloadAll,
+    cancelDownload
   }
 }

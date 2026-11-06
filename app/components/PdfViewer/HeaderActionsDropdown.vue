@@ -2,7 +2,7 @@
   <div ref="dropdownRef" class="relative">
     <!-- Dropdown Toggle Button -->
     <button
-      class="px-2 sm:px-3 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5"
+      class="p-3.5 sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5"
       :aria-expanded="isOpen"
       aria-label="បើកម៉ឺនុយសកម្មភាព"
       @click="isOpen = !isOpen"
@@ -60,7 +60,7 @@
           <!-- Comparison Mode -->
           <button
             :class="[
-              'w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 transition-colors',
+              'w-full text-left px-4 py-3 sm:py-2.5 text-sm flex items-center gap-3 transition-colors',
               isComparisonMode
                 ? 'bg-gray-50 dark:bg-gray-900 text-primary-700 dark:text-primary-300 font-semibold hover:bg-gray-100 dark:hover:bg-gray-800'
                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
@@ -82,17 +82,19 @@
 
           <!-- Fullscreen -->
           <button
-            class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
+            v-if="isFullscreenSupported"
+            class="w-full text-left px-4 py-3 sm:py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
             role="menuitem"
             @click="handleAction('toggleFullscreen')"
           >
-            <Maximize class="w-5 h-5 flex-shrink-0" />
-            <span>ពេញអេក្រង់</span>
+            <Minimize v-if="isFullscreen" class="w-5 h-5 flex-shrink-0" />
+            <Maximize v-else class="w-5 h-5 flex-shrink-0" />
+            <span>{{ isFullscreen ? 'ចេញពីពេញអេក្រង់' : 'ពេញអេក្រង់' }}</span>
           </button>
 
           <!-- Print -->
           <button
-            class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
+            class="w-full text-left px-4 py-3 sm:py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
             role="menuitem"
             @click="handleAction('print')"
           >
@@ -104,7 +106,7 @@
 
           <!-- Dark Mode Toggle -->
           <button
-            class="w-full text-left px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
+            class="w-full text-left px-4 py-3 sm:py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
             role="menuitem"
             @click="handleAction('toggleDarkMode')"
           >
@@ -125,6 +127,7 @@ import {
   ChevronDown,
   Columns2,
   Maximize,
+  Minimize,
   Printer,
   Sun,
   Moon,
@@ -135,6 +138,8 @@ import {
 defineProps({
   isDark: Boolean,
   isComparisonMode: Boolean,
+  isFullscreen: Boolean,
+  isFullscreenSupported: Boolean,
   zoomPercent: Number
 })
 
