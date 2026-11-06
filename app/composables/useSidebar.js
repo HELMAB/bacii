@@ -5,27 +5,29 @@ export function useSidebar(isDesktop) {
   const isSidebarOpen = shallowRef(true)
   const expandedCategories = reactive({})
   const expandedYears = reactive({})
-  const isCompactMode = shallowRef(false)
+  // The category tab on show. Exactly one category is expanded at a time.
+  const activeCategory = shallowRef('')
 
   function toggleSidebar() {
     isSidebarOpen.value = !isSidebarOpen.value
   }
 
-  function toggleCategory(label) {
-    const isCurrentlyExpanded = expandedCategories[label]
+  // Switching tabs keeps the open year, so coming back shows the same list.
+  function selectCategory(label) {
+    if (!label) return
 
-    // Close all categories
     Object.keys(expandedCategories).forEach((key) => {
       expandedCategories[key] = false
     })
+    expandedCategories[label] = true
+    activeCategory.value = label
+  }
 
-    // Close all years when switching categories
-    Object.keys(expandedYears).forEach((key) => {
-      expandedYears[key] = false
-    })
-
-    // Toggle the clicked category
-    expandedCategories[label] = !isCurrentlyExpanded
+  // Shows the first category (docs.json order) until something is chosen.
+  function ensureActiveCategory(categories) {
+    if (!activeCategory.value && categories?.length) {
+      selectCategory(categories[0].label)
+    }
   }
 
   function toggleYear(label) {
@@ -41,22 +43,16 @@ export function useSidebar(isDesktop) {
   }
 
   onMounted(() => {
-    if (typeof window !== 'undefined') {
-      const compactMode = localStorage.getItem('compactMode')
-      if (compactMode === 'true') {
-        isCompactMode.value = true
-      }
+    // Compact mode was removed: the ledger needs fixed 44px rows.
+    try {
+      localStorage.removeItem('compactMode')
+    } catch {
+      // Storage can be blocked; nothing to clean up then.
     }
 
     // Start closed on mobile; the split view only makes sense on desktop.
     if (!isDesktop.value) {
       isSidebarOpen.value = false
-    }
-  })
-
-  watch(isCompactMode, (newVal) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('compactMode', newVal.toString())
     }
   })
 
@@ -69,9 +65,10 @@ export function useSidebar(isDesktop) {
     isSidebarOpen,
     expandedCategories,
     expandedYears,
-    isCompactMode,
+    activeCategory,
     toggleSidebar,
-    toggleCategory,
+    selectCategory,
+    ensureActiveCategory,
     toggleYear
   }
 }

@@ -9,11 +9,12 @@
   >
     <div
       v-if="!isOnline"
-      class="shrink-0 bg-amber-400 text-gray-900 py-2 px-4 text-center border-b border-amber-500"
+      class="shrink-0 bg-system text-on-system py-2 px-4 text-center border-b-2 border-line"
+      role="status"
     >
       <div class="flex items-center justify-center gap-2">
-        <WifiOff class="w-5 h-5 animate-pulse" />
-        <span class="font-semibold text-sm">
+        <WifiOff class="w-5 h-5 shrink-0" :stroke-width="2.4" aria-hidden="true" />
+        <span class="font-bold text-[15px] leading-snug">
           អ្នកកំពុងប្រើប្រាស់ក្រៅបណ្តាញ - ឯកសារដែលបានមើលរួចនឹងដំណើរការ
         </span>
       </div>
@@ -31,11 +32,12 @@
   >
     <div
       v-if="showOnlineNotification"
-      class="shrink-0 bg-gray-900 text-white py-2 px-4 text-center border-b border-primary-500"
+      class="shrink-0 bg-surface text-system py-2 px-4 text-center border-b-2 border-dashed border-system"
+      role="status"
     >
       <div class="flex items-center justify-center gap-2">
-        <CircleCheck class="w-5 h-5" />
-        <span class="font-semibold text-sm">បណ្តាញត្រលប់មកវិញហើយ</span>
+        <CircleCheck class="w-5 h-5 shrink-0" :stroke-width="2.4" aria-hidden="true" />
+        <span class="font-bold text-[15px] leading-snug">បណ្តាញត្រលប់មកវិញហើយ</span>
       </div>
     </div>
   </transition>

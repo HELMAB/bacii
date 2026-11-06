@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import docs from '../../public/docs.json'
 import { subjectIcons } from '../../app/constants/icons'
+import { parseYearLabel } from '../../app/utils/khmer'
 
 const publicDir = fileURLToPath(new URL('../../public', import.meta.url))
 
@@ -63,5 +64,13 @@ describe('docs.json', () => {
       (label) => !subjectIcons[label]
     )
     expect(unmapped).toEqual([])
+  })
+
+  // The sidebar ledger shows the parsed year, so a new label format must still parse.
+  it('gives every year label a readable year', () => {
+    const unreadable = docs
+      .flatMap((category) => category.children.map((year) => year.label))
+      .filter((label) => !parseYearLabel(label).year)
+    expect(unreadable).toEqual([])
   })
 })

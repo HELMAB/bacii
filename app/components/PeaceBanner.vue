@@ -1,12 +1,20 @@
 <template>
-  <!-- Compact, drawer-native peace note (Cambodian flag: blue field, red accent) -->
-  <div class="shrink-0 bg-primary-600 border-l-4 border-red-600 px-5 py-3.5 text-white text-center">
-    <p class="text-sm font-bold leading-snug">កម្ពុជាត្រូវការសន្តិភាព / Cambodia Needs Peace</p>
-    <p class="text-[11px] leading-relaxed text-white/70 mt-2">
-      យើងគាំទ្រដល់ទាហានខ្មែរទាំងអស់ដែលការពារទឹកដីជាតិ — We stand with our brave soldiers defending
-      our homeland.
-    </p>
+  <!-- Peace note, topped with the Cambodian flag's blue-red-blue bands -->
+  <div class="shrink-0 bg-ink-bar text-on-ink-bar text-center">
+    <div class="flex flex-col" aria-hidden="true">
+      <span class="h-1 bg-[#032EA1]"></span>
+      <span class="h-1 bg-[#E00025]"></span>
+      <span class="h-1 bg-[#032EA1]"></span>
+    </div>
+    <div class="px-5 py-3.5">
+      <p class="font-bold leading-snug">
+        កម្ពុជាត្រូវការសន្តិភាព /
+        <span lang="en">Cambodia Needs Peace</span>
+      </p>
+      <p class="text-[13px] leading-[1.7] text-on-ink-bar/80 mt-1.5">
+        យើងគាំទ្រដល់ទាហានខ្មែរទាំងអស់ដែលការពារទឹកដីជាតិ —
+        <span lang="en">We stand with our brave soldiers defending our homeland.</span>
+      </p>
+    </div>
   </div>
 </template>
-
-<script setup></script>

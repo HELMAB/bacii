@@ -1,142 +1,106 @@
 <script setup>
-import { computed, shallowRef, watch } from 'vue'
-import { HardDriveDownload, Check, Loader } from '@lucide/vue'
-import { useOfflineDownload } from '../../composables/useOfflineDownload'
+import { computed, shallowRef } from 'vue'
+import { Download } from '@lucide/vue'
+import { toKhmerDigits } from '../../utils/khmer'
 
 // Average PDF size, for the estimate shown before a download starts on mobile data.
 const AVERAGE_PDF_MB = 1.8
 
+// State comes from the single useOfflineDownload() in app.vue, which also feeds
+// the per-paper "saved" stamps in the sidebar.
 const props = defineProps({
-  data: { type: Array, default: () => [] }
+  isSupported: Boolean,
+  status: { type: String, default: 'idle' },
+  cachedCount: { type: Number, default: 0 },
+  totalCount: { type: Number, default: 0 },
+  failedCount: { type: Number, default: 0 },
+  progress: { type: Number, default: 0 },
+  isComplete: Boolean
 })
 
-const {
-  isSupported,
-  status,
-  cachedCount,
-  totalCount,
-  failedCount,
-  progress,
-  isComplete,
-  checkStatus,
-  downloadAll,
-  cancelDownload
-} = useOfflineDownload()
+const emit = defineEmits(['download', 'cancel'])
 
 const isConfirming = shallowRef(false)
 const estimatedMb = computed(() => {
-  const remaining = totalCount.value - cachedCount.value
+  const remaining = props.totalCount - props.cachedCount
   return Math.max(Math.round((remaining * AVERAGE_PDF_MB) / 10) * 10, 10)
 })
-
-// Flatten the full docs tree to a flat list of PDF URLs (category → year → subject).
-const pdfUrls = computed(() => {
-  const urls = []
-  props.data.forEach((category) => {
-    category.children?.forEach((year) => {
-      year.children?.forEach((subject) => {
-        if (subject.pdf) {
-          urls.push(subject.pdf)
-        }
-      })
-    })
-  })
-  return urls
-})
-
-// Once the docs tree is loaded, ask the SW how many PDFs are already cached.
-watch(
-  [pdfUrls, isSupported],
-  ([urls]) => {
-    if (urls.length) {
-      checkStatus(urls)
-    }
-  },
-  { immediate: true }
+const savedText = computed(
+  () => `${toKhmerDigits(props.cachedCount)} / ${toKhmerDigits(props.totalCount)}`
 )
 
 function handleDownload() {
   isConfirming.value = false
-  downloadAll(pdfUrls.value)
+  emit('download')
 }
 </script>
 
 <template>
   <div
-    v-if="isSupported && pdfUrls.length"
-    class="shrink-0 px-5 py-3.5 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900"
+    v-if="isSupported && totalCount"
+    class="shrink-0 px-4 py-2.5 lg:px-6 lg:py-3 bg-surface border-t-2 border-line"
   >
-    <!-- All cached -->
-    <div
-      v-if="isComplete"
-      class="flex items-center gap-2.5 text-xs font-medium text-primary-700 dark:text-primary-400"
-    >
-      <Check class="w-4 h-4 shrink-0" />
-      <span>អាចអានក្រៅបណ្តាញបានទាំងអស់ ({{ totalCount }})</span>
-    </div>
-
-    <!-- Downloading -->
-    <div v-else-if="status === 'downloading'" class="space-y-2">
-      <div class="flex items-center gap-2.5 text-xs text-gray-700 dark:text-gray-300">
-        <Loader class="w-4 h-4 shrink-0 animate-spin text-primary-600 dark:text-primary-400" />
-        <span class="tabular-nums">កំពុងទាញយក... {{ cachedCount }} / {{ totalCount }}</span>
+    <div class="lg:p-4 lg:border-2 lg:border-dashed lg:border-system lg:bg-surface-raised">
+      <!-- All cached -->
+      <div v-if="isComplete" class="flex flex-wrap items-center gap-x-3 gap-y-1 min-h-11">
+        <span class="stamp stamp-system">បានទាញយកទាំងអស់</span>
+        <span class="text-sm text-fg-muted">អានបានគ្មានអ៊ីនធឺណិត · {{ savedText }}</span>
       </div>
-      <div class="h-1.5 w-full bg-gray-200 dark:bg-gray-800 overflow-hidden">
-        <div
-          class="h-full bg-primary-600 dark:bg-primary-500 transition-[width] duration-300"
-          :style="{ width: progress + '%' }"
-        ></div>
-      </div>
-      <button
-        class="w-full px-3 py-3.5 lg:py-2 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-        @click="cancelDownload"
-      >
-        បោះបង់
-      </button>
-    </div>
 
-    <!-- Confirm before using mobile data -->
-    <div v-else-if="isConfirming" class="space-y-2">
-      <p class="text-xs text-gray-700 dark:text-gray-300">
-        នឹងទាញយកប្រហែល {{ estimatedMb }} MB។ គួរប្រើ Wi-Fi។
-      </p>
-      <div class="flex gap-2">
-        <button
-          class="flex-1 px-3 py-3.5 lg:py-2 text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
-          @click="handleDownload"
-        >
-          ទាញយក
-        </button>
-        <button
-          class="flex-1 px-3 py-3.5 lg:py-2 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          @click="isConfirming = false"
-        >
+      <!-- Downloading -->
+      <div v-else-if="status === 'downloading'" class="space-y-2">
+        <p class="flex items-center justify-between gap-2 text-sm font-bold text-system">
+          <span role="status">កំពុងទាញយក…</span>
+          <span class="font-numeral font-normal text-base" aria-hidden="true">{{ savedText }}</span>
+        </p>
+        <div class="h-2.5 border-2 border-system bg-surface" aria-hidden="true">
+          <div
+            class="h-full bg-stripes-system animate-stripes transition-[width] duration-300"
+            :style="{ width: progress + '%' }"
+          ></div>
+        </div>
+        <button type="button" class="btn btn-outline w-full" @click="$emit('cancel')">
           បោះបង់
         </button>
       </div>
-    </div>
 
-    <!-- Idle / partial / error -->
-    <div v-else class="space-y-2">
-      <button
-        class="w-full flex items-center justify-center gap-2 px-3 py-3.5 lg:py-2 text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
-        @click="isConfirming = true"
-      >
-        <HardDriveDownload class="w-4 h-4 shrink-0" />
-        <span>{{ status === 'error' ? 'ព្យាយាមម្ដងទៀត' : 'ទាញយកសម្រាប់អានក្រៅបណ្តាញ' }}</span>
-      </button>
-      <p
-        v-if="cachedCount > 0"
-        class="text-[11px] text-center text-gray-600 dark:text-gray-400 tabular-nums"
-      >
-        បានរក្សាទុក {{ cachedCount }} / {{ totalCount }}
-      </p>
-      <p
-        v-if="status === 'error' && failedCount > 0"
-        class="text-[11px] text-center text-red-500 tabular-nums"
-      >
-        បរាជ័យ {{ failedCount }} ឯកសារ
-      </p>
+      <!-- Confirm before using mobile data -->
+      <div v-else-if="isConfirming" class="space-y-2">
+        <p class="text-sm">នឹងទាញយកប្រហែល {{ toKhmerDigits(estimatedMb) }} MB។ គួរប្រើ Wi-Fi។</p>
+        <div class="flex gap-2">
+          <button type="button" class="btn btn-system flex-1" @click="handleDownload">ទាញយក</button>
+          <button type="button" class="btn btn-outline flex-1" @click="isConfirming = false">
+            បោះបង់
+          </button>
+        </div>
+      </div>
+
+      <!-- Idle / partial / error: one compact row on phones, a card on desktop -->
+      <div v-else class="flex items-center gap-3 lg:flex-col lg:items-stretch lg:gap-2">
+        <div class="flex-1 min-w-0 flex flex-col">
+          <span class="text-[15px] lg:text-base font-bold leading-snug text-system">
+            អានពេលគ្មានអ៊ីនធឺណិត
+          </span>
+          <span class="text-sm text-fg-muted">បានរក្សាទុក {{ savedText }} វិញ្ញាសា</span>
+          <span v-if="status === 'error' && failedCount > 0" class="text-sm font-bold text-active">
+            បរាជ័យ {{ toKhmerDigits(failedCount) }} ឯកសារ
+          </span>
+        </div>
+        <div class="hidden lg:block h-2.5 border-2 border-system bg-surface" aria-hidden="true">
+          <div class="h-full bg-system" :style="{ width: progress + '%' }"></div>
+        </div>
+        <button
+          type="button"
+          class="btn btn-system btn-icon lg:w-full lg:h-auto lg:min-h-11 lg:px-4"
+          :aria-label="status === 'error' ? 'ព្យាយាមម្ដងទៀត' : 'ទាញយកទាំងអស់'"
+          @click="isConfirming = true"
+        >
+          <Download class="w-[18px] h-[18px] shrink-0" :stroke-width="2.4" aria-hidden="true" />
+          <span class="hidden lg:inline" aria-hidden="true">
+            {{ status === 'error' ? 'ព្យាយាមម្ដងទៀត' : 'ទាញយកទាំងអស់' }}
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </template>

@@ -2,138 +2,124 @@
   <div ref="dropdownRef" class="relative">
     <!-- Dropdown Toggle Button -->
     <button
-      class="p-3.5 sm:px-3 sm:py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5"
+      ref="toggleRef"
+      type="button"
+      class="btn btn-icon sm:w-12 sm:h-12 border-on-ink-bar/50 hover:bg-on-ink-bar/10"
+      aria-haspopup="menu"
       :aria-expanded="isOpen"
       aria-label="បើកម៉ឺនុយសកម្មភាព"
-      @click="isOpen = !isOpen"
+      @click="toggleMenu"
+      @keydown.down.prevent="openMenu"
     >
-      <EllipsisVertical class="w-4 h-4" />
-      <span class="hidden sm:inline">សកម្មភាព</span>
-      <ChevronDown
-        class="hidden sm:block w-3 h-3 transition-transform"
-        :class="{ 'rotate-180': isOpen }"
-      />
+      <Ellipsis class="w-5 h-5" :stroke-width="2.6" aria-hidden="true" />
     </button>
 
     <!-- Dropdown Menu -->
     <Transition
-      enter-active-class="transition ease-out duration-100"
-      enter-from-class="transform opacity-0 -translate-y-1"
-      enter-to-class="transform opacity-100 translate-y-0"
-      leave-active-class="transition ease-in duration-75"
-      leave-from-class="transform opacity-100 translate-y-0"
-      leave-to-class="transform opacity-0 -translate-y-1"
+      enter-active-class="motion-safe:transition ease-out duration-100"
+      enter-from-class="opacity-0 -translate-y-1"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="motion-safe:transition ease-in duration-75"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-1"
     >
       <div
         v-if="isOpen"
-        class="absolute right-0 mt-1 w-56 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 z-50"
+        ref="menuRef"
+        class="absolute right-0 mt-3 w-60 bg-surface-raised text-fg border-2 border-line shadow-print z-50"
+        role="menu"
+        aria-label="សកម្មភាព"
+        @keydown="handleMenuKeydown"
       >
-        <div class="py-1" role="menu">
-          <!-- Zoom (the top bar's zoom controls are hidden on phones) -->
-          <div
-            class="sm:hidden flex items-center -mt-1 mb-1 border-b border-gray-200 dark:border-gray-800"
-          >
-            <button
-              class="flex-1 grid place-items-center py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              role="menuitem"
-              aria-label="បង្រួម"
-              @click="$emit('zoomOut')"
-            >
-              <ZoomOut class="w-5 h-5" />
-            </button>
-            <span
-              class="w-16 text-center text-sm font-medium tabular-nums text-gray-700 dark:text-gray-300"
-              aria-live="polite"
-            >
-              {{ zoomPercent }}%
-            </span>
-            <button
-              class="flex-1 grid place-items-center py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              role="menuitem"
-              aria-label="ពង្រីក"
-              @click="$emit('zoomIn')"
-            >
-              <ZoomIn class="w-5 h-5" />
-            </button>
-          </div>
-
-          <!-- Comparison Mode -->
+        <!-- Zoom (the top bar's zoom controls are hidden on phones) -->
+        <div class="sm:hidden flex items-center border-b-2 border-line">
           <button
-            :class="[
-              'w-full text-left px-4 py-3 sm:py-2.5 text-sm flex items-center gap-3 transition-colors',
-              isComparisonMode
-                ? 'bg-gray-50 dark:bg-gray-900 text-primary-700 dark:text-primary-300 font-semibold hover:bg-gray-100 dark:hover:bg-gray-800'
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-            ]"
+            type="button"
+            class="flex-1 grid place-items-center min-h-12 hover:bg-highlight/25 transition-colors"
             role="menuitem"
-            @click="handleAction('toggleComparison')"
+            aria-label="បង្រួម"
+            @click="$emit('zoomOut')"
           >
-            <Columns2 class="w-5 h-5 flex-shrink-0" />
-            <span class="flex-1">{{ isComparisonMode ? 'បិទការប្រៀបធៀប' : 'ប្រៀបធៀបឯកសារ' }}</span>
-            <span
-              v-if="isComparisonMode"
-              class="text-[10px] uppercase border border-primary-600 text-primary-700 dark:text-primary-300 px-1.5 py-0.5"
-            >
-              កំពុងប្រើ
-            </span>
+            <Minus class="w-5 h-5" :stroke-width="2.4" aria-hidden="true" />
           </button>
-
-          <div class="border-t border-gray-200 dark:border-gray-800 my-1"></div>
-
-          <!-- Fullscreen -->
-          <button
-            v-if="isFullscreenSupported"
-            class="w-full text-left px-4 py-3 sm:py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
-            role="menuitem"
-            @click="handleAction('toggleFullscreen')"
+          <span
+            class="w-20 self-stretch flex items-center justify-center font-numeral text-lg border-x-2 border-dashed border-line"
+            aria-live="polite"
           >
-            <Minimize v-if="isFullscreen" class="w-5 h-5 flex-shrink-0" />
-            <Maximize v-else class="w-5 h-5 flex-shrink-0" />
-            <span>{{ isFullscreen ? 'ចេញពីពេញអេក្រង់' : 'ពេញអេក្រង់' }}</span>
-          </button>
-
-          <!-- Print -->
+            {{ toKhmerDigits(zoomPercent) }}%
+          </span>
           <button
-            class="w-full text-left px-4 py-3 sm:py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
+            type="button"
+            class="flex-1 grid place-items-center min-h-12 hover:bg-highlight/25 transition-colors"
             role="menuitem"
-            @click="handleAction('print')"
+            aria-label="ពង្រីក"
+            @click="$emit('zoomIn')"
           >
-            <Printer class="w-5 h-5 flex-shrink-0" />
-            <span>បោះពុម្ពឯកសារ</span>
-          </button>
-
-          <div class="border-t border-gray-200 dark:border-gray-800 my-1"></div>
-
-          <!-- Dark Mode Toggle -->
-          <button
-            class="w-full text-left px-4 py-3 sm:py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-3 transition-colors"
-            role="menuitem"
-            @click="handleAction('toggleDarkMode')"
-          >
-            <Sun v-if="isDark" class="w-5 h-5 flex-shrink-0" />
-            <Moon v-else class="w-5 h-5 flex-shrink-0" />
-            <span>{{ isDark ? 'ពន្លឺថ្ងៃ' : 'ពន្លឺយប់' }}</span>
+            <Plus class="w-5 h-5" :stroke-width="2.4" aria-hidden="true" />
           </button>
         </div>
+
+        <!-- Comparison Mode -->
+        <button
+          type="button"
+          :class="[itemClass, isComparisonMode && 'font-bold']"
+          role="menuitem"
+          @click="handleAction('toggleComparison')"
+        >
+          <Columns2 class="w-5 h-5 shrink-0" aria-hidden="true" />
+          <span class="flex-1">{{ isComparisonMode ? 'បិទការប្រៀបធៀប' : 'ប្រៀបធៀបឯកសារ' }}</span>
+          <span v-if="isComparisonMode" class="stamp stamp-system">កំពុងប្រើ</span>
+        </button>
+
+        <!-- Fullscreen -->
+        <button
+          v-if="isFullscreenSupported"
+          type="button"
+          :class="itemClass"
+          role="menuitem"
+          @click="handleAction('toggleFullscreen')"
+        >
+          <Minimize v-if="isFullscreen" class="w-5 h-5 shrink-0" aria-hidden="true" />
+          <Maximize v-else class="w-5 h-5 shrink-0" aria-hidden="true" />
+          <span>{{ isFullscreen ? 'ចេញពីពេញអេក្រង់' : 'ពេញអេក្រង់' }}</span>
+        </button>
+
+        <!-- Print -->
+        <button type="button" :class="itemClass" role="menuitem" @click="handleAction('print')">
+          <Printer class="w-5 h-5 shrink-0" aria-hidden="true" />
+          <span>បោះពុម្ពឯកសារ</span>
+        </button>
+
+        <!-- Dark Mode Toggle -->
+        <button
+          type="button"
+          :class="[itemClass, 'border-b-0']"
+          role="menuitem"
+          @click="handleAction('toggleDarkMode')"
+        >
+          <Sun v-if="isDark" class="w-5 h-5 shrink-0" aria-hidden="true" />
+          <Moon v-else class="w-5 h-5 shrink-0" aria-hidden="true" />
+          <span>{{ isDark ? 'ពន្លឺថ្ងៃ' : 'ពន្លឺយប់' }}</span>
+        </button>
       </div>
     </Transition>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { nextTick, ref, onMounted, onBeforeUnmount } from 'vue'
 import {
-  EllipsisVertical,
-  ChevronDown,
+  Ellipsis,
   Columns2,
   Maximize,
   Minimize,
   Printer,
   Sun,
   Moon,
-  ZoomIn,
-  ZoomOut
+  Minus,
+  Plus
 } from '@lucide/vue'
+import { toKhmerDigits } from '../../utils/khmer'
 
 defineProps({
   isDark: Boolean,
@@ -152,25 +138,74 @@ const emit = defineEmits([
   'zoomOut'
 ])
 
+const itemClass =
+  'w-full min-h-11 px-3.5 py-2 flex items-center gap-2.5 text-left text-base border-b-2 border-dashed border-line hover:bg-highlight/25 focus-visible:bg-highlight/25 transition-colors'
+
 const isOpen = ref(false)
 const dropdownRef = ref(null)
+const toggleRef = ref(null)
+const menuRef = ref(null)
+
+function menuItems() {
+  return [...(menuRef.value?.querySelectorAll('[role="menuitem"]') ?? [])].filter(
+    (item) => item.offsetParent !== null
+  )
+}
+
+async function openMenu() {
+  isOpen.value = true
+  await nextTick()
+  menuItems()[0]?.focus()
+}
+
+function closeMenu({ restoreFocus = false } = {}) {
+  isOpen.value = false
+  if (restoreFocus) toggleRef.value?.focus()
+}
+
+function toggleMenu() {
+  if (isOpen.value) closeMenu()
+  else openMenu()
+}
 
 function handleAction(action) {
   emit(action)
-  isOpen.value = false
+  closeMenu({ restoreFocus: true })
+}
+
+// Arrow keys move between items, Home/End jump, Tab leaves the menu.
+function handleMenuKeydown(event) {
+  const items = menuItems()
+  const index = items.indexOf(document.activeElement)
+  const target = {
+    ArrowDown: items[(index + 1) % items.length],
+    ArrowUp: items[(index - 1 + items.length) % items.length],
+    Home: items[0],
+    End: items[items.length - 1]
+  }[event.key]
+
+  if (target) {
+    event.preventDefault()
+    event.stopPropagation()
+    target.focus()
+  } else if (event.key === 'Tab') {
+    closeMenu()
+  }
 }
 
 // Close dropdown when clicking outside
 function handleClickOutside(event) {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
-    isOpen.value = false
+    closeMenu()
   }
 }
 
 // Close dropdown on escape key
 function handleEscapeKey(event) {
   if (event.key === 'Escape' && isOpen.value) {
-    isOpen.value = false
+    // Close only the menu, not the drawer too (global shortcut on window).
+    event.stopPropagation()
+    closeMenu({ restoreFocus: true })
   }
 }
 

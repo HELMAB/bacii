@@ -7,22 +7,18 @@
     leave-from-class="translate-y-0 opacity-100"
     leave-to-class="translate-y-full opacity-0"
   >
-    <div v-if="showPrompt" class="shrink-0 p-3 sm:p-4 bg-gray-950 border-t-2 border-primary-500">
+    <div v-if="showPrompt" class="shrink-0 p-3 sm:p-4 bg-surface text-fg border-t-2 border-line">
       <div class="max-w-4xl mx-auto">
         <div class="flex items-center justify-between gap-2 sm:gap-4">
           <!-- Icon & Content -->
           <div class="flex items-center gap-4 flex-1">
             <!-- App Icon -->
-            <div
-              class="hidden sm:flex flex-shrink-0 w-14 h-14 bg-primary-600 items-center justify-center"
-            >
-              <GraduationCap class="w-8 h-8 text-white" />
-            </div>
+            <BrandStamp :size="56" class="hidden sm:block" />
 
             <!-- Text Content -->
-            <div class="text-white flex-1 min-w-0">
-              <h3 class="font-bold text-base mb-0.5">ដំឡើង Dobpi</h3>
-              <p class="text-xs sm:text-sm text-white/70">
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-base leading-snug mb-0.5">ដំឡើង Dobpi</h3>
+              <p class="text-sm leading-[1.6] text-fg-muted">
                 ប្រើប្រាស់កម្មវិធីដោយមិនចាំបាច់មានអ៊ីនធឺណិត និងចូលប្រើបានលឿនជាងមុន
               </p>
             </div>
@@ -30,18 +26,14 @@
 
           <!-- Actions -->
           <div class="flex items-center gap-2 flex-shrink-0">
+            <button type="button" class="btn btn-ink sm:px-6" @click="installApp">ដំឡើង</button>
             <button
-              class="px-4 sm:px-6 py-3 bg-white text-gray-900 font-bold hover:bg-gray-200 transition-colors"
-              @click="installApp"
-            >
-              ដំឡើង
-            </button>
-            <button
-              class="p-3 text-white hover:bg-white/10 transition-colors"
+              type="button"
+              class="btn btn-icon btn-outline"
               aria-label="បិទ"
               @click="dismissPrompt"
             >
-              <X class="w-5 h-5" />
+              <X class="w-5 h-5" :stroke-width="2.6" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -52,7 +44,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { GraduationCap, X } from '@lucide/vue'
+import { X } from '@lucide/vue'
+import BrandStamp from './BrandStamp.vue'
 
 const showPrompt = ref(false)
 const deferredPrompt = ref(null)

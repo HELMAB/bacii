@@ -1,39 +1,56 @@
 <script setup>
-import { onMounted, shallowRef } from 'vue'
+import { onMounted, shallowRef, useTemplateRef } from 'vue'
 import { Search, X } from '@lucide/vue'
 
 const search = defineModel({ type: String, default: '' })
+const input = useTemplateRef('input')
 
 // The `/` shortcut only exists with a physical keyboard, so don't advertise it on
 // touch screens. Added after mount because the server can't know the device.
-const placeholder = shallowRef('ស្វែងរក...')
+const placeholder = shallowRef('មុខវិជ្ជា ឬឆ្នាំ…')
 
 onMounted(() => {
   if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    placeholder.value = 'ស្វែងរក... ( / )'
+    placeholder.value = 'មុខវិជ្ជា ឬឆ្នាំ… ( / )'
   }
 })
 </script>
 
 <template>
-  <div class="mb-6 relative">
-    <Search class="w-4 h-4 absolute left-0 top-3 text-gray-400 dark:text-gray-500" />
-    <input
-      v-model="search"
-      type="text"
-      enterkeyhint="search"
-      aria-label="ស្វែងរកឯកសារ"
-      :placeholder="placeholder"
-      class="w-full py-2.5 pl-7 pr-10 bg-transparent border-0 border-b border-gray-300 dark:border-gray-700 focus:outline-none focus:border-primary-600 dark:focus:border-primary-400 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-500 text-base lg:text-sm transition-colors"
-      @keydown.escape="search = ''"
-    />
-    <button
-      v-if="search"
-      class="absolute -right-3 top-0 p-3.5 text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-      aria-label="សម្អាតការស្វែងរក"
-      @click="search = ''"
+  <div class="flex flex-col gap-1.5">
+    <label for="doc-search" class="hidden lg:block text-sm font-bold text-fg-muted">ស្វែងរក</label>
+    <div
+      class="h-11 flex items-center gap-2 pl-3 bg-surface-raised border-2 border-line shadow-print-sm focus-within:outline focus-within:outline-[3px] focus-within:outline-offset-2 focus-within:outline-active cursor-text"
+      @click.self="input?.focus()"
     >
-      <X class="w-4 h-4" />
-    </button>
+      <Search
+        class="w-[18px] h-[18px] shrink-0 pointer-events-none"
+        :stroke-width="2.4"
+        aria-hidden="true"
+      />
+      <!-- type="text": the / shortcut in useKeyboardShortcuts looks for it -->
+      <input
+        id="doc-search"
+        ref="input"
+        v-model="search"
+        type="text"
+        enterkeyhint="search"
+        autocomplete="off"
+        aria-label="ស្វែងរកឯកសារ"
+        :placeholder="placeholder"
+        class="flex-1 min-w-0 h-full bg-transparent border-0 text-base text-fg placeholder:text-fg-faint focus:outline-none focus-visible:outline-none"
+        @keydown.escape="search = ''"
+      />
+      <button
+        v-if="search"
+        type="button"
+        class="grid place-items-center w-11 h-full shrink-0 hover:bg-highlight/25 transition-colors"
+        aria-label="សម្អាតការស្វែងរក"
+        @click="search = ''"
+      >
+        <X class="w-4 h-4" :stroke-width="2.6" aria-hidden="true" />
+      </button>
+      <span v-else class="w-3 shrink-0" aria-hidden="true"></span>
+    </div>
   </div>
 </template>

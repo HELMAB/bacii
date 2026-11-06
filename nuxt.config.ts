@@ -47,7 +47,7 @@ export default defineNuxtConfig({
             'ប្រឡងបាក់ឌុប, វិទ្យាសាស្ត្រសង្គម, ឯកសារប្រឡង, គណិតវិទ្យា, រូបវិទ្យា, គីមីវិទ្យា, ជីវវិទ្យា, អក្សរសាស្ត្រខ្មែរ, ប្រវត្តិសាស្ត្រ, ភូមិវិទ្យា, សីលធម៌, ភាសាអង់គ្លេស'
         },
         { name: 'author', content: 'Dobpi' },
-        { name: 'theme-color', content: '#253c99' },
+        { name: 'theme-color', content: '#2A1D14' },
 
         // Open Graph / Facebook
         { property: 'og:type', content: 'website' },
@@ -72,7 +72,22 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
-        { rel: 'manifest', href: '/manifest.json' }
+        { rel: 'manifest', href: '/manifest.json' },
+        // The two fonts on first paint (body text and headings), Khmer subsets.
+        {
+          rel: 'preload',
+          as: 'font',
+          type: 'font/woff2',
+          href: '/fonts/Battambang/Battambang-400-khmer.woff2',
+          crossorigin: ''
+        },
+        {
+          rel: 'preload',
+          as: 'font',
+          type: 'font/woff2',
+          href: '/fonts/Moul/Moul-400-khmer.woff2',
+          crossorigin: ''
+        }
       ],
       script: [
         {

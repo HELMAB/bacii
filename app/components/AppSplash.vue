@@ -1,89 +1,80 @@
 <script setup>
 import { LETTER_PATH, TITLE_PATH, TITLE_VIEW_BOX } from '../constants/logo'
-
-const BEAD_COUNT = 32
-
-const beads = Array.from({ length: BEAD_COUNT }, (_, index) => {
-  const angle = (index / BEAD_COUNT) * Math.PI * 2
-  return {
-    x: (50 + 41 * Math.cos(angle)).toFixed(2),
-    y: (50 + 41 * Math.sin(angle)).toFixed(2)
-  }
-})
 </script>
 
 <template>
   <!-- Rendered by the server so it paints before any JavaScript runs -->
   <div class="app-splash" aria-hidden="true">
-    <div class="app-splash__frame">
-      <div class="app-splash__panel">
-        <svg class="app-splash__record" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="48" fill="#14110d" />
-          <circle cx="50" cy="50" r="44.6" fill="none" stroke="#3a342b" stroke-width="0.5" />
-          <g class="app-splash__beads">
-            <circle
-              v-for="(bead, index) in beads"
-              :key="index"
-              :cx="bead.x"
-              :cy="bead.y"
-              r="1.3"
-              fill="#e8c34a"
-            />
-          </g>
-          <circle cx="50" cy="50" r="37" fill="#c7231f" />
-          <path :d="LETTER_PATH" fill="#14110d" transform="translate(27.8 27.8) scale(0.48)" />
-          <path :d="LETTER_PATH" fill="#ffffff" transform="translate(26 26) scale(0.48)" />
-        </svg>
+    <div class="app-splash__zigzag"></div>
 
-        <svg class="app-splash__title" :viewBox="TITLE_VIEW_BOX">
-          <path
-            :d="TITLE_PATH"
-            transform="translate(2.4 2.4)"
-            fill="#14110d"
-            stroke="#14110d"
-            stroke-width="2.4"
-            stroke-linejoin="round"
-          />
-          <path
-            :d="TITLE_PATH"
-            fill="#ffffff"
-            stroke="#ffffff"
-            stroke-width="4.4"
-            stroke-linejoin="round"
-          />
-          <path :d="TITLE_PATH" fill="#c7231f" />
-        </svg>
+    <div class="app-splash__panel">
+      <svg class="app-splash__stamp" viewBox="-14 -14 128 128">
+        <circle cx="50" cy="50" r="60" fill="#9e2f18" stroke="#2a1d14" stroke-width="3" />
+        <circle
+          class="app-splash__ring"
+          cx="50"
+          cy="50"
+          r="54"
+          fill="none"
+          stroke-width="2"
+          stroke-dasharray="4 4"
+        />
+        <path :d="LETTER_PATH" fill="#2a1d14" transform="translate(20.4 20.4) scale(.64)" />
+        <path :d="LETTER_PATH" fill="#f1e4c6" transform="translate(18 18) scale(.64)" />
+      </svg>
 
-        <p class="app-splash__tagline">ឯកសារប្រឡងឥតគិតថ្លៃ</p>
+      <svg class="app-splash__title" :viewBox="TITLE_VIEW_BOX">
+        <path
+          class="app-splash__title-offset"
+          :d="TITLE_PATH"
+          transform="translate(2.4 2.4)"
+          stroke-width="2.4"
+          stroke-linejoin="round"
+        />
+        <path class="app-splash__title-ink" :d="TITLE_PATH" />
+      </svg>
+
+      <p class="app-splash__ribbon">ឯកសារប្រឡងឥតគិតថ្លៃ</p>
+
+      <div class="app-splash__progress">
+        <div class="app-splash__progress-fill"></div>
       </div>
     </div>
+
+    <div class="app-splash__footer">DOBPI.NETLIFY.APP</div>
   </div>
 </template>
 
 <style>
 .app-splash {
-  --splash-paper: #e8c34a;
-  --splash-ornament: #c7231f;
-  --splash-frame: #0f7a66;
-  --splash-panel: #1f76bd;
-  --splash-dots: #0f4f8c;
+  --splash-ink: #2a1d14;
+  --splash-paper: #f1e4c6;
+  --splash-ray-a: #e0a526;
+  --splash-ray-b: #e9b94a;
+  --splash-title: #2a1d14;
+  --splash-title-offset: #f1e4c6;
+  --splash-ring: #f1e4c6;
 
   position: fixed;
   inset: 0;
   z-index: 60;
-  padding: 26px;
-  background-color: var(--splash-paper);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='44'%3E%3Cg fill='none' stroke='%23c7231f' stroke-width='5.2' stroke-linecap='round'%3E%3Cpath d='M2 34C4 14 20 6 30 12c9 6 4 19-5 17-7-2-5-11 2-10M30 12c8-8 18-6 24 0M30 12c4 8 12 18 24 22M2 34c6 6 14 6 20 3M54 12c-4 6-4 12 0 16'/%3E%3C/g%3E%3Ccircle cx='8' cy='10' r='4.4' fill='%23c7231f'/%3E%3Ccircle cx='44' cy='34' r='3.2' fill='%23c7231f'/%3E%3C/svg%3E");
+  display: flex;
+  flex-direction: column;
+  background: repeating-conic-gradient(
+    from 0deg at 50% 42%,
+    var(--splash-ray-a) 0 9deg,
+    var(--splash-ray-b) 9deg 18deg
+  );
   /* If JavaScript never runs, the splash still gets out of the way. */
   animation: app-splash-failsafe 0.3s ease-in 5s forwards;
 }
 
 .dark .app-splash {
-  --splash-frame: #123c37;
-  --splash-panel: #121833;
-  --splash-dots: #1d2c6b;
-
-  background-color: #2b2410;
+  --splash-ray-a: #3a2a12;
+  --splash-ray-b: #2e2110;
+  --splash-title: #f1e4c6;
+  --splash-title-offset: #000;
+  --splash-ring: #2a1d14;
 }
 
 /* Set before first paint by the inline script in nuxt.config.ts. */
@@ -91,45 +82,94 @@ const beads = Array.from({ length: BEAD_COUNT }, (_, index) => {
   display: none;
 }
 
-.app-splash__frame {
-  height: 100%;
-  padding: 12px;
-  background: var(--splash-frame);
-  outline: 3px solid var(--splash-ornament);
+.app-splash__zigzag {
+  flex-shrink: 0;
+  height: 14px;
+  background:
+    linear-gradient(135deg, #e0a526 25%, transparent 25%) -10px 0 / 20px 20px,
+    linear-gradient(225deg, #e0a526 25%, transparent 25%) -10px 0 / 20px 20px,
+    #9e2f18;
 }
 
 .app-splash__panel {
   display: flex;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(12px, 3.5vmin, 32px);
+  gap: clamp(12px, 3.2vmin, 28px);
+  padding: 16px;
   overflow: hidden;
-  background-color: var(--splash-panel);
-  background-image: radial-gradient(var(--splash-dots) 32%, transparent 34%);
-  background-size: 7px 7px;
 }
 
-.app-splash__record {
-  width: min(62vw, 46vh, 340px);
-  filter: drop-shadow(6px 6px 0 rgb(0 0 0 / 0.45));
+.app-splash__stamp {
+  width: min(42vw, 30vh, 200px);
+  filter: drop-shadow(6px 6px 0 rgb(42 29 20 / 0.9));
 }
 
-.app-splash__beads {
-  transform-origin: 50px 50px;
-  animation: app-splash-spin 1.8s linear infinite;
+.app-splash__ring {
+  stroke: var(--splash-ring);
 }
 
 .app-splash__title {
-  width: min(72vw, 62vh, 460px);
+  width: min(70vw, 52vh, 400px);
 }
 
-.app-splash__tagline {
+.app-splash__title-offset {
+  fill: var(--splash-title-offset);
+  stroke: var(--splash-title-offset);
+}
+
+.app-splash__title-ink {
+  fill: var(--splash-title);
+}
+
+/* Moul may not be loaded on first paint; the ribbon reads fine in the fallback. */
+.app-splash__ribbon {
   margin: 0;
-  color: #fff4cf;
-  font-size: clamp(16px, 3.4vmin, 24px);
-  font-weight: 700;
+  padding: 4px 18px;
+  background: var(--splash-ink);
+  color: var(--splash-paper);
+  font-family: 'Moul', 'Battambang', 'PengHuoth', serif;
+  font-size: clamp(16px, 3vmin, 22px);
+  line-height: 1.7;
+  transform: rotate(-2deg);
+  box-shadow: 3px 3px 0 #9e2f18;
+}
+
+.app-splash__progress {
+  position: relative;
+  width: min(60vw, 240px);
+  height: 14px;
+  margin-top: 4px;
+  overflow: hidden;
+  border: 2px solid var(--splash-ink);
+  background: var(--splash-paper);
+}
+
+.app-splash__progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--splash-ink) 0 6px,
+    rgb(42 29 20 / 0.75) 6px 12px
+  );
+  animation: app-splash-progress 1.4s ease-in-out infinite;
+}
+
+.app-splash__footer {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border-top: 2px solid var(--splash-ink);
+  background: var(--splash-paper);
+  color: var(--splash-ink);
+  font-family: 'Special Elite', ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-align: center;
 }
 
 .app-splash-leave-active {
@@ -141,9 +181,13 @@ const beads = Array.from({ length: BEAD_COUNT }, (_, index) => {
   opacity: 0;
 }
 
-@keyframes app-splash-spin {
-  to {
-    transform: rotate(360deg);
+@keyframes app-splash-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(250%);
   }
 }
 
@@ -161,22 +205,27 @@ const beads = Array.from({ length: BEAD_COUNT }, (_, index) => {
     align-content: center;
   }
 
-  .app-splash__record {
-    width: 44vh;
+  .app-splash__stamp {
+    width: 34vh;
   }
 
   .app-splash__title {
-    width: 44vw;
+    width: 40vw;
   }
 
-  .app-splash__tagline {
-    flex-basis: 100%;
-    text-align: center;
+  .app-splash__ribbon,
+  .app-splash__progress {
+    flex-basis: auto;
+  }
+
+  .app-splash__footer {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .app-splash__beads {
+  .app-splash__progress-fill {
+    width: 100%;
     animation: none;
   }
 

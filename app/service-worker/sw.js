@@ -31,13 +31,13 @@ self.addEventListener('install', (event) => {
 // but never the PDF cache.
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((names) =>
-      Promise.all(
-        names
-          .filter((name) => /^dobpi-v\d+/.test(name))
-          .map((name) => caches.delete(name))
+    caches
+      .keys()
+      .then((names) =>
+        Promise.all(
+          names.filter((name) => /^dobpi-v\d+/.test(name)).map((name) => caches.delete(name))
+        )
       )
-    )
   )
 })
 
@@ -48,10 +48,7 @@ registerRoute(
   new NetworkFirst({ cacheName: PAGES_CACHE, matchOptions: { ignoreSearch: true } })
 )
 
-registerRoute(
-  ({ url }) => url.pathname.endsWith('.pdf'),
-  new CacheFirst({ cacheName: PDF_CACHE })
-)
+registerRoute(({ url }) => url.pathname.endsWith('.pdf'), new CacheFirst({ cacheName: PDF_CACHE }))
 
 registerRoute(
   ({ url }) => url.pathname === '/docs.json',
