@@ -2,6 +2,15 @@
   <div class="flex h-dvh w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
     <h1 class="sr-only">{{ pageHeading }}</h1>
 
+    <!-- type: the splash also has a long fail-safe animation that Vue must not wait for -->
+    <Transition
+      type="transition"
+      leave-active-class="app-splash-leave-active"
+      leave-to-class="app-splash-leave-to"
+    >
+      <AppSplash v-if="isSplashVisible" />
+    </Transition>
+
     <!-- Toast Notification -->
     <ToastNotification :show="showToast" :message="toastMessage" />
 
@@ -149,6 +158,7 @@
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 
 // Components
+import AppSplash from './components/AppSplash.vue'
 import OfflineIndicator from './components/OfflineIndicator.vue'
 import PWAInstallPrompt from './components/PWAInstallPrompt.vue'
 import ToastNotification from './components/ToastNotification.vue'
@@ -174,6 +184,7 @@ import { useComparison } from './composables/useComparison'
 import { useDocsCache } from './composables/useDocsCache'
 import { useReaderHistory } from './composables/useReaderHistory'
 import { useSeo } from './composables/useSeo'
+import { useSplashScreen } from './composables/useSplashScreen'
 import { getPdfScrollAnchor } from './utils/pdfScroll'
 
 // How long scrolling must pause before the reading position is saved.
@@ -254,6 +265,9 @@ const {
   onPdfError,
   onInternalLinkClicked
 } = usePdfViewer(isDesktop, showToastNotification)
+
+// Splash screen
+const { isSplashVisible } = useSplashScreen(computed(() => !!selectedPdf.value && !isLoading.value))
 
 const pdfContainerComponent = ref(null)
 const pdfContainer = computed(() => pdfContainerComponent.value?.pdfContainer)

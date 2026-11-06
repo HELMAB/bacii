@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Vitest test suite for exam data, URLs and history, SEO metadata, the sitemap, and offline downloads
 
+### Changed
+
+- New logo inspired by 1970s Khmer record sleeves, with PNG app icons and a multi-size favicon
+- Splash screen in the same style, shown once per session while the app starts
+
 ## [1.0.2] — 2026-06-08
 
 ### Added

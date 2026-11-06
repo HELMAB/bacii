@@ -15,7 +15,8 @@ npm run preview    # Serve the production build locally (required to test the Se
 npm run generate   # Static site generation
 npm test           # Run the Vitest suite once
 npm run test:watch # Re-run tests on change
-npm run generate-icons   # Regenerate PWA icons from scripts/generate-pwa-icons.js
+npm run generate-icons   # Regenerate logo SVGs from scripts/generate-pwa-icons.js
+npm run generate-png-assets # Rebuild the banner, PNG icons and favicon.ico from the SVGs
 ```
 
 Node 22 is required (`.nvmrc`, `netlify.toml`). ESLint and Prettier are configured (`npm run lint`, `npm run format:check`).
@@ -52,6 +53,10 @@ To add an exam paper:
 ### URLs and history
 
 There is no router: `useReaderHistory` drives the History API directly. The open document lives in the `?pdf=` query param, Back walks through opened documents and closes overlays (drawer, comparison, PDF picker), and the last position is saved in `localStorage` (`dobpi_reading_position`). All `?pdf=` URLs share the `/` HTML shell, so the Service Worker's navigation route matches with `ignoreSearch`.
+
+### Splash screen
+
+`AppSplash` is server-rendered so it paints before JavaScript, and `useSplashScreen` removes it once the reader is ready, capped at 2.2s so a slow PDF never holds it up. It shows once per session: the inline script in `nuxt.config.ts` hides it before first paint on later loads. Its CSS fail-safe animation clears it if JavaScript fails, so the `Transition` around it needs `type="transition"` or Vue waits for that animation and the invisible splash blocks taps.
 
 ### SEO
 

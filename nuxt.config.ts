@@ -76,12 +76,16 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          // Apply the saved theme before first paint to avoid a light-mode flash (FOUC).
+          // Before first paint: apply the saved theme to avoid a light-mode flash (FOUC),
+          // and skip the splash screen if this session has already seen it.
           innerHTML: `
             (function () {
               try {
                 if (localStorage.getItem('theme') === 'dark') {
                   document.documentElement.classList.add('dark');
+                }
+                if (sessionStorage.getItem('dobpi_splash_seen') === '1') {
+                  document.documentElement.classList.add('splash-seen');
                 }
               } catch (e) {}
             })();
