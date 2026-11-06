@@ -13,10 +13,16 @@ npm run dev        # Dev server at http://localhost:3000
 npm run build      # Production build -> .output/public (what Netlify publishes)
 npm run preview    # Serve the production build locally (required to test the Service Worker)
 npm run generate   # Static site generation
+npm test           # Run the Vitest suite once
+npm run test:watch # Re-run tests on change
 npm run generate-icons   # Regenerate PWA icons from scripts/generate-pwa-icons.js
 ```
 
-Node 22 is required (`.nvmrc`, `netlify.toml`). There is no test suite and no linter configured.
+Node 22 is required (`.nvmrc`, `netlify.toml`). ESLint and Prettier are configured (`npm run lint`, `npm run format:check`).
+
+## Testing
+
+Tests live in `tests/` and run with Vitest and happy-dom, without booting Nuxt: `#imports` is aliased to `tests/stubs/nuxt-imports.js`, and `tests/helpers/withSetup.js` mounts a composable so its lifecycle hooks fire. Add a stub there when a tested composable needs another Nuxt auto-import. `tests/data/docs.test.js` checks every `docs.json` entry against the real PDFs, so it catches a wrong or missing paper. Components and the PDF rendering itself aren't covered, so check those in a browser with `npm run preview`.
 
 ## Architecture
 

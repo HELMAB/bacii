@@ -132,6 +132,7 @@ npm run dev        # Dev server at http://localhost:3000
 npm run build      # Production build in .output/public
 npm run preview    # Serve the build locally (needed to test the Service Worker)
 npm run lint       # ESLint
+npm test           # Vitest
 ```
 
 **Add an exam paper**
