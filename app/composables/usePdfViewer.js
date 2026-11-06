@@ -1,8 +1,9 @@
-import { shallowRef, watch } from 'vue'
+import { onMounted, onUnmounted, shallowRef, watch } from 'vue'
+import { usePdfLoadState } from './usePdfLoadState'
+import { getVisiblePdfPage } from '../utils/pdfScroll'
 
 const SELECTED_ZOOM_DESKTOP = 1
 const SELECTED_ZOOM_MOBILE = 1
-const LOADING_FALLBACK_MS = 2000
 
 export function usePdfViewer(isDesktop, showToastNotification) {
   const selectedPdf = shallowRef(null)
@@ -14,10 +15,24 @@ export function usePdfViewer(isDesktop, showToastNotification) {
       ? SELECTED_ZOOM_DESKTOP
       : SELECTED_ZOOM_MOBILE
   )
-  const isLoading = shallowRef(false)
   const showScrollTop = shallowRef(false)
   const currentPage = shallowRef(1)
   const totalPages = shallowRef(0)
+  const isFullscreen = shallowRef(false)
+  const isFullscreenSupported = shallowRef(false)
+
+  const {
+    isLoading,
+    loadError,
+    loadProgress,
+    attempt,
+    startLoad,
+    retryLoad,
+    trackProgress,
+    markDownloaded,
+    finishLoad,
+    failLoad
+  } = usePdfLoadState()
 
   function zoomIn() {
     if (zoomLevel.value < 2) {
@@ -31,19 +46,23 @@ export function usePdfViewer(isDesktop, showToastNotification) {
     }
   }
 
-  function createToggleFullscreen(pdfContainerRef) {
-    return function toggleFullscreen() {
-      const container = pdfContainerRef.value
-      if (!container) return
-
-      if (!document.fullscreenElement) {
-        container.requestFullscreen()
-        showToastNotification('បានបើកពេញអេក្រង់')
-      } else {
-        document.exitFullscreen()
-        showToastNotification('បានបិទពេញអេក្រង់')
+  // Fullscreens the whole app rather than the PDF so the header, pager and drawer
+  // stay usable. iPhone Safari has no fullscreen API, so `isFullscreenSupported`
+  // hides the option there.
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen()
+      } else if (isFullscreenSupported.value) {
+        await document.documentElement.requestFullscreen()
       }
+    } catch {
+      showToastNotification('មិនអាចបើកពេញអេក្រង់បានទេ')
     }
+  }
+
+  function handleFullscreenChange() {
+    isFullscreen.value = !!document.fullscreenElement
   }
 
   function createScrollToTop(pdfContainerRef) {
@@ -57,7 +76,17 @@ export function usePdfViewer(isDesktop, showToastNotification) {
 
   function createSelectPdf(pdfContainerRef) {
     return function selectPdf(subject, category, year) {
-      isLoading.value = true
+      if (subject.pdf === selectedPdf.value) {
+        // The same document won't re-render, so only a failed one needs reloading.
+        if (loadError.value) {
+          retryPdf()
+        }
+        return
+      }
+
+      startLoad()
+      totalPages.value = 0
+      currentPage.value = 1
       selectedPdf.value = subject.pdf
       selectedPdfTitle.value = subject.label
       selectedCategory.value = category
@@ -67,14 +96,12 @@ export function usePdfViewer(isDesktop, showToastNotification) {
       if (pdfContainerRef.value) {
         pdfContainerRef.value.scrollTop = 0
       }
-
-      // Fail-safe: clear the skeleton even if the PDF never reports as rendered.
-      setTimeout(() => {
-        if (isLoading.value) {
-          isLoading.value = false
-        }
-      }, LOADING_FALLBACK_MS)
     }
+  }
+
+  function retryPdf() {
+    totalPages.value = 0
+    retryLoad()
   }
 
   function printPdf() {
@@ -94,40 +121,29 @@ export function usePdfViewer(isDesktop, showToastNotification) {
     }
   }
 
-  function onPdfRendered(pdfProxy) {
-    isLoading.value = false
-    if (pdfProxy && pdfProxy.numPages) {
-      totalPages.value = pdfProxy.numPages
-      currentPage.value = 1
-    } else {
-      totalPages.value = 0
-      currentPage.value = 1
-    }
+  function onPdfLoaded(pdfProxy) {
+    markDownloaded()
+    totalPages.value = pdfProxy.numPages
+    currentPage.value = 1
   }
 
   function onPdfError() {
-    isLoading.value = false
-    showToastNotification('មានបញ្ហាក្នុងការផ្ទុកឯកសារ')
+    failLoad()
+    totalPages.value = 0
   }
 
   function onInternalLinkClicked(pageNumber) {
     currentPage.value = pageNumber
   }
 
-  function createHandleScroll(pdfContainerRef, pdfRefComputed) {
+  function createHandleScroll(pdfContainerRef) {
     return function handleScroll() {
       const container = pdfContainerRef.value
       if (container) {
         showScrollTop.value = container.scrollTop > 300
 
-        if (totalPages.value > 0 && pdfRefComputed.value) {
-          const scrollTop = container.scrollTop
-          const scrollHeight = container.scrollHeight - container.clientHeight
-          const scrollPercent = scrollHeight > 0 ? scrollTop / scrollHeight : 0
-          currentPage.value = Math.min(
-            Math.ceil(scrollPercent * totalPages.value) || 1,
-            totalPages.value
-          )
+        if (totalPages.value > 0) {
+          currentPage.value = getVisiblePdfPage(container)
         }
       }
     }
@@ -139,6 +155,15 @@ export function usePdfViewer(isDesktop, showToastNotification) {
     }
   })
 
+  onMounted(() => {
+    isFullscreenSupported.value = document.fullscreenEnabled === true
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+  })
+
+  onUnmounted(() => {
+    document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  })
+
   return {
     selectedPdf,
     selectedPdfTitle,
@@ -146,18 +171,26 @@ export function usePdfViewer(isDesktop, showToastNotification) {
     selectedYear,
     zoomLevel,
     isLoading,
+    loadError,
+    loadProgress,
+    attempt,
     showScrollTop,
     currentPage,
     totalPages,
+    isFullscreen,
+    isFullscreenSupported,
     zoomIn,
     zoomOut,
+    toggleFullscreen,
     createSelectPdf,
-    createToggleFullscreen,
     createScrollToTop,
     createHandleScroll,
+    retryPdf,
     printPdf,
     downloadPdf,
-    onPdfRendered,
+    onPdfLoaded,
+    onPdfProgress: trackProgress,
+    onPdfRendered: finishLoad,
     onPdfError,
     onInternalLinkClicked
   }

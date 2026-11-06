@@ -31,7 +31,7 @@ State lives in composables, not in a store. Two patterns coexist:
 - **Self-contained** (e.g. `useTheme`, `useToast`, `useSidebar`, `useComparison`, `useDocsCache`) — create their own refs internally.
 - **Dependency-injected** (e.g. `useSearch(data, ...)`, `useNavigation(data, selectedPdf, selectPdf, ...)`, `usePdfViewer(isDesktop, showToastNotification)`) — receive state/callbacks from `app.vue` so they can react to shared state.
 
-`usePdfViewer` exposes `createXxx(ref)` factory functions (`createToggleFullscreen`, `createScrollToTop`, `createHandleScroll`) because those behaviors need DOM refs that only exist in `app.vue` after mount. Follow this factory pattern rather than reaching into the DOM from inside the composable.
+`usePdfViewer` exposes `createXxx(ref)` factory functions (`createSelectPdf`, `createScrollToTop`, `createHandleScroll`) because those behaviors need DOM refs that only exist in `app.vue` after mount. Follow this factory pattern rather than reaching into the DOM from inside the composable.
 
 ### Content is data-driven via `public/docs.json`
 
@@ -42,6 +42,10 @@ To add an exam paper:
 1. Drop the PDF at `public/pdfs/{category}/{year}/{subject}.pdf`.
 2. Add a leaf entry to `public/docs.json` pointing at it.
 3. If it's a new subject/category, add its emoji/gradient in `app/constants/icons.js`.
+
+### URLs and history
+
+There is no router: `useReaderHistory` drives the History API directly. The open document lives in the `?pdf=` query param, Back walks through opened documents and closes overlays (drawer, comparison, PDF picker), and the last position is saved in `localStorage` (`dobpi_reading_position`). All `?pdf=` URLs share the `/` HTML shell, so the Service Worker's navigation route matches with `ignoreSearch`.
 
 ### Caching is multi-layered — keep the layers in sync
 

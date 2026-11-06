@@ -43,7 +43,9 @@ self.addEventListener('activate', (event) => {
 
 registerRoute(
   ({ request }) => request.mode === 'navigate',
-  new NetworkFirst({ cacheName: PAGES_CACHE })
+  // Every document has its own ?pdf= URL but they all share one HTML shell, so an
+  // offline navigation has to fall back to the cached `/` regardless of the query.
+  new NetworkFirst({ cacheName: PAGES_CACHE, matchOptions: { ignoreSearch: true } })
 )
 
 registerRoute(

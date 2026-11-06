@@ -5,6 +5,9 @@
     @click.self="$emit('close')"
   >
     <div
+      role="dialog"
+      aria-modal="true"
+      :aria-label="`ជ្រើសរើសឯកសារ ${pdfNumber}`"
       class="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 max-w-4xl w-full max-h-[90dvh] overflow-hidden flex flex-col"
     >
       <!-- Header -->
@@ -19,7 +22,8 @@
             </p>
           </div>
           <button
-            class="p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+            class="p-2.5 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+            aria-label="បិទ"
             @click="$emit('close')"
           >
             <X class="w-6 h-6" />

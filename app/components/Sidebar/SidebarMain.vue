@@ -37,6 +37,7 @@ function handleSelectPdf(subject, category, year) {
 
 <template>
   <aside
+    :inert="!isOpen"
     :class="[
       isDesktop
         ? [

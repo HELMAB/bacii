@@ -9,9 +9,9 @@
   >
     <button
       v-if="show"
-      class="fixed bottom-6 right-6 z-50 grid place-items-center w-11 h-11 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-primary-600 dark:hover:bg-primary-400 transition-colors duration-200"
-      aria-label="Scroll to top"
-      title="Scroll to top"
+      class="absolute bottom-20 right-3 sm:bottom-6 sm:right-6 z-20 grid place-items-center w-11 h-11 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-primary-600 dark:hover:bg-primary-400 transition-colors duration-200"
+      aria-label="ឡើងទៅលើ"
+      title="ឡើងទៅលើ"
       @click="$emit('click')"
     >
       <ArrowUp class="w-5 h-5" />

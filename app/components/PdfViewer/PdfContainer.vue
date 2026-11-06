@@ -3,19 +3,12 @@
     ref="pdfContainer"
     class="flex-1 bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark overflow-auto pt-2 sm:pt-10 pb-24 relative"
   >
-    <!-- Skeleton Loader -->
-    <div v-if="isLoading" class="absolute inset-0 bg-white dark:bg-gray-950 z-10 p-6 space-y-4">
-      <div class="animate-pulse space-y-4">
-        <div class="h-8 bg-gray-100 dark:bg-gray-900 w-3/4"></div>
-        <div class="h-4 bg-gray-100 dark:bg-gray-900 w-full"></div>
-        <div class="h-4 bg-gray-100 dark:bg-gray-900 w-5/6"></div>
-        <div class="h-4 bg-gray-100 dark:bg-gray-900 w-full"></div>
-        <div class="h-64 bg-gray-100 dark:bg-gray-900"></div>
-        <div class="h-4 bg-gray-100 dark:bg-gray-900 w-4/5"></div>
-        <div class="h-4 bg-gray-100 dark:bg-gray-900 w-full"></div>
-        <div class="h-4 bg-gray-100 dark:bg-gray-900 w-3/4"></div>
-      </div>
-    </div>
+    <PdfLoadOverlay
+      :is-loading="isLoading"
+      :load-error="loadError"
+      :load-progress="loadProgress"
+      @retry="$emit('retry')"
+    />
 
     <!-- PDF with fade transition -->
     <Transition
@@ -25,14 +18,17 @@
       leave-to-class="opacity-0"
       mode="out-in"
     >
-      <div v-if="selectedPdf" :key="selectedPdf" class="w-fit mx-auto px-2">
+      <div v-if="selectedPdf" :key="`${selectedPdf}:${attempt}`" class="w-fit mx-auto px-2">
         <ClientOnly>
           <VuePdfEmbed
-            ref="pdfRef"
             :source="selectedPdf"
             :width="pdfWidth"
-            @rendered="$emit('rendered', $event)"
+            :scale="renderScale"
+            @loaded="$emit('loaded', $event)"
+            @progress="$emit('progress', $event)"
+            @rendered="handleRendered"
             @loading-failed="$emit('loadingFailed')"
+            @rendering-failed="$emit('loadingFailed')"
             @internal-link-clicked="$emit('internalLinkClicked', $event)"
           />
         </ClientOnly>
@@ -43,7 +39,9 @@
 
 <script setup>
 import { ref, computed, defineAsyncComponent } from 'vue'
-import { useFitPdfWidth } from '../../composables/useFitPdfWidth'
+import PdfLoadOverlay from './PdfLoadOverlay.vue'
+import { getPdfRenderScale, useFitPdfWidth } from '../../composables/useFitPdfWidth'
+import { usePdfScrollAnchor } from '../../composables/usePdfScrollAnchor'
 
 const VuePdfEmbed = defineAsyncComponent(() => import('vue-pdf-embed'))
 
@@ -55,19 +53,40 @@ const BASE_PDF_WIDTH = 820
 const props = defineProps({
   selectedPdf: String,
   isLoading: Boolean,
+  loadError: Boolean,
+  loadProgress: { type: Number, default: null },
+  attempt: { type: Number, default: 0 },
   zoomLevel: Number
 })
 
-defineEmits(['rendered', 'loadingFailed', 'internalLinkClicked'])
+const emit = defineEmits([
+  'loaded',
+  'progress',
+  'rendered',
+  'loadingFailed',
+  'internalLinkClicked',
+  'retry'
+])
 
 const pdfContainer = ref(null)
-const pdfRef = ref(null)
 
 const fitWidth = useFitPdfWidth(pdfContainer, BASE_PDF_WIDTH)
 const pdfWidth = computed(() => Math.round(fitWidth.value * (props.zoomLevel || 1)))
+const renderScale = computed(() => getPdfRenderScale(pdfWidth.value))
+
+const { restoreAnchor, setPendingAnchor } = usePdfScrollAnchor(
+  pdfContainer,
+  pdfWidth,
+  () => props.selectedPdf
+)
+
+function handleRendered() {
+  restoreAnchor()
+  emit('rendered')
+}
 
 defineExpose({
   pdfContainer,
-  pdfRef
+  restorePosition: setPendingAnchor
 })
 </script>

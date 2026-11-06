@@ -1,9 +1,5 @@
 <template>
   <div class="flex h-dvh w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
-    <!-- PWA Components -->
-    <OfflineIndicator />
-    <PWAInstallPrompt />
-
     <!-- Toast Notification -->
     <ToastNotification :show="showToast" :message="toastMessage" />
 
@@ -44,12 +40,15 @@
       @toggle-compact-mode="isCompactMode = !isCompactMode"
       @toggle-category="toggleCategory"
       @toggle-year="toggleYear"
-      @select-pdf="selectPdf"
+      @select-pdf="handleDrawerSelect"
       @close-sidebar="toggleSidebar"
     />
 
     <!-- Reader column -->
     <div class="flex-1 flex flex-col min-w-0 h-full">
+      <!-- In the layout flow so it can never cover the header's controls -->
+      <OfflineIndicator />
+
       <ReaderTopBar
         :has-pdf="!!selectedPdf && !isComparisonMode"
         :selected-year="selectedYear"
@@ -57,6 +56,9 @@
         :zoom-level="zoomLevel"
         :is-dark="isDark"
         :is-comparison-mode="isComparisonMode"
+        :is-drawer-open="isSidebarOpen"
+        :is-fullscreen="isFullscreen"
+        :is-fullscreen-supported="isFullscreenSupported"
         @toggle-drawer="toggleSidebar"
         @toggle-comparison="handleToggleComparison"
         @zoom-in="zoomIn"
@@ -83,7 +85,12 @@
         />
 
         <!-- Empty State -->
-        <EmptyState v-else-if="!selectedPdf" />
+        <EmptyState
+          v-else-if="!selectedPdf"
+          :is-loading="isDocsLoading"
+          :load-failed="!!docsError"
+          @retry="retryDocs"
+        />
 
         <!-- PDF Container -->
         <PdfContainer
@@ -91,10 +98,16 @@
           ref="pdfContainerComponent"
           :selected-pdf="selectedPdf"
           :is-loading="isLoading"
+          :load-error="loadError"
+          :load-progress="loadProgress"
+          :attempt="attempt"
           :zoom-level="zoomLevel"
+          @loaded="onPdfLoaded"
+          @progress="onPdfProgress"
           @rendered="onPdfRendered"
           @loading-failed="onPdfError"
           @internal-link-clicked="onInternalLinkClicked"
+          @retry="retryPdf"
         />
 
         <!-- Floating controls (positioned over the reader, not the viewport) -->
@@ -108,7 +121,7 @@
           >
             <div
               v-if="totalPages > 0 && !isLoading"
-              class="absolute bottom-6 left-6 z-30 bg-gray-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-gray-900 px-3 py-1.5"
+              class="absolute bottom-20 left-3 sm:bottom-6 sm:left-6 z-20 bg-gray-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-gray-900 px-3 py-1.5"
             >
               <span class="text-xs font-medium tabular-nums">
                 ទំព័រ {{ currentPage }} / {{ totalPages }}
@@ -128,12 +141,15 @@
           <ScrollToTopButton :show="showScrollTop" @click="scrollToTop" />
         </template>
       </main>
+
+      <!-- In the layout flow so it can never cover the pager -->
+      <PWAInstallPrompt />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 
 // Components
 import OfflineIndicator from './components/OfflineIndicator.vue'
@@ -159,9 +175,14 @@ import { useNavigation } from './composables/useNavigation'
 import { useKeyboardShortcuts } from './composables/useKeyboardShortcuts'
 import { useComparison } from './composables/useComparison'
 import { useDocsCache } from './composables/useDocsCache'
+import { useReaderHistory } from './composables/useReaderHistory'
+import { getPdfScrollAnchor } from './utils/pdfScroll'
+
+// How long scrolling must pause before the reading position is saved.
+const SAVE_POSITION_DELAY_MS = 500
 
 // Load docs data with caching
-const { data, loadDocs } = useDocsCache()
+const { data, isLoading: isDocsLoading, error: docsError, loadDocs } = useDocsCache()
 
 // Theme
 const { isDark, toggleDarkMode } = useTheme()
@@ -212,17 +233,25 @@ const {
   selectedYear,
   zoomLevel,
   isLoading,
+  loadError,
+  loadProgress,
+  attempt,
   showScrollTop,
   currentPage,
   totalPages,
+  isFullscreen,
+  isFullscreenSupported,
   zoomIn,
   zoomOut,
+  toggleFullscreen,
   createSelectPdf,
-  createToggleFullscreen,
   createScrollToTop,
   createHandleScroll,
+  retryPdf,
   printPdf,
   downloadPdf,
+  onPdfLoaded,
+  onPdfProgress,
   onPdfRendered,
   onPdfError,
   onInternalLinkClicked
@@ -230,13 +259,22 @@ const {
 
 const pdfContainerComponent = ref(null)
 const pdfContainer = computed(() => pdfContainerComponent.value?.pdfContainer)
-const pdfRef = computed(() => pdfContainerComponent.value?.pdfRef)
 
 // Create functions that need access to refs
 const selectPdf = createSelectPdf(pdfContainer)
-const toggleFullscreen = createToggleFullscreen(pdfContainer)
 const scrollToTop = createScrollToTop(pdfContainer)
-const handleScroll = createHandleScroll(pdfContainer, pdfRef)
+const trackScroll = createHandleScroll(pdfContainer)
+
+let savePositionTimer = null
+
+function handleScroll() {
+  trackScroll()
+
+  clearTimeout(savePositionTimer)
+  savePositionTimer = setTimeout(() => {
+    savePosition(getPdfScrollAnchor(pdfContainer.value))
+  }, SAVE_POSITION_DELAY_MS)
+}
 
 // Watch for pdfContainer changes and attach scroll listener
 watch(pdfContainer, (newVal, oldVal) => {
@@ -249,6 +287,7 @@ watch(pdfContainer, (newVal, oldVal) => {
 })
 
 onUnmounted(() => {
+  clearTimeout(savePositionTimer)
   if (pdfContainer.value) {
     pdfContainer.value.removeEventListener('scroll', handleScroll)
   }
@@ -266,7 +305,7 @@ function handleToggleComparison() {
         selectedYear.value
       )
     }
-    showToastNotification('📊 បានបើកមុខងារប្រៀបធៀប។ សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប។')
+    showToastNotification('📊 បានបើកមុខងារប្រៀបធៀប។ សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប')
   } else {
     showToastNotification('✓ បានបិទមុខងារប្រៀបធៀប')
   }
@@ -278,7 +317,11 @@ function openPdfSelector(pdfNumber) {
 }
 
 function handlePdfSelection(subject, category, year) {
-  if (pdfSelectorNumber.value === 1) {
+  assignComparisonPdf(pdfSelectorNumber.value, subject, category, year)
+}
+
+function assignComparisonPdf(pdfNumber, subject, category, year) {
+  if (pdfNumber === 1) {
     setComparisonPdf1(subject, category, year)
     showToastNotification(`✓ បានជ្រើសរើសឯកសារ ១: ${subject.label}`)
   } else {
@@ -287,9 +330,41 @@ function handlePdfSelection(subject, category, year) {
   }
 }
 
+// While comparing, the drawer fills the empty panel, or replaces the second one.
+function handleDrawerSelect(subject, category, year) {
+  if (isComparisonMode.value) {
+    assignComparisonPdf(comparisonPdf1.value ? 2 : 1, subject, category, year)
+  } else {
+    selectPdf(subject, category, year)
+  }
+}
+
 // Navigation
-const { currentPdfIndex, totalPdfsCount, canGoPrevious, canGoNext, goToPreviousPdf, goToNextPdf } =
-  useNavigation(data, selectedPdf, selectPdf, showToastNotification)
+const {
+  allPdfs,
+  currentPdfIndex,
+  totalPdfsCount,
+  canGoPrevious,
+  canGoNext,
+  goToPreviousPdf,
+  goToNextPdf
+} = useNavigation(data, selectedPdf, selectPdf, showToastNotification)
+
+// URLs, Back button and reading position
+const { resolveInitialDoc, openDocWithoutHistoryEntry, savePosition } = useReaderHistory({
+  allPdfs,
+  selectedPdf,
+  selectPdf,
+  overlays: [
+    {
+      isOpen: computed(() => isSidebarOpen.value && !isDesktop.value),
+      close: toggleSidebar,
+      replacedByDoc: true
+    },
+    { isOpen: showPdfSelector, close: () => (showPdfSelector.value = false) },
+    { isOpen: isComparisonMode, close: toggleComparisonMode }
+  ]
+})
 
 // Keyboard shortcuts
 useKeyboardShortcuts({
@@ -303,25 +378,27 @@ useKeyboardShortcuts({
   toggleFullscreen
 })
 
-onMounted(async () => {
-  // Load docs data with caching
+async function openInitialDoc() {
+  const { doc, position } = resolveInitialDoc()
+  if (!doc) return
+
+  expandedCategories[doc.category] = true
+  expandedYears[doc.year] = true
+  openDocWithoutHistoryEntry(doc)
+
+  if (position) {
+    await nextTick()
+    pdfContainerComponent.value?.restorePosition(position)
+  }
+}
+
+async function retryDocs() {
   await loadDocs()
+  await openInitialDoc()
+}
 
-  if (data.value.length > 0 && data.value[0].children.length > 0) {
-    const firstCategory = data.value[0]
-    const firstYear = firstCategory.children[0]
-
-    expandedCategories[firstCategory.label] = true
-    expandedYears[firstYear.label] = true
-
-    if (firstYear.children.length > 0) {
-      const firstSubject = firstYear.children[0]
-      selectPdf(firstSubject, firstCategory.label, firstYear.label)
-    }
-  }
-
-  if (typeof document !== 'undefined') {
-    document.title = 'Home — Dobpi'
-  }
+onMounted(async () => {
+  await loadDocs()
+  await openInitialDoc()
 })
 </script>

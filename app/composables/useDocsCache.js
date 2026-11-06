@@ -8,7 +8,8 @@ export function useDocsCache() {
   // The docs tree is large and only ever replaced wholesale (never mutated in place),
   // so a shallowRef avoids deep-proxying the entire nested structure.
   const data = shallowRef([])
-  const isLoading = shallowRef(false)
+  // Starts true: the first render shouldn't flash the "pick a document" empty state.
+  const isLoading = shallowRef(true)
   const error = shallowRef(null)
 
   async function loadDocs() {

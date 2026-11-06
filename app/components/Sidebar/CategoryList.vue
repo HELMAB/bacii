@@ -9,7 +9,7 @@
       <button
         :class="[
           'flex items-center gap-2 w-full text-left font-bold uppercase text-gray-900 dark:text-gray-100 hover:text-primary-600 dark:hover:text-primary-400 transition-colors',
-          isCompactMode ? 'text-[11px] py-1.5' : 'text-xs py-2'
+          isCompactMode ? 'text-[11px] py-1.5' : 'text-xs py-3.5 lg:py-2'
         ]"
         @click="$emit('toggleCategory', category.label)"
       >
@@ -32,7 +32,7 @@
           <button
             :class="[
               'flex items-center gap-2 w-full text-left text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors',
-              isCompactMode ? 'text-xs py-1' : 'text-sm py-1.5'
+              isCompactMode ? 'text-xs py-1' : 'text-sm py-3 lg:py-1.5'
             ]"
             @click="$emit('toggleYear', year.label)"
           >
@@ -58,7 +58,7 @@
               :key="subject.label"
               :class="[
                 'flex items-center w-full text-left border-l transition-colors duration-150',
-                isCompactMode ? 'text-xs py-1 px-3' : 'text-sm py-1.5 px-3',
+                isCompactMode ? 'text-xs py-1 px-3' : 'text-sm py-3 lg:py-1.5 px-3',
                 selectedPdf === subject.pdf
                   ? 'border-l-2 border-primary-600 bg-gray-50 dark:bg-gray-900 text-primary-700 dark:text-primary-300 font-semibold'
                   : 'border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-600 hover:text-gray-900 dark:hover:text-gray-100'

@@ -1,7 +1,10 @@
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
 import { HardDriveDownload, Check, Loader } from '@lucide/vue'
 import { useOfflineDownload } from '../../composables/useOfflineDownload'
+
+// Average PDF size, for the estimate shown before a download starts on mobile data.
+const AVERAGE_PDF_MB = 1.8
 
 const props = defineProps({
   data: { type: Array, default: () => [] }
@@ -16,8 +19,15 @@ const {
   progress,
   isComplete,
   checkStatus,
-  downloadAll
+  downloadAll,
+  cancelDownload
 } = useOfflineDownload()
+
+const isConfirming = shallowRef(false)
+const estimatedMb = computed(() => {
+  const remaining = totalCount.value - cachedCount.value
+  return Math.max(Math.round((remaining * AVERAGE_PDF_MB) / 10) * 10, 10)
+})
 
 // Flatten the full docs tree to a flat list of PDF URLs (category → year → subject).
 const pdfUrls = computed(() => {
@@ -46,6 +56,7 @@ watch(
 )
 
 function handleDownload() {
+  isConfirming.value = false
   downloadAll(pdfUrls.value)
 }
 </script>
@@ -76,20 +87,47 @@ function handleDownload() {
           :style="{ width: progress + '%' }"
         ></div>
       </div>
+      <button
+        class="w-full px-3 py-3.5 lg:py-2 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        @click="cancelDownload"
+      >
+        បោះបង់
+      </button>
+    </div>
+
+    <!-- Confirm before using mobile data -->
+    <div v-else-if="isConfirming" class="space-y-2">
+      <p class="text-xs text-gray-700 dark:text-gray-300">
+        នឹងទាញយកប្រហែល {{ estimatedMb }} MB។ គួរប្រើ Wi-Fi។
+      </p>
+      <div class="flex gap-2">
+        <button
+          class="flex-1 px-3 py-3.5 lg:py-2 text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
+          @click="handleDownload"
+        >
+          ទាញយក
+        </button>
+        <button
+          class="flex-1 px-3 py-3.5 lg:py-2 text-xs font-medium text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          @click="isConfirming = false"
+        >
+          បោះបង់
+        </button>
+      </div>
     </div>
 
     <!-- Idle / partial / error -->
     <div v-else class="space-y-2">
       <button
-        class="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
-        @click="handleDownload"
+        class="w-full flex items-center justify-center gap-2 px-3 py-3.5 lg:py-2 text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors"
+        @click="isConfirming = true"
       >
         <HardDriveDownload class="w-4 h-4 shrink-0" />
         <span>{{ status === 'error' ? 'ព្យាយាមម្ដងទៀត' : 'ទាញយកសម្រាប់អានក្រៅបណ្តាញ' }}</span>
       </button>
       <p
         v-if="cachedCount > 0"
-        class="text-[11px] text-center text-gray-400 dark:text-gray-500 tabular-nums"
+        class="text-[11px] text-center text-gray-600 dark:text-gray-400 tabular-nums"
       >
         បានរក្សាទុក {{ cachedCount }} / {{ totalCount }}
       </p>
