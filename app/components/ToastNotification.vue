@@ -9,7 +9,7 @@
   >
     <div
       v-if="show"
-      class="fixed top-20 right-4 z-50 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 py-3 flex items-center gap-2.5 border-l-2 border-primary-500"
+      class="fixed top-20 right-4 z-50 max-w-[calc(100vw-2rem)] bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 py-3 flex items-center gap-2.5 border-l-2 border-primary-500"
     >
       <Check class="w-5 h-5" />
       <span class="text-sm">{{ message }}</span>

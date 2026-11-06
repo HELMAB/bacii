@@ -30,15 +30,17 @@
     </div>
 
     <!-- Comparison Container -->
-    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2 p-2 overflow-hidden">
+    <div
+      class="flex-1 grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 gap-2 p-2 overflow-hidden"
+    >
       <!-- Left PDF Panel -->
       <div
-        class="flex flex-col bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 overflow-hidden"
+        class="flex flex-col min-h-0 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 overflow-hidden"
       >
         <!-- Panel Header -->
         <div class="border-b border-gray-200 dark:border-gray-800 p-3">
-          <div class="flex items-center justify-between">
-            <div class="flex-1">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex-1 min-w-0">
               <h3 class="text-[11px] font-bold uppercase text-gray-400 dark:text-gray-500">
                 ឯកសារ ១
               </h3>
@@ -49,7 +51,7 @@
               </div>
             </div>
             <button
-              class="px-3 py-1 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-xs font-medium transition-colors"
+              class="px-3 py-1 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-xs font-medium transition-colors shrink-0"
               @click="$emit('selectPdf', 1)"
             >
               ផ្លាស់ប្តូរ
@@ -60,7 +62,7 @@
         <!-- PDF Viewer 1 -->
         <div
           ref="pdfContainer1"
-          class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark py-4"
+          class="flex-1 min-h-0 overflow-auto bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark py-2 md:py-4"
         >
           <div v-if="!comparisonPdf1" class="flex items-center justify-center h-full">
             <div class="text-center text-gray-400 dark:text-gray-600">
@@ -73,7 +75,7 @@
               :is="VuePdfEmbed"
               v-if="VuePdfEmbed"
               :source="comparisonPdf1"
-              :width="COMPARISON_PDF_WIDTH"
+              :width="pdf1Width"
               @rendered="onPdfRendered"
             />
           </div>
@@ -82,12 +84,12 @@
 
       <!-- Right PDF Panel -->
       <div
-        class="flex flex-col bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 overflow-hidden"
+        class="flex flex-col min-h-0 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 overflow-hidden"
       >
         <!-- Panel Header -->
         <div class="border-b border-gray-200 dark:border-gray-800 p-3">
-          <div class="flex items-center justify-between">
-            <div class="flex-1">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex-1 min-w-0">
               <h3 class="text-[11px] font-bold uppercase text-gray-400 dark:text-gray-500">
                 ឯកសារ ២
               </h3>
@@ -98,7 +100,7 @@
               </div>
             </div>
             <button
-              class="px-3 py-1 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-xs font-medium transition-colors"
+              class="px-3 py-1 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-xs font-medium transition-colors shrink-0"
               @click="$emit('selectPdf', 2)"
             >
               ផ្លាស់ប្តូរ
@@ -109,7 +111,7 @@
         <!-- PDF Viewer 2 -->
         <div
           ref="pdfContainer2"
-          class="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark py-4"
+          class="flex-1 min-h-0 overflow-auto bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark py-2 md:py-4"
         >
           <div v-if="!comparisonPdf2" class="flex items-center justify-center h-full">
             <div class="text-center text-gray-400 dark:text-gray-600">
@@ -122,7 +124,7 @@
               :is="VuePdfEmbed"
               v-if="VuePdfEmbed"
               :source="comparisonPdf2"
-              :width="COMPARISON_PDF_WIDTH"
+              :width="pdf2Width"
               @rendered="onPdfRendered"
             />
           </div>
@@ -135,11 +137,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { FileText, X } from '@lucide/vue'
+import { useFitPdfWidth } from '../composables/useFitPdfWidth'
 
 const VuePdfEmbed = ref(null)
 
-// Render width for each comparison panel (px) — panels are roughly half-width on desktop.
-const COMPARISON_PDF_WIDTH = 520
+// Widest render width for each comparison panel (px) — narrower panels fit the page instead.
+const COMPARISON_PDF_MAX_WIDTH = 520
+
+const pdfContainer1 = ref(null)
+const pdfContainer2 = ref(null)
+const pdf1Width = useFitPdfWidth(pdfContainer1, COMPARISON_PDF_MAX_WIDTH)
+const pdf2Width = useFitPdfWidth(pdfContainer2, COMPARISON_PDF_MAX_WIDTH)
 
 defineProps({
   comparisonPdf1: String,

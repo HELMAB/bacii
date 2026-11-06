@@ -2,14 +2,17 @@
   <div ref="dropdownRef" class="relative">
     <!-- Dropdown Toggle Button -->
     <button
-      class="px-3 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5"
+      class="px-2 sm:px-3 py-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5"
       :aria-expanded="isOpen"
       aria-label="បើកម៉ឺនុយសកម្មភាព"
       @click="isOpen = !isOpen"
     >
       <EllipsisVertical class="w-4 h-4" />
       <span class="hidden sm:inline">សកម្មភាព</span>
-      <ChevronDown class="w-3 h-3 transition-transform" :class="{ 'rotate-180': isOpen }" />
+      <ChevronDown
+        class="hidden sm:block w-3 h-3 transition-transform"
+        :class="{ 'rotate-180': isOpen }"
+      />
     </button>
 
     <!-- Dropdown Menu -->
@@ -26,6 +29,34 @@
         class="absolute right-0 mt-1 w-56 bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 z-50"
       >
         <div class="py-1" role="menu">
+          <!-- Zoom (the top bar's zoom controls are hidden on phones) -->
+          <div
+            class="sm:hidden flex items-center -mt-1 mb-1 border-b border-gray-200 dark:border-gray-800"
+          >
+            <button
+              class="flex-1 grid place-items-center py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              role="menuitem"
+              aria-label="បង្រួម"
+              @click="$emit('zoomOut')"
+            >
+              <ZoomOut class="w-5 h-5" />
+            </button>
+            <span
+              class="w-16 text-center text-sm font-medium tabular-nums text-gray-700 dark:text-gray-300"
+              aria-live="polite"
+            >
+              {{ zoomPercent }}%
+            </span>
+            <button
+              class="flex-1 grid place-items-center py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              role="menuitem"
+              aria-label="ពង្រីក"
+              @click="$emit('zoomIn')"
+            >
+              <ZoomIn class="w-5 h-5" />
+            </button>
+          </div>
+
           <!-- Comparison Mode -->
           <button
             :class="[
@@ -96,19 +127,24 @@ import {
   Maximize,
   Printer,
   Sun,
-  Moon
+  Moon,
+  ZoomIn,
+  ZoomOut
 } from '@lucide/vue'
 
 defineProps({
   isDark: Boolean,
-  isComparisonMode: Boolean
+  isComparisonMode: Boolean,
+  zoomPercent: Number
 })
 
 const emit = defineEmits([
   'toggleComparison',
   'toggleFullscreen',
   'print',
-  'toggleDarkMode'
+  'toggleDarkMode',
+  'zoomIn',
+  'zoomOut'
 ])
 
 const isOpen = ref(false)

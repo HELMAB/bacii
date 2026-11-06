@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
+  <div class="flex h-dvh w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
     <!-- PWA Components -->
     <OfflineIndicator />
     <PWAInstallPrompt />
