@@ -1,6 +1,15 @@
 <template>
-  <div class="flex h-dvh w-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
+  <div class="flex flex-col h-dvh w-screen overflow-hidden bg-page text-fg">
     <h1 class="sr-only">{{ pageHeading }}</h1>
+
+    <!-- Lets keyboard users jump past the header and the whole sidebar -->
+    <button
+      type="button"
+      class="btn bg-surface-raised text-fg shadow-print-sm sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[70] focus:px-4 focus:outline-highlight"
+      @click="focusReader"
+    >
+      រំលងទៅឯកសារ
+    </button>
 
     <!-- type: the splash also has a long fail-safe animation that Vue must not wait for -->
     <Transition
@@ -32,124 +41,130 @@
     >
       <div
         v-if="isSidebarOpen && !isDesktop"
-        class="fixed inset-0 bg-black/50 z-40"
+        class="fixed inset-0 bg-ink-bar/55 z-40"
         @click="toggleSidebar"
       ></div>
     </Transition>
 
-    <!-- Navigation sidebar (pushes content on desktop, overlays on mobile) -->
-    <SidebarMain
-      v-model:search-query="searchQuery"
-      :is-open="isSidebarOpen"
-      :is-desktop="isDesktop"
-      :is-compact-mode="isCompactMode"
-      :data="data"
-      :filtered-data="filteredData"
-      :expanded-categories="expandedCategories"
-      :expanded-years="expandedYears"
-      :selected-pdf="selectedPdf"
-      @toggle-compact-mode="isCompactMode = !isCompactMode"
-      @toggle-category="toggleCategory"
-      @toggle-year="toggleYear"
-      @select-pdf="handleDrawerSelect"
-      @close-sidebar="toggleSidebar"
+    <!-- In the layout flow so it can never cover the header's controls -->
+    <OfflineIndicator />
+
+    <!-- Full-width ink header -->
+    <ReaderTopBar
+      :has-pdf="!!selectedPdf && !isComparisonMode"
+      :selected-category="selectedCategory"
+      :selected-year="selectedYear"
+      :selected-pdf-title="selectedPdfTitle"
+      :zoom-level="zoomLevel"
+      :is-dark="isDark"
+      :is-comparison-mode="isComparisonMode"
+      :is-drawer-open="isSidebarOpen"
+      :is-fullscreen="isFullscreen"
+      :is-fullscreen-supported="isFullscreenSupported"
+      @toggle-drawer="toggleSidebar"
+      @toggle-comparison="handleToggleComparison"
+      @zoom-in="zoomIn"
+      @zoom-out="zoomOut"
+      @toggle-fullscreen="toggleFullscreen"
+      @print="printPdf"
+      @download="downloadPdf"
+      @toggle-dark-mode="toggleDarkMode"
     />
 
-    <!-- Reader column -->
-    <div class="flex-1 flex flex-col min-w-0 h-full">
-      <!-- In the layout flow so it can never cover the header's controls -->
-      <OfflineIndicator />
-
-      <ReaderTopBar
-        :has-pdf="!!selectedPdf && !isComparisonMode"
-        :selected-year="selectedYear"
-        :selected-pdf-title="selectedPdfTitle"
-        :zoom-level="zoomLevel"
-        :is-dark="isDark"
-        :is-comparison-mode="isComparisonMode"
-        :is-drawer-open="isSidebarOpen"
-        :is-fullscreen="isFullscreen"
-        :is-fullscreen-supported="isFullscreenSupported"
-        @toggle-drawer="toggleSidebar"
-        @toggle-comparison="handleToggleComparison"
-        @zoom-in="zoomIn"
-        @zoom-out="zoomOut"
-        @toggle-fullscreen="toggleFullscreen"
-        @print="printPdf"
-        @download="downloadPdf"
-        @toggle-dark-mode="toggleDarkMode"
+    <div class="flex-1 flex min-h-0">
+      <!-- Navigation sidebar (pushes content on desktop, overlays on mobile) -->
+      <SidebarMain
+        v-model:search-query="searchQuery"
+        :is-open="isSidebarOpen"
+        :is-desktop="isDesktop"
+        :data="data"
+        :filtered-data="filteredData"
+        :active-category="activeCategory"
+        :expanded-years="expandedYears"
+        :selected-pdf="selectedPdf"
+        :cached-pdfs="cachedPdfs"
+        :offline="offlineState"
+        @select-category="selectCategory"
+        @toggle-year="toggleYear"
+        @select-pdf="handleDrawerSelect"
+        @close-sidebar="toggleSidebar"
+        @download-all="downloadAll(pdfUrls)"
+        @cancel-download="cancelDownload"
       />
 
-      <main class="flex-1 flex flex-col overflow-hidden relative">
-        <!-- Comparison View -->
-        <ComparisonView
-          v-if="isComparisonMode"
-          :comparison-pdf1="comparisonPdf1"
-          :comparison-pdf2="comparisonPdf2"
-          :comparison-pdf1-title="comparisonPdf1Title"
-          :comparison-pdf2-title="comparisonPdf2Title"
-          :comparison-pdf1-year="comparisonPdf1Year"
-          :comparison-pdf2-year="comparisonPdf2Year"
-          @close="toggleComparisonMode"
-          @swap="swapPdfs"
-          @select-pdf="openPdfSelector"
-        />
-
-        <!-- Empty State -->
-        <EmptyState v-else-if="!selectedPdf" :is-loading="isDocsLoading" />
-
-        <!-- PDF Container -->
-        <PdfContainer
-          v-else
-          ref="pdfContainerComponent"
-          :selected-pdf="selectedPdf"
-          :is-loading="isLoading"
-          :load-error="loadError"
-          :load-progress="loadProgress"
-          :attempt="attempt"
-          :zoom-level="zoomLevel"
-          @loaded="onPdfLoaded"
-          @progress="onPdfProgress"
-          @rendered="onPdfRendered"
-          @loading-failed="onPdfError"
-          @internal-link-clicked="onInternalLinkClicked"
-          @retry="retryPdf"
-        />
-
-        <!-- Floating controls (positioned over the reader, not the viewport) -->
-        <template v-if="selectedPdf && !isComparisonMode">
-          <!-- Page progress indicator -->
-          <Transition
-            enter-active-class="transition-opacity duration-300 ease-out"
-            enter-from-class="opacity-0"
-            leave-active-class="transition-opacity duration-300 ease-in"
-            leave-to-class="opacity-0"
-          >
-            <div
-              v-if="totalPages > 0 && !isLoading"
-              class="absolute bottom-20 left-3 sm:bottom-6 sm:left-6 z-20 bg-gray-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-gray-900 px-3 py-1.5"
-            >
-              <span class="text-xs font-medium tabular-nums">
-                ទំព័រ {{ currentPage }} / {{ totalPages }}
-              </span>
-            </div>
-          </Transition>
-
-          <PdfPager
-            :current-pdf-index="currentPdfIndex"
-            :total-pdfs-count="totalPdfsCount"
-            :can-go-previous="canGoPrevious"
-            :can-go-next="canGoNext"
-            @previous="goToPreviousPdf"
-            @next="goToNextPdf"
+      <!-- Reader column -->
+      <div class="flex-1 flex flex-col min-w-0 h-full">
+        <main
+          id="reader"
+          tabindex="-1"
+          class="flex-1 flex flex-col overflow-hidden relative focus-visible:outline-none"
+        >
+          <!-- Comparison View -->
+          <ComparisonView
+            v-if="isComparisonMode"
+            :comparison-pdf1="comparisonPdf1"
+            :comparison-pdf2="comparisonPdf2"
+            :comparison-pdf1-title="comparisonPdf1Title"
+            :comparison-pdf2-title="comparisonPdf2Title"
+            :comparison-pdf1-year="comparisonPdf1Year"
+            :comparison-pdf2-year="comparisonPdf2Year"
+            @close="toggleComparisonMode"
+            @swap="swapPdfs"
+            @select-pdf="openPdfSelector"
           />
 
-          <ScrollToTopButton :show="showScrollTop" @click="scrollToTop" />
-        </template>
-      </main>
+          <!-- Empty State -->
+          <EmptyState v-else-if="!selectedPdf" :is-loading="isDocsLoading" />
 
-      <!-- In the layout flow so it can never cover the pager -->
-      <PWAInstallPrompt />
+          <!-- PDF Container -->
+          <PdfContainer
+            v-else
+            ref="pdfContainerComponent"
+            :selected-pdf="selectedPdf"
+            :is-loading="isLoading"
+            :load-error="loadError"
+            :load-progress="loadProgress"
+            :attempt="attempt"
+            :zoom-level="zoomLevel"
+            @loaded="onPdfLoaded"
+            @progress="onPdfProgress"
+            @rendered="handlePdfRendered"
+            @loading-failed="onPdfError"
+            @internal-link-clicked="onInternalLinkClicked"
+            @retry="retryPdf"
+          />
+
+          <!-- Floating controls (positioned over the reader, not the viewport) -->
+          <template v-if="selectedPdf && !isComparisonMode">
+            <Transition
+              enter-active-class="motion-safe:transition-opacity duration-300 ease-out"
+              enter-from-class="opacity-0"
+              leave-active-class="motion-safe:transition-opacity duration-300 ease-in"
+              leave-to-class="opacity-0"
+            >
+              <PageIndicator
+                v-if="totalPages > 0 && !isLoading"
+                :current-page="currentPage"
+                :total-pages="totalPages"
+              />
+            </Transition>
+
+            <PdfPager
+              :current-pdf-index="currentPdfIndex"
+              :total-pdfs-count="totalPdfsCount"
+              :can-go-previous="canGoPrevious"
+              :can-go-next="canGoNext"
+              @previous="goToPreviousPdf"
+              @next="goToNextPdf"
+            />
+
+            <ScrollToTopButton :show="showScrollTop" @click="scrollToTop" />
+          </template>
+        </main>
+
+        <!-- In the layout flow so it can never cover the pager -->
+        <PWAInstallPrompt />
+      </div>
     </div>
   </div>
 </template>
@@ -167,6 +182,7 @@ import EmptyState from './components/PdfViewer/EmptyState.vue'
 import ReaderTopBar from './components/PdfViewer/ReaderTopBar.vue'
 import PdfContainer from './components/PdfViewer/PdfContainer.vue'
 import PdfPager from './components/PdfViewer/PdfPager.vue'
+import PageIndicator from './components/PdfViewer/PageIndicator.vue'
 import ScrollToTopButton from './components/ScrollToTopButton.vue'
 import ComparisonView from './components/ComparisonView.vue'
 import PdfSelectorModal from './components/PdfSelectorModal.vue'
@@ -185,6 +201,7 @@ import { useDocsCache } from './composables/useDocsCache'
 import { useReaderHistory } from './composables/useReaderHistory'
 import { useSeo } from './composables/useSeo'
 import { useSplashScreen } from './composables/useSplashScreen'
+import { useOfflineDownload } from './composables/useOfflineDownload'
 import { getPdfScrollAnchor } from './utils/pdfScroll'
 
 // How long scrolling must pause before the reading position is saved.
@@ -207,14 +224,34 @@ const {
   isSidebarOpen,
   expandedCategories,
   expandedYears,
-  isCompactMode,
+  activeCategory,
   toggleSidebar,
-  toggleCategory,
+  selectCategory,
+  ensureActiveCategory,
   toggleYear
 } = useSidebar(isDesktop)
 
 // Search
 const { searchQuery, filteredData } = useSearch(data, expandedCategories, expandedYears)
+
+// Searching opens every matching year (useSearch). Put the ledger back the way it
+// was once the search is cleared. 'sync' so the snapshot is taken before useSearch
+// expands anything.
+let yearsBeforeSearch = null
+watch(
+  () => !!searchQuery.value.trim(),
+  (isSearching) => {
+    if (isSearching) {
+      yearsBeforeSearch = { ...expandedYears }
+    } else if (yearsBeforeSearch) {
+      Object.keys(expandedYears).forEach((year) => {
+        expandedYears[year] = !!yearsBeforeSearch[year]
+      })
+      yearsBeforeSearch = null
+    }
+  },
+  { flush: 'sync' }
+)
 
 // Comparison Mode
 const {
@@ -317,9 +354,9 @@ function handleToggleComparison() {
         selectedYear.value
       )
     }
-    showToastNotification('📊 បានបើកមុខងារប្រៀបធៀប។ សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប')
+    showToastNotification('បានបើកមុខងារប្រៀបធៀប។ សូមជ្រើសរើសឯកសារដើម្បីប្រៀបធៀប')
   } else {
-    showToastNotification('✓ បានបិទមុខងារប្រៀបធៀប')
+    showToastNotification('បានបិទមុខងារប្រៀបធៀប')
   }
 }
 
@@ -335,10 +372,10 @@ function handlePdfSelection(subject, category, year) {
 function assignComparisonPdf(pdfNumber, subject, category, year) {
   if (pdfNumber === 1) {
     setComparisonPdf1(subject, category, year)
-    showToastNotification(`✓ បានជ្រើសរើសឯកសារ ១: ${subject.label}`)
+    showToastNotification(`បានជ្រើសរើសឯកសារ ១: ${subject.label}`)
   } else {
     setComparisonPdf2(subject, category, year)
-    showToastNotification(`✓ បានជ្រើសរើសឯកសារ ២: ${subject.label}`)
+    showToastNotification(`បានជ្រើសរើសឯកសារ ២: ${subject.label}`)
   }
 }
 
@@ -361,6 +398,68 @@ const {
   goToPreviousPdf,
   goToNextPdf
 } = useNavigation(data, selectedPdf, selectPdf, showToastNotification)
+
+// The tab follows the open paper, so prev/next across the two categories (and
+// opening a paper from search) switches it, with that paper's year open.
+watch([selectedCategory, selectedYear], ([category, year]) => {
+  if (category) selectCategory(category)
+  if (year && !expandedYears[year]) toggleYear(year)
+})
+
+// Until a paper is open, show the first category (docs.json order).
+watch(data, (categories) => ensureActiveCategory(categories), { immediate: true })
+
+// Offline reading: one instance for the whole app, so the sidebar's per-paper
+// "saved" stamps and the download card share the same state.
+const {
+  isSupported: isOfflineSupported,
+  status: offlineStatus,
+  cachedCount,
+  cachedPdfs,
+  totalCount,
+  failedCount,
+  progress: offlineProgress,
+  isComplete: isOfflineComplete,
+  checkStatus,
+  downloadAll,
+  markCached,
+  cancelDownload
+} = useOfflineDownload()
+
+const pdfUrls = computed(() => allPdfs.value.map((doc) => doc.pdf).filter(Boolean))
+
+const offlineState = computed(() => ({
+  isSupported: isOfflineSupported.value,
+  status: offlineStatus.value,
+  cachedCount: cachedCount.value,
+  totalCount: totalCount.value,
+  failedCount: failedCount.value,
+  progress: offlineProgress.value,
+  isComplete: isOfflineComplete.value
+}))
+
+// Once the docs tree is loaded (and the Cache API is known to work), count what's saved.
+watch(
+  [pdfUrls, isOfflineSupported],
+  ([urls]) => {
+    if (urls.length) {
+      checkStatus(urls)
+    }
+  },
+  { immediate: true }
+)
+
+// Skip link target: the PDF scroller (so arrow keys scroll it), else the reader.
+function focusReader() {
+  const reader = document.getElementById('reader')
+  ;(reader?.querySelector('[data-reader-scroll]') ?? reader)?.focus()
+}
+
+// An opened paper is saved by the Service Worker's cache-first PDF route.
+function handlePdfRendered() {
+  onPdfRendered()
+  markCached(selectedPdf.value)
+}
 
 // URLs, Back button and reading position
 const { urlPdf, resolveInitialDoc, openDocWithoutHistoryEntry, savePosition } = useReaderHistory({
@@ -397,7 +496,7 @@ async function openInitialDoc() {
   const { doc, position, isDefaultDoc } = resolveInitialDoc()
   if (!doc) return
 
-  expandedCategories[doc.category] = true
+  selectCategory(doc.category)
   expandedYears[doc.year] = true
   openDocWithoutHistoryEntry(doc, { isDefaultDoc })
 

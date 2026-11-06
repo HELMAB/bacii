@@ -1,11 +1,13 @@
 <script setup>
 import { computed } from 'vue'
-import { Menu, ZoomIn, ZoomOut, Download, Sun, Moon } from '@lucide/vue'
-import { getSubjectIcon } from '../../constants/icons'
+import { Menu, Minus, Plus, Download, Sun, Moon } from '@lucide/vue'
+import BrandStamp from '../BrandStamp.vue'
 import HeaderActionsDropdown from './HeaderActionsDropdown.vue'
+import { formatYearShort, stripCategoryPrefix, toKhmerDigits } from '../../utils/khmer'
 
 const props = defineProps({
   hasPdf: Boolean,
+  selectedCategory: String,
   selectedYear: String,
   selectedPdfTitle: String,
   zoomLevel: Number,
@@ -28,111 +30,125 @@ defineEmits([
 ])
 
 const zoomPercent = computed(() => Math.round(props.zoomLevel * 100))
-const subjectIcon = computed(() => getSubjectIcon(props.selectedPdfTitle))
+const subtitle = computed(() =>
+  [stripCategoryPrefix(props.selectedCategory), formatYearShort(props.selectedYear)]
+    .filter(Boolean)
+    .join(' · ')
+)
 </script>
 
 <template>
-  <header
-    class="relative z-30 shrink-0 h-14 flex items-center gap-1 sm:gap-2 px-1 sm:px-4 sm:px-4 bg-white/90 dark:bg-gray-950/90 backdrop-blur border-b border-gray-200 dark:border-gray-800"
-  >
-    <!-- Drawer toggle -->
-    <button
-      class="p-3 sm:p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-1 focus:ring-primary-600"
-      aria-label="បើកបញ្ជីឯកសារ"
-      :aria-expanded="isDrawerOpen"
-      @click="$emit('toggleDrawer')"
+  <div class="relative z-30 shrink-0">
+    <header
+      class="flex items-center gap-2 sm:gap-4 px-2.5 sm:px-6 py-2 sm:py-3 bg-ink-bar text-on-ink-bar"
     >
-      <Menu class="w-5 h-5" />
-    </button>
-
-    <!-- Title / brand -->
-    <div class="flex items-center gap-2 min-w-0 flex-1">
-      <template v-if="hasPdf">
-        <component
-          :is="subjectIcon"
-          class="w-5 h-5 shrink-0 text-primary-600 dark:text-primary-400"
-        />
-        <p class="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100 truncate">
-          {{ selectedPdfTitle }}
-        </p>
-        <span
-          class="hidden sm:inline shrink-0 text-xs tabular-nums uppercase text-gray-400 dark:text-gray-500"
-        >
-          {{ selectedYear }}
-        </span>
-      </template>
-      <span v-else class="text-sm font-bold uppercase text-gray-900 dark:text-white">Dobpi</span>
-    </div>
-
-    <!-- Controls -->
-    <div class="flex items-center gap-1 sm:gap-1.5">
-      <!-- Zoom -->
-      <div
-        v-if="hasPdf"
-        class="hidden sm:flex items-center border border-gray-200 dark:border-gray-800"
+      <!-- Drawer toggle -->
+      <button
+        type="button"
+        class="btn btn-icon border-on-ink-bar/50 hover:bg-on-ink-bar/10"
+        aria-label="បើកបញ្ជីឯកសារ"
+        :aria-expanded="isDrawerOpen"
+        @click="$emit('toggleDrawer')"
       >
-        <button
-          class="px-2 py-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          aria-label="បង្រួម"
-          title="បង្រួម"
-          @click="$emit('zoomOut')"
-        >
-          <ZoomOut class="w-4 h-4" />
-        </button>
-        <span
-          class="px-1.5 text-xs font-medium tabular-nums text-gray-700 dark:text-gray-300 min-w-[3rem] text-center border-x border-gray-200 dark:border-gray-800 self-stretch flex items-center justify-center"
-        >
-          {{ zoomPercent }}%
-        </span>
-        <button
-          class="px-2 py-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          aria-label="ពង្រីក"
-          title="ពង្រីក"
-          @click="$emit('zoomIn')"
-        >
-          <ZoomIn class="w-4 h-4" />
-        </button>
+        <Menu class="w-[22px] h-[22px]" :stroke-width="2.4" aria-hidden="true" />
+      </button>
+
+      <!-- Brand: always without a document, from xl beside the title -->
+      <div :class="['items-center gap-3 shrink-0', hasPdf ? 'hidden xl:flex' : 'flex']">
+        <BrandStamp :size="hasPdf ? 48 : 40" class="sm:w-12 sm:h-12" />
+        <div class="flex flex-col">
+          <span class="font-bold text-lg sm:text-xl leading-normal">បាក់ឌុប</span>
+          <span class="text-xs leading-snug text-on-ink-bar/80">DOBPI</span>
+        </div>
       </div>
 
-      <!-- Theme toggle (on phones it lives in the actions menu once a PDF is open) -->
-      <button
-        class="p-3 sm:p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-        :class="{ 'hidden sm:block': hasPdf }"
-        :aria-label="isDark ? 'ពន្លឺថ្ងៃ' : 'ពន្លឺយប់'"
-        :title="isDark ? 'ពន្លឺថ្ងៃ' : 'ពន្លឺយប់'"
-        @click="$emit('toggleDarkMode')"
-      >
-        <Sun v-if="isDark" class="w-5 h-5" />
-        <Moon v-else class="w-5 h-5" />
-      </button>
+      <!-- Title -->
+      <div class="flex-1 min-w-0 flex flex-col pl-1 sm:items-center sm:text-center">
+        <template v-if="hasPdf">
+          <p class="font-bold text-base sm:text-xl leading-[1.7] truncate max-w-full">
+            {{ selectedPdfTitle }}
+          </p>
+          <p
+            v-if="subtitle"
+            class="text-[13px] sm:text-sm leading-normal text-on-ink-bar/80 truncate max-w-full"
+          >
+            {{ subtitle }}
+          </p>
+        </template>
+      </div>
 
-      <!-- Download -->
-      <button
-        v-if="hasPdf"
-        class="p-3.5 sm:px-3 sm:py-2 bg-primary-600 text-white text-sm hover:bg-primary-700 transition-colors flex items-center gap-1.5"
-        aria-label="ទាញយក"
-        title="ទាញយក"
-        @click="$emit('download')"
-      >
-        <Download class="w-4 h-4" />
-        <span class="hidden md:inline">ទាញយក</span>
-      </button>
+      <!-- Controls -->
+      <div class="flex items-center gap-2">
+        <!-- Zoom (phones use the actions menu) -->
+        <div v-if="hasPdf" class="hidden sm:flex items-center border-2 border-on-ink-bar/50">
+          <button
+            type="button"
+            class="grid place-items-center w-11 h-11 hover:bg-on-ink-bar/10 transition-colors"
+            aria-label="បង្រួម"
+            title="បង្រួម (-)"
+            @click="$emit('zoomOut')"
+          >
+            <Minus class="w-[18px] h-[18px]" :stroke-width="2.4" aria-hidden="true" />
+          </button>
+          <span
+            class="min-w-16 self-stretch flex items-center justify-center font-bold text-lg border-x-2 border-dashed border-on-ink-bar/30"
+            aria-live="polite"
+          >
+            {{ toKhmerDigits(zoomPercent) }}%
+          </span>
+          <button
+            type="button"
+            class="grid place-items-center w-11 h-11 hover:bg-on-ink-bar/10 transition-colors"
+            aria-label="ពង្រីក"
+            title="ពង្រីក (+)"
+            @click="$emit('zoomIn')"
+          >
+            <Plus class="w-[18px] h-[18px]" :stroke-width="2.4" aria-hidden="true" />
+          </button>
+        </div>
 
-      <!-- Actions -->
-      <HeaderActionsDropdown
-        v-if="hasPdf"
-        :is-dark="isDark"
-        :is-comparison-mode="isComparisonMode"
-        :is-fullscreen="isFullscreen"
-        :is-fullscreen-supported="isFullscreenSupported"
-        :zoom-percent="zoomPercent"
-        @zoom-in="$emit('zoomIn')"
-        @zoom-out="$emit('zoomOut')"
-        @toggle-comparison="$emit('toggleComparison')"
-        @toggle-fullscreen="$emit('toggleFullscreen')"
-        @print="$emit('print')"
-        @toggle-dark-mode="$emit('toggleDarkMode')"
-      />
-    </div>
-  </header>
+        <!-- Theme toggle: in the actions menu once a document is open -->
+        <button
+          v-if="!hasPdf"
+          type="button"
+          class="btn btn-icon border-on-ink-bar/50 hover:bg-on-ink-bar/10"
+          :aria-label="isDark ? 'ពន្លឺថ្ងៃ' : 'ពន្លឺយប់'"
+          :title="isDark ? 'ពន្លឺថ្ងៃ' : 'ពន្លឺយប់'"
+          @click="$emit('toggleDarkMode')"
+        >
+          <Sun v-if="isDark" class="w-5 h-5" aria-hidden="true" />
+          <Moon v-else class="w-5 h-5" aria-hidden="true" />
+        </button>
+
+        <!-- Download -->
+        <button
+          v-if="hasPdf"
+          type="button"
+          class="btn btn-icon md:w-auto md:h-12 md:px-4 border-on-ink-bar/50 hover:bg-on-ink-bar/10 font-normal"
+          aria-label="ទាញយក"
+          title="ទាញយក"
+          @click="$emit('download')"
+        >
+          <Download class="w-[18px] h-[18px]" :stroke-width="2.4" aria-hidden="true" />
+          <span class="hidden md:inline" aria-hidden="true">ទាញយក</span>
+        </button>
+
+        <!-- Actions -->
+        <HeaderActionsDropdown
+          v-if="hasPdf"
+          :is-dark="isDark"
+          :is-comparison-mode="isComparisonMode"
+          :is-fullscreen="isFullscreen"
+          :is-fullscreen-supported="isFullscreenSupported"
+          :zoom-percent="zoomPercent"
+          @zoom-in="$emit('zoomIn')"
+          @zoom-out="$emit('zoomOut')"
+          @toggle-comparison="$emit('toggleComparison')"
+          @toggle-fullscreen="$emit('toggleFullscreen')"
+          @print="$emit('print')"
+          @toggle-dark-mode="$emit('toggleDarkMode')"
+        />
+      </div>
+    </header>
+  </div>
 </template>

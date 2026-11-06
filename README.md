@@ -75,7 +75,7 @@ We stand in solidarity with our brave soldiers defending Cambodia's sovereignty 
 ### ♿ Built for Khmer students
 
 - Full Khmer language interface (km-KH)
-- Authentic Khmer typography with the PengHuoth font
+- Khmer typography with the Google Sans font (self-hosted, works offline)
 - Keyboard shortcuts and large, touch-friendly controls
 
 ## Keyboard shortcuts

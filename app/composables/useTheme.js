@@ -1,8 +1,9 @@
 import { computed, shallowRef, onMounted } from 'vue'
 import { useHead } from '#imports'
 
-const THEME_COLOR_LIGHT = '#253c99'
-const THEME_COLOR_DARK = '#030712'
+// Match the ink header bar in each theme.
+const THEME_COLOR_LIGHT = '#2A1D14'
+const THEME_COLOR_DARK = '#1C130D'
 
 export function useTheme() {
   const isDark = shallowRef(false)

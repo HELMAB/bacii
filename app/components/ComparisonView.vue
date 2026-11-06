@@ -1,39 +1,32 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden">
     <!-- Comparison Header -->
-    <div class="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 p-3">
-      <div class="flex items-center justify-between flex-wrap gap-2">
-        <div class="flex items-center gap-3">
-          <h2 class="text-xs font-bold uppercase text-gray-900 dark:text-white">មុខងារប្រៀបធៀប</h2>
-          <button
-            :disabled="!comparisonPdf1 || !comparisonPdf2"
-            :class="[
-              'px-3 py-2.5 md:py-1.5 text-sm font-medium transition-colors border',
-              comparisonPdf1 && comparisonPdf2
-                ? 'border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                : 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-700 cursor-not-allowed'
-            ]"
-            title="ប្តូរឯកសារ"
-            @click="$emit('swap')"
-          >
-            ⇄ ប្តូរ
-          </button>
-        </div>
+    <div
+      class="shrink-0 flex items-center justify-between flex-wrap gap-2 px-3.5 py-2 bg-surface border-b-2 border-line"
+    >
+      <div class="flex items-center gap-3">
+        <h2 class="font-bold text-base leading-[1.7]">មុខងារប្រៀបធៀប</h2>
         <button
-          class="px-4 py-2.5 md:py-1.5 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 text-sm font-medium transition-colors flex items-center gap-1.5"
-          @click="$emit('close')"
+          type="button"
+          :disabled="!comparisonPdf1 || !comparisonPdf2"
+          class="btn btn-outline"
+          title="ប្តូរឯកសារ"
+          @click="$emit('swap')"
         >
-          <X class="w-4 h-4" />
-          ចេញ
+          <ArrowLeftRight class="w-[18px] h-[18px]" :stroke-width="2.4" aria-hidden="true" />
+          ប្តូរ
         </button>
       </div>
+      <button type="button" class="btn btn-ink" @click="$emit('close')">
+        <X class="w-[18px] h-[18px]" :stroke-width="2.6" aria-hidden="true" />
+        ចេញ
+      </button>
     </div>
 
     <!-- Comparison Container -->
-    <div
-      class="flex-1 grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 gap-2 p-2 overflow-hidden"
-    >
+    <div class="flex-1 grid grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1 overflow-hidden">
       <ComparisonPanel
+        class="border-b-4 border-double border-line md:border-b-0 md:border-r-4"
         label="១"
         :pdf="comparisonPdf1"
         :title="comparisonPdf1Title"
@@ -52,7 +45,7 @@
 </template>
 
 <script setup>
-import { X } from '@lucide/vue'
+import { ArrowLeftRight, X } from '@lucide/vue'
 import ComparisonPanel from './ComparisonPanel.vue'
 
 defineProps({

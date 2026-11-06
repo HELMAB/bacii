@@ -1,7 +1,9 @@
 <template>
   <div
     ref="pdfContainer"
-    class="flex-1 bg-gray-100 dark:bg-gray-900 bg-dots dark:bg-dots-dark overflow-auto pt-2 sm:pt-10 pb-24 relative"
+    tabindex="-1"
+    data-reader-scroll
+    class="flex-1 bg-halftone overflow-auto focus-visible:outline-none pt-4 sm:pt-10 pb-[calc(72px+24px)] sm:pb-24 relative"
   >
     <PdfLoadOverlay
       :is-loading="isLoading"

@@ -5,6 +5,7 @@ import { shallowRef, computed, onMounted } from 'vue'
 // hands back when there's no network.
 const PDF_CACHE = 'dobpi-pdfs'
 const CONCURRENCY = 4
+const RECOUNT_DELAY_MS = 2000
 
 // Drives the "download all PDFs for offline reading" flow.
 //
@@ -18,7 +19,16 @@ export function useOfflineDownload() {
   const cachedCount = shallowRef(0)
   const totalCount = shallowRef(0)
   const failedCount = shallowRef(0)
+  // Which PDFs are saved, for the per-paper stamp in the sidebar. Replaced, never
+  // mutated, so anything watching it updates.
+  const cachedPdfs = shallowRef(new Set())
   let abortController = null
+
+  function addCached(url) {
+    if (cachedPdfs.value.has(url)) return false
+    cachedPdfs.value = new Set(cachedPdfs.value).add(url)
+    return true
+  }
 
   onMounted(() => {
     isSupported.value = 'caches' in window && 'serviceWorker' in navigator
@@ -36,13 +46,15 @@ export function useOfflineDownload() {
 
     const cache = await caches.open(PDF_CACHE)
 
-    let cached = 0
+    const found = new Set()
     for (const url of urls) {
       if (await cache.match(url)) {
-        cached++
+        found.add(url)
       }
     }
 
+    const cached = found.size
+    cachedPdfs.value = found
     cachedCount.value = cached
     totalCount.value = urls.length
 
@@ -78,14 +90,17 @@ export function useOfflineDownload() {
     const pending = []
     let completed = 0
 
+    const alreadyCached = new Set(cachedPdfs.value)
     for (const url of urls) {
       if (await cache.match(url)) {
+        alreadyCached.add(url)
         completed++
       } else {
         pending.push(url)
       }
     }
 
+    cachedPdfs.value = alreadyCached
     cachedCount.value = completed
 
     let failures = 0
@@ -99,6 +114,7 @@ export function useOfflineDownload() {
           const response = await fetch(url, { cache: 'no-store', signal })
           if (response.ok) {
             await cache.put(url, response.clone())
+            addCached(url)
           } else {
             failures++
           }
@@ -122,11 +138,31 @@ export function useOfflineDownload() {
 
     if (signal.aborted) {
       status.value = 'idle'
+      // Downloads already in flight still land in the cache (the Service Worker's
+      // PDF route stores them), so count again now and once they've settled.
+      await checkStatus(urls)
+      setTimeout(() => {
+        if (status.value !== 'downloading') checkStatus(urls)
+      }, RECOUNT_DELAY_MS)
       return
     }
 
     failedCount.value = failures
     status.value = failures > 0 ? 'error' : 'complete'
+  }
+
+  // A paper opened in the reader is saved by the Service Worker's cache-first PDF
+  // route, not by downloadAll, so check the shared cache and mark it if it's there.
+  async function markCached(url) {
+    if (!isSupported.value || !url || status.value === 'downloading') return
+
+    const cache = await caches.open(PDF_CACHE)
+    if (!(await cache.match(url)) || !addCached(url)) return
+
+    cachedCount.value = Math.min(cachedCount.value + 1, totalCount.value || Infinity)
+    if (totalCount.value > 0 && cachedCount.value >= totalCount.value) {
+      status.value = 'complete'
+    }
   }
 
   // Already-saved PDFs stay cached, so downloading again resumes from here.
@@ -138,12 +174,14 @@ export function useOfflineDownload() {
     isSupported,
     status,
     cachedCount,
+    cachedPdfs,
     totalCount,
     failedCount,
     progress,
     isComplete,
     checkStatus,
     downloadAll,
+    markCached,
     cancelDownload
   }
 }

@@ -2,45 +2,136 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  1970s Khmer print design. Colours are semantic tokens stored as space-separated
+  RGB channels so Tailwind opacity modifiers work (bg-fg/20). Dark mode only
+  redefines the variables here; components use one class instead of a dark: pair.
+*/
 @layer base {
-  @font-face {
-    font-family: 'PengHuoth';
-    src:
-      url('/fonts/PengHuoth/PengHuoth-Regular.woff2') format('woff2'),
-      url('/fonts/PengHuoth/PengHuoth-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+  :root {
+    --c-page: 234 219 184; /* #EADBB8 */
+    --c-surface: 241 228 198; /* #F1E4C6 paper */
+    --c-surface-raised: 251 245 230; /* #FBF5E6 card */
+    --c-fg: 42 29 20; /* #2A1D14 ink */
+    --c-fg-muted: 90 70 50; /* #5A4632 */
+    --c-fg-faint: 110 91 69; /* #6E5B45 */
+    --c-line: 42 29 20; /* #2A1D14 */
+    --c-shadow: 42 29 20; /* #2A1D14 */
+    --c-active: 158 47 24; /* #9E2F18 brick */
+    --c-on-active: 241 228 198; /* #F1E4C6 */
+    --c-highlight: 224 165 38; /* #E0A526 turmeric */
+    --c-system: 36 90 87; /* #245A57 teal */
+    --c-on-system: 241 228 198; /* #F1E4C6 */
+    --c-ink-bar: 42 29 20; /* #2A1D14 */
+    --c-on-ink-bar: 241 228 198; /* #F1E4C6 */
+    --c-reader: 47 110 106; /* #2F6E6A */
+    --c-halftone-dot: 20 52 50 / 0.25;
+    --c-ledger-rule: 36 90 87 / 0.22;
+
+    color-scheme: light;
   }
 
-  @font-face {
-    font-family: 'PengHuoth';
-    src:
-      url('/fonts/PengHuoth/PengHuoth-Bold.woff2') format('woff2'),
-      url('/fonts/PengHuoth/PengHuoth-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-  }
+  .dark {
+    --c-page: 20 16 12; /* #14100C */
+    --c-surface: 42 29 20; /* #2A1D14 */
+    --c-surface-raised: 51 36 26; /* #33241A */
+    --c-fg: 241 228 198; /* #F1E4C6 */
+    --c-fg-muted: 217 199 160; /* #D9C7A0 */
+    --c-fg-faint: 168 149 122; /* #A8957A */
+    --c-line: 110 91 69; /* #6E5B45 */
+    --c-shadow: 0 0 0; /* #000000 */
+    --c-active: 226 115 90; /* #E2735A */
+    --c-on-active: 28 19 13; /* #1C130D */
+    --c-highlight: 224 165 38; /* #E0A526 */
+    --c-system: 95 163 158; /* #5FA39E */
+    --c-on-system: 20 16 12; /* #14100C */
+    --c-ink-bar: 28 19 13; /* #1C130D */
+    --c-on-ink-bar: 241 228 198; /* #F1E4C6 */
+    --c-reader: 20 16 12; /* #14100C */
+    --c-halftone-dot: 47 110 106 / 0.35;
+    --c-ledger-rule: 95 163 158 / 0.18;
 
-  body {
-    font-family: 'PengHuoth', sans-serif;
+    color-scheme: dark;
   }
 }
 
+/*
+  One font: Google Sans (SIL OFL, licence next to the files), self-hosted so it
+  works offline. Split by script with unicode-range so a Khmer-only screen never
+  downloads the Latin file. Hierarchy comes from weight (400 / 700) and size.
+*/
 @layer base {
-  /* Focus visible styles — sharp, no radius */
+  @font-face {
+    font-family: 'Google Sans';
+    src: url('/fonts/GoogleSans/GoogleSans-400-khmer.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+1780-17FF, U+19E0-19FF, U+200B-200D, U+25CC;
+  }
+
+  @font-face {
+    font-family: 'Google Sans';
+    src: url('/fonts/GoogleSans/GoogleSans-400-latin.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074,
+      U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  @font-face {
+    font-family: 'Google Sans';
+    src: url('/fonts/GoogleSans/GoogleSans-700-khmer.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+1780-17FF, U+19E0-19FF, U+200B-200D, U+25CC;
+  }
+
+  @font-face {
+    font-family: 'Google Sans';
+    src: url('/fonts/GoogleSans/GoogleSans-700-latin.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074,
+      U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  body {
+    font-family: theme('fontFamily.sans');
+    font-size: 16px;
+    /* Khmer stacks subscripts and vowels above and below the line. */
+    line-height: 1.7;
+    background-color: rgb(var(--c-page));
+    color: rgb(var(--c-fg));
+  }
+
+  /* Focus ring: thick and square, in the "where you are" colour. */
   *:focus-visible {
-    outline: 2px solid #253c99;
+    outline: 3px solid rgb(var(--c-active));
     outline-offset: 2px;
   }
 
-  /* Smooth scrolling */
+  /* Brick is too dark to see on the ink bars (1.8:1); turmeric is 7.5:1. */
+  .bg-ink-bar :focus-visible {
+    outline-color: rgb(var(--c-highlight));
+  }
+
   html {
     scroll-behavior: smooth;
   }
 
-  /* Custom scrollbar — minimal, square */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Scrollbar: minimal, square */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -51,18 +142,184 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgb(209 213 219);
-  }
-
-  .dark ::-webkit-scrollbar-thumb {
-    background: rgb(55 65 81);
+    background: rgb(var(--c-fg-faint) / 0.6);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgb(156 163 175);
+    background: rgb(var(--c-fg-muted));
   }
 
-  .dark ::-webkit-scrollbar-thumb:hover {
-    background: rgb(75 85 99);
+  mark {
+    background-color: rgb(var(--c-highlight));
+    color: #2a1d14;
+  }
+}
+
+@layer components {
+  /* ---- Print patterns ---- */
+
+  /* Reader backdrop: dots printed over teal (light) or night ink (dark). */
+  .bg-halftone {
+    background:
+      radial-gradient(circle, rgb(var(--c-halftone-dot)) 1.3px, transparent 1.6px) 0 0 / 8px 8px,
+      rgb(var(--c-reader));
+  }
+
+  /* Exercise-book ruling. The 44px period must equal the ledger row height. */
+  .bg-ruled {
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 43px,
+      rgb(var(--c-ledger-rule)) 43px 44px
+    );
+  }
+
+  /* Sunburst behind the splash and empty state. */
+  .bg-rays {
+    background: repeating-conic-gradient(from 0deg at 50% 38%, #e0a526 0 9deg, #e9b94a 9deg 18deg);
+  }
+
+  .dark .bg-rays {
+    background: repeating-conic-gradient(from 0deg at 50% 38%, #3a2a12 0 9deg, #2e2110 9deg 18deg);
+  }
+
+  /* Diamond rule used under headings. */
+  .bg-diamonds {
+    background:
+      linear-gradient(45deg, transparent 42%, rgb(var(--c-fg)) 42% 58%, transparent 58%) 0 0 / 12px
+        12px,
+      linear-gradient(-45deg, transparent 42%, rgb(var(--c-fg)) 42% 58%, transparent 58%) 0 0 / 12px
+        12px;
+  }
+
+  /* Diagonal ink stripes for progress bars. */
+  .bg-stripes {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(var(--c-fg)) 0 6px,
+      rgb(var(--c-fg) / 0.75) 6px 12px
+    );
+  }
+
+  .bg-stripes-system {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(var(--c-system)) 0 6px,
+      rgb(var(--c-system) / 0.7) 6px 12px
+    );
+  }
+
+  /* Slides a striped fill sideways (indeterminate or in-progress bars). */
+  .animate-stripes {
+    background-size: 17px 17px;
+    animation: print-stripes 0.8s linear infinite;
+  }
+
+  /* Indeterminate bar: a block that sweeps across its track. */
+  .progress-indeterminate {
+    width: 40%;
+    animation: print-indeterminate 1.4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-stripes,
+    .progress-indeterminate {
+      animation: none;
+    }
+
+    .progress-indeterminate {
+      width: 100%;
+    }
+  }
+
+  /* ---- Controls ---- */
+
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 border-2 border-line px-4 text-base font-bold leading-snug;
+    @apply motion-safe:transition-[transform,box-shadow,background-color] motion-safe:duration-100;
+    @apply active:translate-x-[2px] active:translate-y-[2px] active:shadow-none;
+    @apply disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:active:translate-x-0 disabled:active:translate-y-0;
+  }
+
+  .btn-ink {
+    @apply bg-fg text-surface shadow-[3px_3px_0_rgb(var(--c-active))];
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-fg hover:bg-highlight/25;
+  }
+
+  .btn-system {
+    @apply bg-system text-on-system shadow-print-sm;
+  }
+
+  .btn-icon {
+    @apply h-11 w-11 min-h-0 shrink-0 p-0;
+  }
+
+  .btn-icon-lg {
+    @apply h-12 w-12 min-h-0 shrink-0 p-0;
+  }
+
+  /* Rubber stamp: bold, outlined, slightly crooked. */
+  .stamp {
+    @apply inline-block shrink-0 whitespace-nowrap border-2 px-1.5 text-sm font-bold leading-normal -rotate-[5deg];
+  }
+
+  .stamp-system {
+    @apply border-system text-system;
+  }
+
+  .stamp-active {
+    @apply border-active text-active;
+  }
+
+  .sheet {
+    @apply border-2 border-line bg-surface-raised shadow-print;
+  }
+
+  .ink-chip {
+    @apply inline-flex h-11 items-center bg-ink-bar px-4 text-on-ink-bar border-2 border-surface shadow-print-sm;
+  }
+
+  /* On the night reader the chip flips to paper so it still stands out. */
+  .dark .ink-chip {
+    @apply bg-fg text-page border-page;
+  }
+}
+
+/*
+  Pages drawn by vue-pdf-embed (global, not scoped). The frame is a shadow ring,
+  not a border, so it takes no layout space: useFitPdfWidth's gutter and the
+  scroll anchors in utils/pdfScroll.js keep measuring the same page boxes.
+*/
+.vue-pdf-embed__page {
+  box-shadow:
+    0 0 0 2px rgb(var(--c-line)),
+    8px 8px 0 0 rgb(var(--c-shadow));
+}
+
+/* vue-pdf-embed wraps each page in its own div, so space the wrappers. */
+.vue-pdf-embed > * + * {
+  margin-top: 32px;
+}
+
+.dark .vue-pdf-embed__page canvas {
+  filter: sepia(0.12) brightness(0.9);
+}
+
+@keyframes print-stripes {
+  to {
+    background-position: 17px 0;
+  }
+}
+
+@keyframes print-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(250%);
   }
 }
