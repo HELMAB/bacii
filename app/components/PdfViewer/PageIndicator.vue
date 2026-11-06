@@ -14,7 +14,7 @@ defineProps({
     class="ink-chip absolute left-4 bottom-[92px] sm:left-6 sm:bottom-6 z-20 text-[15px] pointer-events-none"
   >
     ទំព័រ
-    <b class="ml-1.5 font-numeral font-normal text-lg leading-none">
+    <b class="ml-1.5 font-bold text-lg leading-none">
       {{ toKhmerDigits(`${currentPage} / ${totalPages}`) }}
     </b>
   </div>

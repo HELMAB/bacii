@@ -73,19 +73,19 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/manifest.json' },
-        // The two fonts on first paint (body text and headings), Khmer subsets.
+        // Both weights are on first paint (body text and headings), Khmer subsets.
         {
           rel: 'preload',
           as: 'font',
           type: 'font/woff2',
-          href: '/fonts/Battambang/Battambang-400-khmer.woff2',
+          href: '/fonts/GoogleSans/GoogleSans-400-khmer.woff2',
           crossorigin: ''
         },
         {
           rel: 'preload',
           as: 'font',
           type: 'font/woff2',
-          href: '/fonts/Moul/Moul-400-khmer.woff2',
+          href: '/fonts/GoogleSans/GoogleSans-700-khmer.woff2',
           crossorigin: ''
         }
       ],

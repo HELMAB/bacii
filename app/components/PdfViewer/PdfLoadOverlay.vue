@@ -32,7 +32,7 @@ const SKELETON_LINES = [92, 98, 74, 86, 40, 0, 88, 95, 66, 90]
     <div class="sheet w-60 max-w-full p-5 space-y-3">
       <p class="flex items-baseline justify-between gap-2 font-bold">
         កំពុងផ្ទុក
-        <span v-if="loadProgress !== null" class="font-numeral font-normal text-xl">
+        <span v-if="loadProgress !== null" class="font-bold text-xl">
           {{ toKhmerDigits(loadProgress) }}%
         </span>
       </p>

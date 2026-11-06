@@ -114,13 +114,13 @@ import { LETTER_PATH, TITLE_PATH, TITLE_VIEW_BOX } from '../constants/logo'
   fill: var(--splash-title);
 }
 
-/* Moul may not be loaded on first paint; the ribbon reads fine in the fallback. */
 .app-splash__ribbon {
   margin: 0;
   padding: 4px 18px;
   background: var(--splash-ink);
   color: var(--splash-paper);
-  font-family: 'Moul', 'Battambang', 'PengHuoth', serif;
+  font-family: 'Google Sans', system-ui, sans-serif;
+  font-weight: 700;
   font-size: clamp(16px, 3vmin, 22px);
   line-height: 1.7;
   transform: rotate(-2deg);
@@ -155,7 +155,7 @@ import { LETTER_PATH, TITLE_PATH, TITLE_VIEW_BOX } from '../constants/logo'
   border-top: 2px solid var(--splash-ink);
   background: var(--splash-paper);
   color: var(--splash-ink);
-  font-family: 'Special Elite', ui-monospace, monospace;
+  font-family: 'Google Sans', system-ui, sans-serif;
   font-size: 13px;
   letter-spacing: 3px;
   text-align: center;

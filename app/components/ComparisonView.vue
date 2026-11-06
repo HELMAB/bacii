@@ -5,7 +5,7 @@
       class="shrink-0 flex items-center justify-between flex-wrap gap-2 px-3.5 py-2 bg-surface border-b-2 border-line"
     >
       <div class="flex items-center gap-3">
-        <h2 class="font-display text-base leading-[1.7]">មុខងារប្រៀបធៀប</h2>
+        <h2 class="font-bold text-base leading-[1.7]">មុខងារប្រៀបធៀប</h2>
         <button
           type="button"
           :disabled="!comparisonPdf1 || !comparisonPdf2"

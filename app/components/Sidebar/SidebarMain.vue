@@ -110,7 +110,7 @@ function handleSelectPdf(subject, category, year) {
       <!-- Mobile drawer header -->
       <div class="lg:hidden shrink-0">
         <div class="flex items-center gap-3 pl-4 pr-2.5 py-2 bg-ink-bar text-on-ink-bar">
-          <h2 class="flex-1 font-display text-lg leading-[1.7]">ឯកសារប្រឡង</h2>
+          <h2 class="flex-1 font-bold text-lg leading-[1.7]">ឯកសារប្រឡង</h2>
           <button
             ref="closeButton"
             type="button"
@@ -131,7 +131,7 @@ function handleSelectPdf(subject, category, year) {
         <div class="flex flex-col gap-5 pt-5 lg:pt-6 pb-6">
           <!-- Desktop heading -->
           <div class="hidden lg:flex flex-col px-6">
-            <h2 class="font-display text-[22px] leading-[1.7] text-active">ឯកសារប្រឡង</h2>
+            <h2 class="font-bold text-[22px] leading-[1.7] text-active">ឯកសារប្រឡង</h2>
             <p class="text-sm text-fg-muted">សញ្ញាបត្រមធ្យមសិក្សាទុតិយភូមិ</p>
           </div>
 

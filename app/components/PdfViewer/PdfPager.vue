@@ -32,7 +32,7 @@ defineEmits(['previous', 'next'])
     <span
       class="flex flex-col items-center justify-center border-x-2 border-dashed border-line sm:px-3.5 whitespace-nowrap"
     >
-      <span class="font-numeral text-lg leading-tight text-active sm:text-fg">
+      <span class="font-bold text-lg leading-tight text-active sm:text-fg">
         {{ toKhmerDigits(`${currentPdfIndex + 1} / ${totalPdfsCount}`) }}
       </span>
       <span class="text-xs leading-snug text-fg-muted sm:sr-only">វិញ្ញាសា</span>

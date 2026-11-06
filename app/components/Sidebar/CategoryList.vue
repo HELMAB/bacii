@@ -23,7 +23,7 @@
           @click="$emit('toggleYear', year.label)"
         >
           <span :class="marginClass" class="flex flex-col items-center justify-center text-active">
-            <span class="font-numeral text-lg leading-none">
+            <span class="font-bold text-lg leading-none">
               {{ parseYearLabel(year.label).year }}
             </span>
             <span
@@ -137,7 +137,7 @@
               </span>
               <span
                 :class="[
-                  'shrink-0 font-numeral text-base',
+                  'shrink-0 font-bold text-base',
                   selectedPdf === subject.pdf ? 'text-on-active' : 'text-active'
                 ]"
               >
@@ -157,7 +157,7 @@
     role="status"
   >
     <SearchX class="w-8 h-8 mx-auto mb-2 text-fg-muted" :stroke-width="2" aria-hidden="true" />
-    <p class="font-display text-base leading-[1.7]">រកមិនឃើញលទ្ធផល</p>
+    <p class="font-bold text-base leading-[1.7]">រកមិនឃើញលទ្ធផល</p>
     <p class="mt-1 text-sm text-fg-muted">សាកល្បងឈ្មោះមុខវិជ្ជា ឬឆ្នាំ ដូចជា «២០២២»</p>
   </div>
 </template>

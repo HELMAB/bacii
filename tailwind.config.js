@@ -43,14 +43,8 @@ export default {
         print: '8px 8px 0 rgb(var(--c-shadow))'
       },
       fontFamily: {
-        // Body text
-        sans: ['Battambang', 'PengHuoth', 'sans-serif'],
-        // Headings, 16px and up only
-        display: ['Moul', 'Battambang', 'PengHuoth', 'serif'],
-        // Khmer numerals, stamps, counters
-        numeral: ['Koulen', 'Battambang', 'PengHuoth', 'sans-serif'],
-        // Latin only (no Khmer glyphs): "DOBPI", the site address
-        mono: ['"Special Elite"', 'ui-monospace', 'monospace']
+        // The only font. Hierarchy comes from weight (400 / 700) and size.
+        sans: ['"Google Sans"', 'system-ui', 'sans-serif']
       }
     }
   },

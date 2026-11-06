@@ -44,7 +44,7 @@
         <h3
           class="min-w-0 h-11 flex items-center gap-2 px-2.5 bg-surface-raised border-2 border-line shadow-print-sm"
         >
-          <span class="font-numeral text-lg text-active leading-none" aria-hidden="true">
+          <span class="font-bold text-lg text-active leading-none" aria-hidden="true">
             {{ label }}
           </span>
           <span class="sr-only">ឯកសារ {{ label }}</span>

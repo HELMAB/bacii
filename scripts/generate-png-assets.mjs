@@ -20,8 +20,9 @@ const faviconSizes = [16, 32, 48]
 
 const chromeBin = process.env.CHROME_BIN || 'google-chrome'
 
-// Loaded from disk so Khmer text renders in the app's font rather than a system fallback.
-const fontsDir = join(publicDir, 'fonts/PengHuoth')
+// The Khmer font drawn into the social image and icons. Kept beside this script,
+// not in public/, because the app itself doesn't use it (it would only be precached).
+const fontsDir = join(process.cwd(), 'scripts/fonts/PengHuoth')
 const fontFaces = [
   { file: 'PengHuoth-Regular.ttf', weight: 400 },
   { file: 'PengHuoth-Bold.ttf', weight: 700 }

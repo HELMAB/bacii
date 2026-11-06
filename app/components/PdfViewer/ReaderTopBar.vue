@@ -57,15 +57,15 @@ const subtitle = computed(() =>
       <div :class="['items-center gap-3 shrink-0', hasPdf ? 'hidden xl:flex' : 'flex']">
         <BrandStamp :size="hasPdf ? 48 : 40" class="sm:w-12 sm:h-12" />
         <div class="flex flex-col">
-          <span class="font-display text-lg sm:text-xl leading-normal">បាក់ឌុប</span>
-          <span class="font-mono text-xs leading-snug text-on-ink-bar/80">DOBPI</span>
+          <span class="font-bold text-lg sm:text-xl leading-normal">បាក់ឌុប</span>
+          <span class="text-xs leading-snug text-on-ink-bar/80">DOBPI</span>
         </div>
       </div>
 
       <!-- Title -->
       <div class="flex-1 min-w-0 flex flex-col pl-1 sm:items-center sm:text-center">
         <template v-if="hasPdf">
-          <p class="font-display text-base sm:text-xl leading-[1.7] truncate max-w-full">
+          <p class="font-bold text-base sm:text-xl leading-[1.7] truncate max-w-full">
             {{ selectedPdfTitle }}
           </p>
           <p
@@ -91,7 +91,7 @@ const subtitle = computed(() =>
             <Minus class="w-[18px] h-[18px]" :stroke-width="2.4" aria-hidden="true" />
           </button>
           <span
-            class="min-w-16 self-stretch flex items-center justify-center font-numeral text-lg border-x-2 border-dashed border-on-ink-bar/30"
+            class="min-w-16 self-stretch flex items-center justify-center font-bold text-lg border-x-2 border-dashed border-on-ink-bar/30"
             aria-live="polite"
           >
             {{ toKhmerDigits(zoomPercent) }}%

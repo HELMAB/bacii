@@ -4,13 +4,13 @@
       <BrandStamp :size="152" outlined />
 
       <h2
-        class="font-display text-5xl leading-[1.5] text-fg [text-shadow:3px_3px_0_rgb(var(--c-surface))]"
+        class="font-bold text-5xl leading-[1.5] text-fg [text-shadow:3px_3px_0_rgb(var(--c-surface))]"
       >
         បាក់ឌុប
       </h2>
 
       <p
-        class="bg-ink-bar text-on-ink-bar font-display text-base leading-[1.7] px-4 py-1 -rotate-2 shadow-print-sm"
+        class="bg-ink-bar text-on-ink-bar font-bold text-base leading-[1.7] px-4 py-1 -rotate-2 shadow-print-sm"
       >
         វិញ្ញាសាប្រឡងទុតិយភូមិ
       </p>

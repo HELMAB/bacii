@@ -56,14 +56,14 @@
 }
 
 /*
-  Fonts, all SIL OFL (licences next to the files). Split by script with
-  unicode-range so a Khmer-only screen never downloads the Latin files.
-  Special Elite has no Khmer glyphs: use it for Latin text only.
+  One font: Google Sans (SIL OFL, licence next to the files), self-hosted so it
+  works offline. Split by script with unicode-range so a Khmer-only screen never
+  downloads the Latin file. Hierarchy comes from weight (400 / 700) and size.
 */
 @layer base {
   @font-face {
-    font-family: 'Battambang';
-    src: url('/fonts/Battambang/Battambang-400-khmer.woff2') format('woff2');
+    font-family: 'Google Sans';
+    src: url('/fonts/GoogleSans/GoogleSans-400-khmer.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -71,8 +71,8 @@
   }
 
   @font-face {
-    font-family: 'Battambang';
-    src: url('/fonts/Battambang/Battambang-400-latin.woff2') format('woff2');
+    font-family: 'Google Sans';
+    src: url('/fonts/GoogleSans/GoogleSans-400-latin.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -82,8 +82,8 @@
   }
 
   @font-face {
-    font-family: 'Battambang';
-    src: url('/fonts/Battambang/Battambang-700-khmer.woff2') format('woff2');
+    font-family: 'Google Sans';
+    src: url('/fonts/GoogleSans/GoogleSans-700-khmer.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -91,86 +91,14 @@
   }
 
   @font-face {
-    font-family: 'Battambang';
-    src: url('/fonts/Battambang/Battambang-700-latin.woff2') format('woff2');
+    font-family: 'Google Sans';
+    src: url('/fonts/GoogleSans/GoogleSans-700-latin.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
     unicode-range:
       U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074,
       U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  @font-face {
-    font-family: 'Moul';
-    src: url('/fonts/Moul/Moul-400-khmer.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    unicode-range: U+1780-17FF, U+19E0-19FF, U+200B-200D, U+25CC;
-  }
-
-  @font-face {
-    font-family: 'Moul';
-    src: url('/fonts/Moul/Moul-400-latin.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    unicode-range:
-      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074,
-      U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  @font-face {
-    font-family: 'Koulen';
-    src: url('/fonts/Koulen/Koulen-400-khmer.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    unicode-range: U+1780-17FF, U+19E0-19FF, U+200B-200D, U+25CC;
-  }
-
-  @font-face {
-    font-family: 'Koulen';
-    src: url('/fonts/Koulen/Koulen-400-latin.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    unicode-range:
-      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074,
-      U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  @font-face {
-    font-family: 'Special Elite';
-    src: url('/fonts/SpecialElite/SpecialElite-400-latin.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-    unicode-range:
-      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074,
-      U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-
-  /* Fallback while the fonts above load, and for any glyph they lack. */
-  @font-face {
-    font-family: 'PengHuoth';
-    src:
-      url('/fonts/PengHuoth/PengHuoth-Regular.woff2') format('woff2'),
-      url('/fonts/PengHuoth/PengHuoth-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: 'PengHuoth';
-    src:
-      url('/fonts/PengHuoth/PengHuoth-Bold.woff2') format('woff2'),
-      url('/fonts/PengHuoth/PengHuoth-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
   }
 
   body {
@@ -333,9 +261,9 @@
     @apply h-12 w-12 min-h-0 shrink-0 p-0;
   }
 
-  /* Rubber stamp: Koulen, outlined, slightly crooked. */
+  /* Rubber stamp: bold, outlined, slightly crooked. */
   .stamp {
-    @apply inline-block shrink-0 whitespace-nowrap border-2 px-1.5 font-numeral text-sm font-normal leading-normal -rotate-[5deg];
+    @apply inline-block shrink-0 whitespace-nowrap border-2 px-1.5 text-sm font-bold leading-normal -rotate-[5deg];
   }
 
   .stamp-system {

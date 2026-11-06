@@ -51,7 +51,7 @@ function handleDownload() {
       <div v-else-if="status === 'downloading'" class="space-y-2">
         <p class="flex items-center justify-between gap-2 text-sm font-bold text-system">
           <span role="status">កំពុងទាញយក…</span>
-          <span class="font-numeral font-normal text-base" aria-hidden="true">{{ savedText }}</span>
+          <span class="font-bold text-base" aria-hidden="true">{{ savedText }}</span>
         </p>
         <div class="h-2.5 border-2 border-system bg-surface" aria-hidden="true">
           <div

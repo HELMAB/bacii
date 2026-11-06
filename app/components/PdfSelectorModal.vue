@@ -16,7 +16,7 @@
       <div class="shrink-0">
         <div class="flex items-center gap-3 pl-5 pr-2.5 py-2 bg-ink-bar text-on-ink-bar">
           <div class="flex-1 min-w-0">
-            <h2 id="pdf-selector-title" class="font-display text-lg leading-[1.7]">
+            <h2 id="pdf-selector-title" class="font-bold text-lg leading-[1.7]">
               ជ្រើសរើសឯកសារ {{ pdfNumber === 1 ? '១' : '២' }}
             </h2>
             <p class="text-sm text-on-ink-bar/80">ជ្រើសរើសឯកសារប្រឡងដើម្បីប្រៀបធៀប</p>
@@ -55,7 +55,7 @@
         >
           <section v-for="year in category.children" :key="year.label">
             <h3 class="flex items-baseline gap-2 pb-1 mb-3 border-b-2 border-line text-active">
-              <span class="font-numeral text-xl leading-none">
+              <span class="font-bold text-xl leading-none">
                 {{ parseYearLabel(year.label).year }}
               </span>
               <span v-if="parseYearLabel(year.label).round" class="text-sm font-bold">

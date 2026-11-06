@@ -43,7 +43,7 @@
             <Minus class="w-5 h-5" :stroke-width="2.4" aria-hidden="true" />
           </button>
           <span
-            class="w-20 self-stretch flex items-center justify-center font-numeral text-lg border-x-2 border-dashed border-line"
+            class="w-20 self-stretch flex items-center justify-center font-bold text-lg border-x-2 border-dashed border-line"
             aria-live="polite"
           >
             {{ toKhmerDigits(zoomPercent) }}%
