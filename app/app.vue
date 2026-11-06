@@ -49,7 +49,7 @@
     <!-- In the layout flow so it can never cover the header's controls -->
     <OfflineIndicator />
 
-    <!-- Full-width ink header with the zigzag strip -->
+    <!-- Full-width ink header -->
     <ReaderTopBar
       :has-pdf="!!selectedPdf && !isComparisonMode"
       :selected-category="selectedCategory"

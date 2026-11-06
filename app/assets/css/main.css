@@ -230,14 +230,6 @@
 @layer components {
   /* ---- Print patterns ---- */
 
-  /* Decorative strip under ink bars. Fixed colours in both themes. */
-  .bg-zigzag {
-    background:
-      linear-gradient(135deg, #e0a526 25%, transparent 25%) -10px 0 / 20px 20px,
-      linear-gradient(225deg, #e0a526 25%, transparent 25%) -10px 0 / 20px 20px,
-      #9e2f18;
-  }
-
   /* Reader backdrop: dots printed over teal (light) or night ink (dark). */
   .bg-halftone {
     background:

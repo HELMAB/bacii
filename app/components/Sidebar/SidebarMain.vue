@@ -121,7 +121,6 @@ function handleSelectPdf(subject, category, year) {
             <X class="w-5 h-5" :stroke-width="2.6" aria-hidden="true" />
           </button>
         </div>
-        <div class="bg-zigzag h-2.5" aria-hidden="true"></div>
       </div>
 
       <!--

@@ -150,6 +150,5 @@ const subtitle = computed(() =>
         />
       </div>
     </header>
-    <div class="bg-zigzag h-2.5 sm:h-3.5" aria-hidden="true"></div>
   </div>
 </template>

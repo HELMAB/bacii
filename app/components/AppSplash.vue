@@ -5,8 +5,6 @@ import { LETTER_PATH, TITLE_PATH, TITLE_VIEW_BOX } from '../constants/logo'
 <template>
   <!-- Rendered by the server so it paints before any JavaScript runs -->
   <div class="app-splash" aria-hidden="true">
-    <div class="app-splash__zigzag"></div>
-
     <div class="app-splash__panel">
       <svg class="app-splash__stamp" viewBox="-14 -14 128 128">
         <circle cx="50" cy="50" r="60" fill="#9e2f18" stroke="#2a1d14" stroke-width="3" />
@@ -80,15 +78,6 @@ import { LETTER_PATH, TITLE_PATH, TITLE_VIEW_BOX } from '../constants/logo'
 /* Set before first paint by the inline script in nuxt.config.ts. */
 .splash-seen .app-splash {
   display: none;
-}
-
-.app-splash__zigzag {
-  flex-shrink: 0;
-  height: 14px;
-  background:
-    linear-gradient(135deg, #e0a526 25%, transparent 25%) -10px 0 / 20px 20px,
-    linear-gradient(225deg, #e0a526 25%, transparent 25%) -10px 0 / 20px 20px,
-    #9e2f18;
 }
 
 .app-splash__panel {

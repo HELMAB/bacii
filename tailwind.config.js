@@ -35,10 +35,7 @@ export default {
         'on-system': token('on-system'),
         'ink-bar': token('ink-bar'),
         'on-ink-bar': token('on-ink-bar'),
-        reader: token('reader'),
-        // Fixed, decorative only (zigzag strip, stamps on the splash).
-        brick: '#9E2F18',
-        turmeric: '#E0A526'
+        reader: token('reader')
       },
       // The only two shadow sizes: offset print shadows, no blur.
       boxShadow: {
